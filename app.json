@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Mashjid Koi",
-    "slug": "mashjid-koi",
+    "name": "MasjidKoi",
+    "slug": "masjidkoi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mashjid-koi",
+    "scheme": "masjidkoi",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

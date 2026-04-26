@@ -7,7 +7,7 @@ export default function Index() {
       <StatusBar style="light" />
 
       <View className="bg-cyan-600 px-5 pb-4 pt-14">
-        <Text className="text-2xl font-bold text-white">Mashjid Koi</Text>
+        <Text className="text-2xl font-bold text-white">MasjidKoi</Text>
       </View>
 
       <View className="flex-1" />
