@@ -1,12 +1,15 @@
 import { Magnetometer, type MagnetometerMeasurement } from "expo-sensors";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+
+const HEADING_OFFSET_DEGREES = -90;
 
 function getHeadingFromMagnetometer(data: MagnetometerMeasurement) {
   const angle = Math.atan2(data.y, data.x);
   const heading = angle >= 0 ? angle : angle + 2 * Math.PI;
-  return (heading * 180) / Math.PI;
+  const headingDegrees = (heading * 180) / Math.PI;
+  return normalizeHeading(headingDegrees + HEADING_OFFSET_DEGREES);
 }
 
 function getCardinalDirection(heading: number) {
@@ -16,14 +19,33 @@ function getCardinalDirection(heading: number) {
   return "West";
 }
 
+function normalizeHeading(heading: number) {
+  return (heading + 360) % 360;
+}
+
+function getShortestAngleDelta(from: number, to: number) {
+  return ((to - from + 540) % 360) - 180;
+}
+
 export default function QiblaScreen() {
   const [heading, setHeading] = useState<number | null>(null);
+  const targetHeadingRef = useRef<number | null>(null);
+  const currentHeadingRef = useRef(0);
+  const animationFrameRef = useRef<number | null>(null);
+  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
-    Magnetometer.setUpdateInterval(150);
+    Magnetometer.setUpdateInterval(16);
 
     const subscription = Magnetometer.addListener((data) => {
-      setHeading(getHeadingFromMagnetometer(data));
+      const nextHeading = getHeadingFromMagnetometer(data);
+      targetHeadingRef.current = nextHeading;
+
+      if (!hasInitializedRef.current) {
+        hasInitializedRef.current = true;
+        currentHeadingRef.current = nextHeading;
+        setHeading(nextHeading);
+      }
     });
 
     return () => {
@@ -31,10 +53,55 @@ export default function QiblaScreen() {
     };
   }, []);
 
+  useEffect(() => {
+    const animate = () => {
+      const targetHeading = targetHeadingRef.current;
+
+      if (targetHeading !== null) {
+        const delta = getShortestAngleDelta(currentHeadingRef.current, targetHeading);
+        currentHeadingRef.current = normalizeHeading(currentHeadingRef.current + delta * 0.2);
+        setHeading(currentHeadingRef.current);
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
+
   const roundedHeading = useMemo(() => {
     if (heading === null) return null;
     return Math.round(heading);
   }, [heading]);
+
+  const scaleTicks = useMemo(
+    () =>
+      Array.from({ length: 36 }, (_, index) => {
+        const angle = index * 10;
+        const isMajorTick = index % 3 === 0;
+
+        return (
+          <View
+            key={`tick-${angle}`}
+            style={[
+              styles.scaleTick,
+              {
+                height: isMajorTick ? 12 : 7,
+                backgroundColor: isMajorTick ? "#0e7490" : "#94a3b8",
+                transform: [{ rotate: `${angle}deg` }, { translateY: -104 }],
+              },
+            ]}
+          />
+        );
+      }),
+    [],
+  );
 
   return (
     <View className="flex-1 bg-slate-100">
@@ -49,21 +116,22 @@ export default function QiblaScreen() {
 
         <View style={styles.compassCard}>
           <View style={styles.compassBody}>
-            <Text style={styles.northLabel}>N</Text>
-            <Text style={styles.eastLabel}>E</Text>
-            <Text style={styles.southLabel}>S</Text>
-            <Text style={styles.westLabel}>W</Text>
-
             <View
               style={[
-                styles.needleWrapper,
-                {
-                  transform: [{ rotate: `${heading === null ? 0 : -heading}deg` }],
-                },
+                styles.rotatingWheel,
+                { transform: [{ rotate: `${heading === null ? 0 : -heading}deg` }] },
               ]}
             >
-              <View style={styles.needle} />
-              <Text style={styles.needleTip}>▲</Text>
+              {scaleTicks}
+              <Text style={[styles.dialLabel, styles.northLabel]}>N</Text>
+              <Text style={[styles.dialLabel, styles.eastLabel]}>E</Text>
+              <Text style={[styles.dialLabel, styles.southLabel]}>S</Text>
+              <Text style={[styles.dialLabel, styles.westLabel]}>W</Text>
+
+              <View style={styles.needleWrapper}>
+                <View style={styles.needle} />
+                <Text style={styles.needleTip}>▲</Text>
+              </View>
             </View>
 
             <View style={styles.centerDot} />
@@ -103,33 +171,36 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "relative",
   },
-  northLabel: {
+  rotatingWheel: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 120,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
+  scaleTick: {
     position: "absolute",
-    top: 10,
+    width: 2,
+    borderRadius: 99,
+  },
+  dialLabel: {
     color: "#0f172a",
     fontSize: 20,
     fontWeight: "700",
+    position: "absolute",
+  },
+  northLabel: {
+    top: 10,
   },
   eastLabel: {
-    position: "absolute",
     right: 12,
-    color: "#0f172a",
-    fontSize: 20,
-    fontWeight: "700",
   },
   southLabel: {
-    position: "absolute",
     bottom: 10,
-    color: "#0f172a",
-    fontSize: 20,
-    fontWeight: "700",
   },
   westLabel: {
-    position: "absolute",
     left: 12,
-    color: "#0f172a",
-    fontSize: 20,
-    fontWeight: "700",
   },
   needleWrapper: {
     alignItems: "center",
