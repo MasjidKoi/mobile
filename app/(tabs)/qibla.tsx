@@ -1,9 +1,14 @@
+import * as Location from "expo-location";
 import { Magnetometer, type MagnetometerMeasurement } from "expo-sensors";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 const HEADING_OFFSET_DEGREES = -90;
+const KAABA_COORDINATES = {
+  latitude: 21.4225,
+  longitude: 39.82617,
+};
 
 function getHeadingFromMagnetometer(data: MagnetometerMeasurement) {
   const angle = Math.atan2(data.y, data.x);
@@ -27,12 +32,62 @@ function getShortestAngleDelta(from: number, to: number) {
   return ((to - from + 540) % 360) - 180;
 }
 
+function toRadians(value: number) {
+  return (value * Math.PI) / 180;
+}
+
+function toDegrees(value: number) {
+  return (value * 180) / Math.PI;
+}
+
+function getQiblaBearing(latitude: number, longitude: number) {
+  const lat1 = toRadians(latitude);
+  const lon1 = toRadians(longitude);
+  const lat2 = toRadians(KAABA_COORDINATES.latitude);
+  const lon2 = toRadians(KAABA_COORDINATES.longitude);
+
+  const deltaLon = lon2 - lon1;
+  const y = Math.sin(deltaLon) * Math.cos(lat2);
+  const x =
+    Math.cos(lat1) * Math.sin(lat2) -
+    Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLon);
+
+  return normalizeHeading(toDegrees(Math.atan2(y, x)));
+}
+
 export default function QiblaScreen() {
   const [heading, setHeading] = useState<number | null>(null);
+  const [qiblaBearing, setQiblaBearing] = useState<number | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const targetHeadingRef = useRef<number | null>(null);
   const currentHeadingRef = useRef(0);
   const animationFrameRef = useRef<number | null>(null);
   const hasInitializedRef = useRef(false);
+
+  useEffect(() => {
+    const loadLocation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setLocationError("Location permission needed for Qibla direction");
+        return;
+      }
+
+      const position = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      const bearing = getQiblaBearing(
+        position.coords.latitude,
+        position.coords.longitude,
+      );
+      setQiblaBearing(bearing);
+      setLocationError(null);
+    };
+
+    loadLocation().catch(() => {
+      setLocationError("Could not get current location");
+    });
+  }, []);
 
   useEffect(() => {
     Magnetometer.setUpdateInterval(16);
@@ -80,6 +135,21 @@ export default function QiblaScreen() {
     return Math.round(heading);
   }, [heading]);
 
+  const roundedQiblaBearing = useMemo(() => {
+    if (qiblaBearing === null) return null;
+    return Math.round(qiblaBearing);
+  }, [qiblaBearing]);
+
+  const qiblaRelativeAngle = useMemo(() => {
+    if (heading === null || qiblaBearing === null) return null;
+    return getShortestAngleDelta(heading, qiblaBearing);
+  }, [heading, qiblaBearing]);
+
+  const isAligned = useMemo(() => {
+    if (qiblaRelativeAngle === null) return false;
+    return Math.abs(qiblaRelativeAngle) <= 5;
+  }, [qiblaRelativeAngle]);
+
   const scaleTicks = useMemo(
     () =>
       Array.from({ length: 36 }, (_, index) => {
@@ -116,6 +186,8 @@ export default function QiblaScreen() {
 
         <View style={styles.compassCard}>
           <View style={styles.compassBody}>
+            <View style={styles.northIndex} />
+
             <View
               style={[
                 styles.rotatingWheel,
@@ -134,6 +206,20 @@ export default function QiblaScreen() {
               </View>
             </View>
 
+            {qiblaRelativeAngle !== null ? (
+              <View
+                style={[
+                  styles.qiblaPointer,
+                  {
+                    transform: [
+                      { rotate: `${qiblaRelativeAngle}deg` },
+                      { translateY: -86 },
+                    ],
+                  },
+                ]}
+              />
+            ) : null}
+
             <View style={styles.centerDot} />
           </View>
 
@@ -142,6 +228,20 @@ export default function QiblaScreen() {
               ? "Reading sensor..."
               : `${roundedHeading}° ${getCardinalDirection(roundedHeading)}`}
           </Text>
+
+          <Text className="mt-2 text-sm font-medium text-cyan-700">
+            {locationError
+              ? locationError
+              : roundedQiblaBearing === null
+                ? "Calculating Qibla..."
+                : `Qibla: ${roundedQiblaBearing}° from North`}
+          </Text>
+
+          {roundedQiblaBearing !== null ? (
+            <Text className="mt-1 text-sm font-semibold text-emerald-700">
+              {isAligned ? "Aligned with Qibla" : "Turn device to align with Qibla"}
+            </Text>
+          ) : null}
         </View>
       </View>
     </View>
@@ -184,6 +284,19 @@ const styles = StyleSheet.create({
     width: 2,
     borderRadius: 99,
   },
+  northIndex: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 8,
+    borderRightWidth: 8,
+    borderBottomWidth: 16,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "#0e7490",
+    position: "absolute",
+    top: -6,
+    zIndex: 5,
+  },
   dialLabel: {
     color: "#0f172a",
     fontSize: 20,
@@ -222,6 +335,18 @@ const styles = StyleSheet.create({
     color: "#dc2626",
     fontSize: 26,
     lineHeight: 28,
+  },
+  qiblaPointer: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderBottomWidth: 18,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "#16a34a",
+    position: "absolute",
+    zIndex: 6,
   },
   centerDot: {
     width: 16,
