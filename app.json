@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Mashjid Koi",
+    "slug": "mashjid-koi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "mashjid-koi",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
