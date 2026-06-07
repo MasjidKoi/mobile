@@ -2338,7 +2338,8 @@
                           "fill": "$text-secondary",
                           "content": "5:12",
                           "fontFamily": "$font-primary",
-                          "fontSize": 15
+                          "fontSize": 15,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -2408,7 +2409,8 @@
                           "fill": "$text-secondary",
                           "content": "12:58",
                           "fontFamily": "$font-primary",
-                          "fontSize": 15
+                          "fontSize": 15,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -2550,7 +2552,8 @@
                           "fill": "$text-secondary",
                           "content": "6:28",
                           "fontFamily": "$font-primary",
-                          "fontSize": 15
+                          "fontSize": 15,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -2620,7 +2623,8 @@
                           "fill": "$text-secondary",
                           "content": "7:52",
                           "fontFamily": "$font-primary",
-                          "fontSize": 15
+                          "fontSize": 15,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -14780,7 +14784,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1780857273757.png",
+            "url": "images/generated-1780857273757.png",
             "mode": "fill"
           },
           "layout": "none",
@@ -19984,7 +19988,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1780857995286.png",
+                "url": "images/generated-1780857995286.png",
                 "mode": "fill"
               },
               "layout": "none",
@@ -27699,7 +27703,8 @@
                       "width": "fill_container",
                       "content": "আপনার আশেপাশের মসজিদ খুঁজুন, নামাজের সময় দেখুন এবং দান করুন।",
                       "fontFamily": "$font-primary",
-                      "fontSize": 15
+                      "fontSize": 15,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -27764,7 +27769,8 @@
                       "width": "fill_container",
                       "content": "OTP valid for 10 minutes",
                       "fontFamily": "$font-primary",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -59353,7 +59359,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1780868551952.png",
+            "url": "images/generated-1780868551952.png",
             "mode": "fill"
           },
           "width": 390,
@@ -59720,7 +59726,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1780868553389.png",
+            "url": "images/generated-1780868553389.png",
             "mode": "fill"
           },
           "width": 390,
@@ -60087,7 +60093,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1780868549518.png",
+            "url": "images/generated-1780868549518.png",
             "mode": "fill"
           },
           "width": 390,
@@ -60454,7 +60460,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1780868552515.png",
+            "url": "images/generated-1780868552515.png",
             "mode": "fill"
           },
           "width": 390,
