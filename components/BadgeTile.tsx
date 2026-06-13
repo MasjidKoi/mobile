@@ -18,10 +18,20 @@ export type BadgeTileProps = {
   tier: string;
   progress?: string;
   state?: BadgeTileState;
+  /** Tier-progression dots (●●○) — `earned` of `total` filled. */
+  tiers?: { total: number; earned: number };
   className?: string;
 };
 
-export function BadgeTile({ icon, name, tier, progress, state = "progress", className }: BadgeTileProps) {
+export function BadgeTile({
+  icon,
+  name,
+  tier,
+  progress,
+  state = "progress",
+  tiers,
+  className,
+}: BadgeTileProps) {
   const earned = state === "earned";
   return (
     <View
@@ -37,6 +47,18 @@ export function BadgeTile({ icon, name, tier, progress, state = "progress", clas
         {icon}
       </View>
       <Text className="text-center text-caption font-semibold text-content-primary">{name}</Text>
+      {tiers ? (
+        <View className="flex-row items-center gap-[5px]">
+          {Array.from({ length: tiers.total }, (_, i) => (
+            <View
+              key={i}
+              className={`h-[9px] w-[9px] rounded-full ${
+                i < tiers.earned ? "bg-accent-gold" : "border-[1.5px] border-border bg-surface"
+              }`}
+            />
+          ))}
+        </View>
+      ) : null}
       <Text className={`text-center text-micro ${earned ? "text-[#8A6A1F]" : "text-content-muted"}`}>
         {tier}
       </Text>
