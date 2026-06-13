@@ -3,8 +3,8 @@
  * className strings — e.g. React Navigation themes, StatusBar, expo-image
  * placeholders, animated style values, or any `style={{ … }}` prop.
  *
- * Values come from constants/tokens.js (the single source of truth shared with
- * tailwind.config.js). Prefer className utilities (`bg-primary`, `text-body`)
+ * Values come from constants/tokens.ts (the single source of truth shared with
+ * tailwind.config.ts). Prefer className utilities (`bg-primary`, `text-body`)
  * in components; reach for these constants only where a className can't.
  */
 import {
@@ -12,8 +12,8 @@ import {
   spacing,
   radius,
   fontFamily,
-  fontWeight,
   fontSize,
+  lineHeight,
   typography,
 } from "./tokens";
 
@@ -21,8 +21,8 @@ export const Colors = colors;
 export const Spacing = spacing;
 export const Radius = radius;
 export const Fonts = fontFamily;
-export const FontWeight = fontWeight;
 export const FontSize = fontSize;
+export const LineHeight = lineHeight;
 export const Typography = typography;
 
 export type ColorToken = keyof typeof colors;
@@ -45,8 +45,8 @@ export const theme = {
   spacing,
   radius,
   fontFamily,
-  fontWeight,
   fontSize,
+  lineHeight,
   typography,
 } as const;
 

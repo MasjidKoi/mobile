@@ -51,16 +51,18 @@ export const radius = {
   lg: 16,
 } as const;
 
+/**
+ * Hind Siliguri (covers বাংলা + English). In React Native each weight is a
+ * separate font family, selected by family name — not the `fontWeight` prop.
+ * Names match the @expo-google-fonts/hind-siliguri exports loaded in
+ * app/_layout.tsx. `primary` is the default body family.
+ */
 export const fontFamily = {
-  // Loaded via expo-font in app/_layout.tsx. Covers বাংলা + English.
-  primary: "Hind Siliguri",
-} as const;
-
-export const fontWeight = {
-  regular: "400",
-  medium: "500",
-  semibold: "600",
-  bold: "700",
+  primary: "HindSiliguri_400Regular",
+  regular: "HindSiliguri_400Regular",
+  medium: "HindSiliguri_500Medium",
+  semibold: "HindSiliguri_600SemiBold",
+  bold: "HindSiliguri_700Bold",
 } as const;
 
 export const fontSize = {
@@ -72,12 +74,24 @@ export const fontSize = {
   display: 28,
 } as const;
 
-/** Named type ramp from the Style Guide (size + weight per role). */
+export const lineHeight = {
+  micro: 16,
+  caption: 18,
+  body: 22,
+  heading: 24,
+  title: 28,
+  display: 34,
+} as const;
+
+/**
+ * Named type ramp from the Style Guide. Weight is carried by `fontFamily`
+ * (RN selects custom-font weight by family, not the numeric `fontWeight`).
+ */
 export const typography = {
-  display: { fontFamily: fontFamily.primary, fontSize: fontSize.display, fontWeight: fontWeight.bold },
-  title: { fontFamily: fontFamily.primary, fontSize: fontSize.title, fontWeight: fontWeight.semibold },
-  heading: { fontFamily: fontFamily.primary, fontSize: fontSize.heading, fontWeight: fontWeight.semibold },
-  body: { fontFamily: fontFamily.primary, fontSize: fontSize.body, fontWeight: fontWeight.regular },
-  caption: { fontFamily: fontFamily.primary, fontSize: fontSize.caption, fontWeight: fontWeight.medium },
-  micro: { fontFamily: fontFamily.primary, fontSize: fontSize.micro, fontWeight: fontWeight.regular },
+  display: { fontFamily: fontFamily.bold, fontSize: fontSize.display, lineHeight: lineHeight.display },
+  title: { fontFamily: fontFamily.semibold, fontSize: fontSize.title, lineHeight: lineHeight.title },
+  heading: { fontFamily: fontFamily.semibold, fontSize: fontSize.heading, lineHeight: lineHeight.heading },
+  body: { fontFamily: fontFamily.regular, fontSize: fontSize.body, lineHeight: lineHeight.body },
+  caption: { fontFamily: fontFamily.medium, fontSize: fontSize.caption, lineHeight: lineHeight.caption },
+  micro: { fontFamily: fontFamily.regular, fontSize: fontSize.micro, lineHeight: lineHeight.micro },
 } as const;
