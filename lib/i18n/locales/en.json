@@ -1,0 +1,47 @@
+{
+  "common": {
+    "brand": "MasjidKoi",
+    "skip": "Skip",
+    "start": "Get started",
+    "next": "Next",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "done": "Done"
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "start": "Get started",
+    "slides": {
+      "find-masjid": {
+        "kicker": "Discover",
+        "title": "Find masjids\nnear you",
+        "body": "Every nearby masjid on the map — prayer times and facilities, all in one app."
+      },
+      "prayer-times": {
+        "kicker": "Schedule",
+        "title": "Prayer times\nat your fingertips",
+        "body": "Each masjid's jamaat times and azan reminders — tuned to your madhab."
+      },
+      "qibla": {
+        "kicker": "Direction",
+        "title": "Qibla and the way,\none tap away",
+        "body": "See the Qibla direction from anywhere and get directions to the masjid."
+      },
+      "donate": {
+        "kicker": "Donate",
+        "title": "Give to your\nmasjid",
+        "body": "Secure donations via bKash, Nagad or card — with a receipt, from anywhere."
+      }
+    }
+  },
+  "home": {
+    "placeholder": "Onboarding complete — the app home will appear here.",
+    "replayOnboarding": "Replay onboarding"
+  },
+  "validation": {
+    "email_required": "Enter your email",
+    "email_invalid": "Enter a valid email",
+    "otp_invalid": "Enter the 6-digit code"
+  }
+}

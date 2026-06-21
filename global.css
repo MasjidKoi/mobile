@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * Light-palette defaults for the semantic color tokens. These give web builds
+ * and the very first native frame a value before the ThemeProvider injects the
+ * active palette via NativeWind `vars()` (see lib/theme/vars.ts). Variable names
+ * are `--color-<token-key>` from constants/tokens.ts and are referenced by
+ * tailwind.config.ts. Dark values are supplied at runtime, not here.
+ */
+:root {
+  --color-primary: #0e6b4f;
+  --color-primary-pressed: #0a523d;
+  --color-primary-soft: #e8f1ec;
+  --color-accent-gold: #b98e2f;
+  --color-accent-gold-soft: #f4eddb;
+  --color-error: #c2453e;
+  --color-error-soft: #f7e7e6;
+  --color-background: #f7f8f6;
+  --color-surface: #ffffff;
+  --color-surface-inverse: #10110f;
+  --color-surface-inverse-raised: #1c1e1a;
+  --color-border: #e4e9e5;
+  --color-text-primary: #182420;
+  --color-text-secondary: #57645d;
+  --color-text-muted: #8c9690;
+  --color-scrim: #182420b3;
+  --color-control-light: #ffffffeb;
+  --color-overlay-fill: #ffffff26;
+  --color-on-inverse: #ffffff;
+  --color-on-inverse-muted: #ffffff99;
+}

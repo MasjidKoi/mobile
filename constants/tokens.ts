@@ -37,6 +37,44 @@ export const colors = {
   "on-inverse-muted": "#FFFFFF99",
 } as const;
 
+/**
+ * Dark-mode palette — the SAME keys as `colors` (enforced by `satisfies`). The
+ * ThemeProvider swaps these in as CSS variables at runtime (lib/theme/vars.ts),
+ * so every existing `className` token (bg-surface, text-content-primary, …)
+ * flips automatically with no per-component edits.
+ *
+ * Note the "inverse" tokens flip the other way: a dark-mode `surface-inverse`
+ * is LIGHT (and `on-inverse` text becomes dark), preserving the inverted-card
+ * contrast relationship the kit relies on.
+ */
+export const colorsDark = {
+  primary: "#2EA37C",
+  "primary-pressed": "#247F61",
+  "primary-soft": "#14342A",
+
+  "accent-gold": "#D8B25A",
+  "accent-gold-soft": "#2A2410",
+
+  error: "#E5675F",
+  "error-soft": "#3A1F1D",
+
+  background: "#0D0F0E",
+  surface: "#161917",
+  "surface-inverse": "#F2F4F1",
+  "surface-inverse-raised": "#FFFFFF",
+  border: "#2A2F2C",
+
+  "text-primary": "#ECEFEC",
+  "text-secondary": "#A7B0AB",
+  "text-muted": "#79827D",
+
+  scrim: "#000000B3",
+  "control-light": "#1C1E1AEB",
+  "overlay-fill": "#FFFFFF1A",
+  "on-inverse": "#10110F",
+  "on-inverse-muted": "#10110F99",
+} as const satisfies Record<keyof typeof colors, string>;
+
 export const spacing = {
   xs: 4,
   sm: 8,
