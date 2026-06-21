@@ -42,6 +42,11 @@ export function MasjidMap({
   showsUserLocation = true,
 }: MasjidMapProps) {
   const mapRef = useRef<MapView>(null);
+  // On iOS both the map's tap recogniser and a marker's fire for the same tap
+  // (react-native-maps sets them to recognise simultaneously), so a pin tap
+  // would `onSelect` then immediately `onDeselect`. This guard lets the marker
+  // selection win for that one tap while keeping tap-empty-map-to-dismiss.
+  const suppressDeselect = useRef(false);
   const initialRegion = useMemo<Region>(
     () => ({
       latitude: center.lat,
@@ -93,7 +98,13 @@ export function MasjidMap({
       style={{ flex: 1 }}
       initialRegion={initialRegion}
       onRegionChangeComplete={setRegion}
-      onPress={onDeselect}
+      onPress={() => {
+        if (suppressDeselect.current) {
+          suppressDeselect.current = false;
+          return;
+        }
+        onDeselect();
+      }}
       showsUserLocation={showsUserLocation}
       showsMyLocationButton={false}
       toolbarEnabled={false}
@@ -103,7 +114,10 @@ export function MasjidMap({
           <Marker
             key={`cluster-${item.clusterId}`}
             coordinate={{ latitude: item.latitude, longitude: item.longitude }}
-            onPress={() => onClusterPress(item)}
+            onPress={() => {
+              suppressDeselect.current = true;
+              onClusterPress(item);
+            }}
           >
             <ClusterBubble count={item.count} />
           </Marker>
@@ -111,7 +125,10 @@ export function MasjidMap({
           <Marker
             key={item.masjid.masjid_id}
             coordinate={{ latitude: item.latitude, longitude: item.longitude }}
-            onPress={() => onSelect(item.masjid)}
+            onPress={() => {
+              suppressDeselect.current = true;
+              onSelect(item.masjid);
+            }}
           >
             <MapPin
               selected={item.masjid.masjid_id === selectedId}
