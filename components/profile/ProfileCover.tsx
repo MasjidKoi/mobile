@@ -14,16 +14,22 @@ import { useColors } from "@/lib/theme/useColors";
 
 const COVER_HEIGHT = 230;
 const OVERLAY = "rgba(0,0,0,0.35)";
+// Design 20/21/34: floating header controls are near-opaque white circles with a
+// dark glyph, legible over both a photo and the empty (grey) cover.
+const CONTROL_BG = "rgba(255,255,255,0.92)";
+const CONTROL_FG = "#182420";
 
-/** A circular, semi-transparent control that floats over the cover photo. */
+/** A circular control that floats over the cover (design header). */
 function OverlayButton({
   icon,
   label,
   onPress,
+  size = 20,
 }: {
   icon: keyof typeof Feather.glyphMap;
   label: string;
   onPress: () => void;
+  size?: number;
 }) {
   return (
     <Pressable
@@ -31,11 +37,39 @@ function OverlayButton({
       accessibilityLabel={label}
       onPress={onPress}
       hitSlop={8}
-      style={{ backgroundColor: OVERLAY }}
+      style={{ backgroundColor: CONTROL_BG }}
       className="h-[38px] w-[38px] items-center justify-center rounded-full"
     >
-      <Feather name={icon} size={20} color="#FFFFFF" />
+      <Feather name={icon} size={size} color={CONTROL_FG} />
     </Pressable>
+  );
+}
+
+/** Back (left) + Share/More (right) controls, pinned below the status bar. */
+function HeaderControls({
+  onBack,
+  onShare,
+  onMore,
+  top,
+}: {
+  onBack: () => void;
+  onShare: () => void;
+  onMore: () => void;
+  top: number;
+}) {
+  const { t } = useTranslation();
+  return (
+    <View
+      pointerEvents="box-none"
+      className="absolute left-4 right-4 flex-row items-center justify-between"
+      style={{ top }}
+    >
+      <OverlayButton icon="arrow-left" label={t("common.close")} onPress={onBack} />
+      <View className="flex-row items-center gap-2">
+        <OverlayButton icon="share-2" label={t("common.share")} onPress={onShare} size={18} />
+        <OverlayButton icon="more-horizontal" label={t("common.more")} onPress={onMore} />
+      </View>
+    </View>
   );
 }
 
@@ -44,14 +78,24 @@ export type ProfileCoverProps = {
   onBack: () => void;
   onOpenGallery: (index: number) => void;
   onAddPhoto: () => void;
+  onShare: () => void;
+  onMore: () => void;
 };
 
 /**
  * Profile header media: the admin cover photo with a gallery counter that opens
  * the full-screen viewer (design 20). When a masjid has no photos it shows the
- * sparse empty cover with an "Add photo" CTA (design 21).
+ * sparse empty cover with an "Add photo" CTA (design 21). Both variants carry
+ * the floating Back / Share / More controls.
  */
-export function ProfileCover({ photos, onBack, onOpenGallery, onAddPhoto }: ProfileCoverProps) {
+export function ProfileCover({
+  photos,
+  onBack,
+  onOpenGallery,
+  onAddPhoto,
+  onShare,
+  onMore,
+}: ProfileCoverProps) {
   const { t } = useTranslation();
   const f = useFormat();
   const c = useColors();
@@ -68,9 +112,7 @@ export function ProfileCover({ photos, onBack, onOpenGallery, onAddPhoto }: Prof
         style={{ height: 180 + insets.top, paddingTop: insets.top, backgroundColor: c.border }}
         className="items-center justify-center gap-2 px-6"
       >
-        <View className="absolute left-4" style={{ top: backTop }}>
-          <OverlayButton icon="arrow-left" label={t("common.close")} onPress={onBack} />
-        </View>
+        <HeaderControls onBack={onBack} onShare={onShare} onMore={onMore} top={backTop} />
         <Feather name="image" size={26} color={c["text-muted"]} />
         <Text className="text-caption font-medium text-content-secondary">
           {t("masjid.profile.noPhotos")}
@@ -93,9 +135,7 @@ export function ProfileCover({ photos, onBack, onOpenGallery, onAddPhoto }: Prof
         style={{ position: "absolute", left: 0, right: 0, top: 0, height: 88 }}
         pointerEvents="none"
       />
-      <View className="absolute left-4" style={{ top: backTop }}>
-        <OverlayButton icon="arrow-left" label={t("common.close")} onPress={onBack} />
-      </View>
+      <HeaderControls onBack={onBack} onShare={onShare} onMore={onMore} top={backTop} />
       {ordered.length > 1 ? (
         <View
           style={{ backgroundColor: OVERLAY }}

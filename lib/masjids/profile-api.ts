@@ -95,6 +95,7 @@ export interface QuestionPublicListResponse {
 export interface MyQuestion {
   question_id: string;
   masjid_id: string;
+  masjid_name: string | null;
   question: string;
   status: QuestionStatus;
   answer: string | null;
@@ -184,6 +185,7 @@ export interface CommunityPhotoPublicListResponse {
 export interface CommunityPhotoSubmission {
   photo_id: string;
   masjid_id: string;
+  masjid_name: string | null;
   url: string;
   status: PhotoStatus;
   created_at: string;

@@ -13,7 +13,8 @@
     "later": "Later",
     "close": "Close",
     "back": "Back",
-    "share": "Share"
+    "share": "Share",
+    "more": "More"
   },
   "onboarding": {
     "skip": "Skip",
@@ -530,7 +531,9 @@
     "verified": {
       "label": "Verified",
       "title": "Verified masjid",
-      "body": "Our team has confirmed this masjid's location and details on the ground."
+      "body": "Our team has confirmed this masjid's location and details on the ground.",
+      "unverified": "Not verified",
+      "gotIt": "Got it"
     },
     "contact": {
       "call": "Call",
@@ -572,7 +575,7 @@
       "emailLabel": "Your email (optional)",
       "emailPlaceholder": "So we can follow up",
       "note": "Your suggestion goes to the masjid / our team for review.",
-      "submit": "Submit",
+      "submit": "Send report",
       "submitting": "Submitting…",
       "sentTitle": "Thanks for the suggestion",
       "sentCaption": "We'll review it and update the masjid if it checks out.",
@@ -591,7 +594,9 @@
       },
       "guestNote": "You can suggest edits as a guest — add an email if you'd like us to follow up.",
       "fieldSelected": "Selected field",
-      "changeField": "Change"
+      "changeField": "Change",
+      "introSub": "Pick the detail you want to correct",
+      "currentValueLabel": "Currently in the app"
     },
     "contribute": {
       "photo": {
@@ -617,7 +622,11 @@
           "rejected": "Not added"
         },
         "limitReassure": "Your earlier submissions are safely in the queue.",
-        "visibleInProfile": "Visible in profile →"
+        "visibleInProfile": "Visible in profile →",
+        "pushNote": "We'll notify you once it's approved",
+        "guidelines": "Clear, respectful photos only · max 5 MB each",
+        "limitPerMasjid": "Today at this masjid",
+        "limitPerDay": "Your total today"
       },
       "question": {
         "title": "Ask a question",
@@ -636,7 +645,8 @@
           "pending": "Awaiting answer",
           "answered": "Answered",
           "rejected": "Not posted"
-        }
+        },
+        "pushNote": "We'll take you straight to the answer when it arrives"
       },
       "myPhotos": {
         "cta": "My photo submissions",
@@ -654,7 +664,9 @@
       "tabs": {
         "photos": "Photos",
         "questions": "Questions"
-      }
+      },
+      "myContributions": "My contributions",
+      "submittedAt": "Submitted · {{time}}"
     }
   },
   "donation": {

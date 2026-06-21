@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Dimensions, FlatList, Pressable, ScrollView, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, Pressable, ScrollView, Share, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Text } from "@/components";
@@ -25,19 +25,29 @@ export default function GalleryScreen() {
   const { t } = useTranslation();
   const f = useFormat();
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ masjidId: string; index?: string; source?: string }>();
+  const params = useLocalSearchParams<{ masjidId: string; index?: string; source?: string; url?: string }>();
   const masjidId = params.masjidId ?? "";
   const source = params.source === "community" ? "community" : "admin";
+  // Single-image mode (e.g. viewing one's own pending submission): show just the
+  // passed URL, no thumbnail rail.
+  const directUrl = typeof params.url === "string" && params.url.length > 0 ? params.url : null;
 
-  const masjidPhotos = useMasjid(masjidId).data?.photos;
+  const masjid = useMasjid(masjidId).data;
+  const masjidPhotos = masjid?.photos;
   const communityData = useCommunityPhotos(masjidId).data;
 
+  const onShare = () =>
+    void Share.share({
+      message: `${masjid?.name ?? ""}\nmasjidkoi://masjid/${masjidId}`.trim(),
+    }).catch(() => undefined);
+
   const urls = useMemo(() => {
+    if (directUrl) return [directUrl];
     if (source === "community") {
       return (communityData?.pages.flatMap((p) => p.items) ?? []).map((p) => p.url);
     }
     return orderAdminPhotos(masjidPhotos ?? []).map((p) => p.url);
-  }, [source, communityData, masjidPhotos]);
+  }, [directUrl, source, communityData, masjidPhotos]);
 
   // Requested entry point — derived from the param alone (NOT urls.length, which
   // can be 0 on the first render before the query data hydrates).
@@ -72,7 +82,16 @@ export default function GalleryScreen() {
             {`${f.number(Math.min(index, urls.length - 1) + 1)} / ${f.number(urls.length)}`}
           </Text>
         ) : null}
-        <View className="h-9 w-9" />
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t("common.share")}
+          onPress={onShare}
+          hitSlop={8}
+          style={{ backgroundColor: OVERLAY }}
+          className="h-9 w-9 items-center justify-center rounded-full"
+        >
+          <Feather name="share-2" size={18} color="#FFFFFF" />
+        </Pressable>
       </View>
 
       {/* Main pager — FlatList so `initialScrollIndex` honors the requested photo
@@ -114,9 +133,11 @@ export default function GalleryScreen() {
 
       {/* Caption + thumbnail rail */}
       <View style={{ paddingBottom: insets.bottom + 10 }} className="gap-2.5 px-4 pt-2">
-        <Text className="text-[12px] font-regular text-on-inverse-muted">
-          {source === "community" ? t("masjid.profile.visitorPhotos") : t("masjid.gallery.adminGallery")}
-        </Text>
+        {!directUrl ? (
+          <Text className="text-[12px] font-regular text-on-inverse-muted">
+            {source === "community" ? t("masjid.profile.visitorPhotos") : t("masjid.gallery.adminGallery")}
+          </Text>
+        ) : null}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
           {urls.map((uri, i) => (
             <Pressable

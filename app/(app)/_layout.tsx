@@ -28,7 +28,7 @@ export default function AppLayout() {
         <Stack.Screen name="submit-masjid" />
         <Stack.Screen name="my-submissions" />
         {/* Phase 5 — masjid profile contributions */}
-        <Stack.Screen name="gallery" options={{ presentation: "modal", animation: "fade" }} />
+        <Stack.Screen name="gallery" options={{ presentation: "fullScreenModal", animation: "fade" }} />
         <Stack.Screen name="add-photo" />
         <Stack.Screen name="ask-question" />
         <Stack.Screen name="suggest-edit" />
