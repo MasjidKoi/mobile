@@ -65,7 +65,7 @@ export function ProfileCover({ photos, onBack, onOpenGallery, onAddPhoto }: Prof
   if (!cover) {
     return (
       <View
-        style={{ height: 180, backgroundColor: c.border }}
+        style={{ height: 180 + insets.top, paddingTop: insets.top, backgroundColor: c.border }}
         className="items-center justify-center gap-2 px-6"
       >
         <View className="absolute left-4" style={{ top: backTop }}>
