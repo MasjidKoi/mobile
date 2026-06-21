@@ -63,7 +63,16 @@ export default function AppLayout() {
         <Stack.Screen name="event/[id]" />
         <Stack.Screen name="reviews/[id]" />
         <Stack.Screen name="review/[id]" />
-        <Stack.Screen name="checkin/[id]" />
+        {/* Check-in outcome + post-check-in review prompt are sheets over the
+            dimmed profile (design 88/89/90). */}
+        <Stack.Screen
+          name="checkin/[id]"
+          options={{ presentation: "transparentModal", animation: "fade" }}
+        />
+        <Stack.Screen
+          name="review-prompt/[id]"
+          options={{ presentation: "transparentModal", animation: "fade" }}
+        />
         <Stack.Screen name="following" />
         {/* A card, not a modal: its location-denied state opens the city-picker
             modal, and modal-over-modal stacks awkwardly on iOS. */}

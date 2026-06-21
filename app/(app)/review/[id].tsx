@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppBar, BackButton, Banner, Button, Dialog, Input, Text } from "@/components";
 import { RatingInput } from "@/components/review";
+import { useMasjid } from "@/hooks/useMasjid";
 import { useReviewDelete, useReviewUpsert } from "@/hooks/useReviews";
 import { ApiError } from "@/lib/api/errors";
 import { useColors } from "@/lib/theme/useColors";
@@ -22,8 +23,10 @@ export default function WriteReviewScreen() {
   const c = useColors();
   const params = useLocalSearchParams<{ id: string; rating?: string; body?: string; reviewId?: string }>();
   const masjidId = params.id;
-  const isEdit = params.rating != null;
+  // Editing replaces an existing review (carries its id); a `rating` alone is
+  // just a pre-selection handed in by the post-check-in prompt (88).
   const reviewId = params.reviewId;
+  const isEdit = reviewId != null;
 
   const [rating, setRating] = useState<number>(Number(params.rating) || 0);
   const [body, setBody] = useState<string>(params.body ?? "");
@@ -32,6 +35,7 @@ export default function WriteReviewScreen() {
 
   const upsert = useReviewUpsert(masjidId);
   const del = useReviewDelete(masjidId);
+  const masjidName = useMasjid(masjidId).data?.name ?? null;
 
   const remove = () => {
     if (!reviewId) return;
@@ -93,15 +97,29 @@ export default function WriteReviewScreen() {
           contentContainerClassName="gap-5 px-4 py-4 pb-10"
           keyboardShouldPersistTaps="handled"
         >
+          {masjidName ? (
+            <View className="flex-row items-center justify-center gap-1.5">
+              <Feather name="home" size={15} color={c.primary} />
+              <Text variant="caption" className="font-semibold text-primary">
+                {masjidName}
+              </Text>
+            </View>
+          ) : null}
+
           <View className="items-center gap-2 py-2">
             <Text variant="body" className="text-content-secondary">
               {t("community.reviews.ratingPrompt")}
             </Text>
             <RatingInput value={rating} onChange={setRating} />
+            {rating > 0 ? (
+              <Text variant="caption" className="font-semibold text-content-primary">
+                {t(`community.reviews.ratingWord.${rating}`)}
+              </Text>
+            ) : null}
           </View>
 
           <Input
-            label={t("community.reviews.bodyLabel")}
+            label={lowStar ? t("community.reviews.bodyLabelRequired") : t("community.reviews.bodyLabel")}
             value={body}
             onChangeText={setBody}
             placeholder={t("community.reviews.bodyPlaceholder")}

@@ -12,7 +12,8 @@
     "notNow": "Not now",
     "later": "Later",
     "close": "Close",
-    "back": "Back"
+    "back": "Back",
+    "share": "Share"
   },
   "onboarding": {
     "skip": "Skip",
@@ -175,9 +176,13 @@
     "placeholder": "Onboarding complete — the app home will appear here.",
     "replayOnboarding": "Replay onboarding",
     "yourArea": "Your area",
+    "greeting": "Assalamu Alaikum",
+    "homeMasjid": "Home masjid",
+    "calculatedSource": "Calculated times",
     "reminders": "Reminders",
     "qibla": "Qibla",
     "addMasjid": "Set your home masjid",
+    "addMasjidCaption": "See jamaat times for your masjid",
     "todaysPrayers": "Today's prayers",
     "todaysPrayersCalculated": "Today's prayers (calculated)",
     "calculatedTitle": "Local prayer times",
@@ -363,6 +368,9 @@
     "calibrateHint": "Move your phone in a figure-8 to calibrate",
     "rotateHint": "Turn until the needle points to the Kaaba",
     "kaaba": "Kaaba",
+    "calibrateTitle": "Calibrate compass",
+    "directionUncertain": "Direction uncertain",
+    "worksOffline": "Works offline",
     "needLocationTitle": "Location needed",
     "needLocationCaption": "We need your location to point to the Qibla.",
     "compass": {
@@ -816,7 +824,9 @@
       "photoUpdates": "Photo approval updates",
       "modeDigest": "Digest",
       "modeInstant": "Instant",
-      "modeMute": "Mute"
+      "modeMute": "Mute",
+      "digestSection": "Digest",
+      "digestNote": "Announcements from your digest-mode masjids arrive together in one push at this time. If there's nothing new, no push is sent."
     },
     "storage": {
       "title": "Storage & offline",
@@ -937,7 +947,15 @@
       "rsvpClosed": "RSVP isn't open for this event.",
       "disabled": "RSVP isn't enabled for this event.",
       "rsvpError": "Couldn't update RSVP — try again.",
-      "countWithCap": "{{going}} / {{cap}} going"
+      "countWithCap": "{{going}} / {{cap}} going",
+      "join": "Join",
+      "cancelGoing": "Cancel going",
+      "description": "Description",
+      "goingBanner": "You're going to this event",
+      "addToCalendar": "Add to calendar",
+      "reminder": "Remind me 1 hour before",
+      "reminderSet": "Reminder set for 1 hour before",
+      "calendarAdded": "Added to your calendar"
     },
     "follow": {
       "title": "Masjids you follow",
@@ -951,7 +969,10 @@
         "digest": "Daily digest",
         "instant": "Instant",
         "mute": "Muted"
-      }
+      },
+      "following": "Following",
+      "count_one": "Following {{count}} masjid",
+      "count_other": "Following {{count}} masjids"
     },
     "reviews": {
       "yours": "Your review",
@@ -976,7 +997,18 @@
       "deleteConfirmTitle": "Delete your review?",
       "deleteConfirmBody": "This permanently removes your review and rating.",
       "deleteError": "Couldn't delete your review — try again.",
-      "starLabel": "{{n}} stars"
+      "starLabel": "{{n}} stars",
+      "bodyLabelRequired": "What went wrong? (required)",
+      "ratingWord": {
+        "1": "Terrible",
+        "2": "Poor",
+        "3": "Okay",
+        "4": "Good",
+        "5": "Excellent"
+      },
+      "promptTitle": "How was the masjid?",
+      "promptBody": "You just checked in at {{masjid}}. Leave a quick review?",
+      "notNow": "Not now"
     },
     "checkin": {
       "cta": "Check in",
@@ -1271,5 +1303,14 @@
     "save": "Save reflection",
     "saved": "Reflection saved",
     "empty": "Log a few prayers this week to see your reflection."
+  },
+  "time": {
+    "relative": {
+      "justNow": "Just now",
+      "minutesAgo": "{{count}} min ago",
+      "hoursAgo": "{{count}} hr ago",
+      "yesterday": "Yesterday",
+      "daysAgo": "{{count}} days ago"
+    }
   }
 }

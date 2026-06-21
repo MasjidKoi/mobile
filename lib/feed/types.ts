@@ -27,6 +27,7 @@ export interface FeedEventItem {
   description: string;
   event_date: string;
   event_time: string;
+  event_end_time: string | null;
   location: string;
   capacity: number | null;
   attendee_count: number;

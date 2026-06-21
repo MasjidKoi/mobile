@@ -7,6 +7,9 @@ export type NotificationMode = "digest" | "instant" | "mute";
 export interface FollowedMasjidPreference {
   masjid_id: string;
   name: string;
+  admin_region: string;
+  latitude: number | null;
+  longitude: number | null;
   notification_mode: NotificationMode;
 }
 

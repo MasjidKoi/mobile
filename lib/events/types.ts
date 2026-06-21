@@ -15,6 +15,7 @@ export interface EventResponse {
   description: string;
   event_date: string;
   event_time: string;
+  event_end_time: string | null;
   location: string;
   capacity: number | null;
   rsvp_enabled: boolean;
@@ -50,6 +51,7 @@ export interface EventDetailParam {
   description: string;
   event_date: string;
   event_time: string;
+  event_end_time: string | null;
   location: string;
   capacity: number | null;
   rsvp_count: number;
@@ -68,6 +70,7 @@ export function feedEventToDetailParam(item: FeedEventItem): EventDetailParam {
     description: item.description,
     event_date: item.event_date,
     event_time: item.event_time,
+    event_end_time: item.event_end_time,
     location: item.location,
     capacity: item.capacity,
     rsvp_count: item.attendee_count,
@@ -87,6 +90,7 @@ export function listEventToDetailParam(ev: EventResponse, masjidName: string): E
     description: ev.description,
     event_date: ev.event_date,
     event_time: ev.event_time,
+    event_end_time: ev.event_end_time,
     location: ev.location,
     capacity: ev.capacity,
     rsvp_count: ev.rsvp_count,

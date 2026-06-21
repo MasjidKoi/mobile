@@ -61,7 +61,15 @@ export function useFollow(id: string | null | undefined, name?: string | null) {
             ? previous.masjids
             : [
                 ...previous.masjids,
-                { masjid_id: id, name: name ?? "", notification_mode: "digest" as const },
+                {
+                  masjid_id: id,
+                  name: name ?? "",
+                  // region/coords backfill on the next prefs refetch (onSettled).
+                  admin_region: "",
+                  latitude: null,
+                  longitude: null,
+                  notification_mode: "digest" as const,
+                },
               ]
           : previous.masjids.filter((m) => m.masjid_id !== id);
         queryClient.setQueryData<NotificationPreferences>(prefsKey, { ...previous, masjids });

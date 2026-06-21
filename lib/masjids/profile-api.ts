@@ -145,6 +145,8 @@ export interface ReviewListResponse {
   page: number;
   page_size: number;
   average_rating: number | null;
+  /** Count of reviews per star, keyed "1"–"5". Drives the distribution bars. */
+  rating_distribution?: Record<string, number> | null;
 }
 
 /**
