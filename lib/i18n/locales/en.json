@@ -653,6 +653,52 @@
       "newCta": "New recurring gift",
       "emptyTitle": "No recurring reminders yet",
       "emptyCaption": "After a donation, set one up to give regularly."
+    },
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    },
+    "dashboard": {
+      "title": "My donations",
+      "lifetime": "Lifetime giving",
+      "thisYear": "This year",
+      "masjids": "Masjids",
+      "filterAll": "All",
+      "recurringRow": "Recurring giving",
+      "annualReport": "Download annual report",
+      "emptyTitle": "No donations yet",
+      "emptyCaption": "When you give, your history and receipts show up here.",
+      "emptyCta": "Find a masjid",
+      "offline": "You're offline — connect to see your donations."
+    },
+    "detail": {
+      "title": "Donation details",
+      "amount": "Amount",
+      "fee": "Platform fee",
+      "net": "Masjid receives",
+      "category": "Category",
+      "receiptNumber": "Receipt number",
+      "method": "Method",
+      "date": "Date",
+      "downloadReceipt": "Download receipt",
+      "giveAgain": "Give to this masjid again"
+    },
+    "filters": {
+      "title": "Filter donations",
+      "category": "Category",
+      "all": "All",
+      "apply": "Apply",
+      "clear": "Clear"
+    },
+    "receipt": {
+      "title": "Receipt",
+      "heading": "Donation receipt",
+      "open": "Open / Share PDF",
+      "loading": "Preparing…",
+      "taxNote": "Keep this receipt for your records.",
+      "error": "Couldn't open the receipt — please try again."
     }
   }
 }

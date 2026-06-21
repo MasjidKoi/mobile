@@ -12,3 +12,6 @@ export type { FundedBadgeProps } from "./FundedBadge";
 
 export { RecurringRow } from "./RecurringRow";
 export type { RecurringRowProps } from "./RecurringRow";
+
+export { DonationHistoryRow } from "./DonationHistoryRow";
+export type { DonationHistoryRowProps } from "./DonationHistoryRow";

@@ -36,6 +36,8 @@ export default function AppLayout() {
         <Stack.Screen name="campaign/[id]" />
         <Stack.Screen name="recurring" />
         <Stack.Screen name="recurring-setup" />
+        <Stack.Screen name="donations" />
+        <Stack.Screen name="receipt/[id]" />
         <Stack.Screen name="qibla" />
         <Stack.Screen name="hijri-calendar" />
         <Stack.Screen name="prayer-reminders" />

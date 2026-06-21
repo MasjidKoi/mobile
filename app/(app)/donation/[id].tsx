@@ -2,20 +2,21 @@ import { Feather } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Button, SuccessCard, Text } from "@/components";
+import { AppBar, Button, StatusBadge, SuccessCard, Text } from "@/components";
 import { ConfirmingState } from "@/components/donation";
 import { useDonation } from "@/hooks/useDonation";
 import { useMasjid } from "@/hooks/useMasjid";
+import { donationStatusTone } from "@/lib/donations/presets";
 import { useFormat } from "@/lib/i18n/format";
 import { useColors } from "@/lib/theme/useColors";
 
 /** How long we keep polling a `pending` gift before offering recovery. */
 const CONFIRM_TIMEOUT_MS = 30_000;
 
-type Mode = "loading" | "confirming" | "success" | "failed" | "recovery";
+type Mode = "loading" | "confirming" | "success" | "failed" | "recovery" | "detail";
 
 /**
  * 40 Confirming → 41 Success / 42 Failed / 43 Recovery. `id` is the **donation**
@@ -44,13 +45,17 @@ export default function DonationStatusScreen() {
     return () => clearTimeout(timer);
   }, [shouldPoll]);
 
+  // Without a `status` param we arrived from history → detail view; with one
+  // it's a post-payment return and we resolve the gateway outcome.
+  const isResult = status != null;
   let mode: Mode;
   if (!d && q.isLoading) mode = "loading";
-  else if (d?.status === "completed") mode = "success";
-  else if (d?.status === "failed" || d?.status === "refunded") mode = "failed";
+  else if (!d) mode = "recovery";
+  else if (!isResult) mode = "detail";
+  else if (d.status === "completed") mode = "success";
+  else if (d.status === "failed" || d.status === "refunded") mode = "failed";
   else if (status === "fail") mode = "failed";
   else if (status === "cancel" || status === "dismiss") mode = "recovery";
-  else if (q.isError && !d) mode = "recovery";
   else if (timedOut) mode = "recovery";
   else mode = "confirming";
 
@@ -115,11 +120,19 @@ export default function DonationStatusScreen() {
             to={t("donation.amount.toMasjid", { masjid: masjidName })}
             icon={<Feather name="check" size={30} color={c.primary} />}
             actions={
-              <Button
-                label={t("donation.success.done")}
-                className="flex-1"
-                onPress={done}
-              />
+              <>
+                {d?.receipt_number ? (
+                  <Button
+                    variant="secondary"
+                    label={t("donation.success.receipt")}
+                    className="flex-1"
+                    onPress={() =>
+                      router.push({ pathname: "/receipt/[id]", params: { id: d.donation_id } })
+                    }
+                  />
+                ) : null}
+                <Button label={t("donation.success.done")} className="flex-1" onPress={done} />
+              </>
             }
           />
           {/* Recurring nudge (48) — offer to make this a regular gift */}
@@ -146,6 +159,67 @@ export default function DonationStatusScreen() {
             </Text>
           ) : null}
         </View>
+      </SafeAreaView>
+    );
+  }
+
+  // 51 Donation Detail — reached from history (no `status` param).
+  if (mode === "detail" && d) {
+    const backButton = (
+      <Pressable accessibilityRole="button" onPress={() => router.back()} hitSlop={12}>
+        <Feather name="arrow-left" size={24} color={c["text-primary"]} />
+      </Pressable>
+    );
+    const detailRow = (label: string, value: string) => (
+      <View className="flex-row items-center justify-between">
+        <Text variant="caption" className="text-content-secondary">
+          {label}
+        </Text>
+        <Text variant="caption" className="font-semibold">
+          {value}
+        </Text>
+      </View>
+    );
+    return (
+      <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
+        <AppBar title={t("donation.detail.title")} left={backButton} />
+        <ScrollView contentContainerClassName="gap-4 px-5 py-4 pb-8">
+          <View className="items-center gap-2 py-2">
+            <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-soft">
+              <Feather name="check" size={26} color={c.primary} />
+            </View>
+            <Text className="text-[26px] font-bold text-content-primary">
+              {f.currency(Number(d.gross_amount))}
+            </Text>
+            <StatusBadge tone={donationStatusTone(d.status)} label={t(`donation.status.${d.status}`)} />
+            <Text variant="caption" className="text-content-secondary">
+              {`${masjidName} · ${f.date(new Date(d.created_at))}`}
+            </Text>
+          </View>
+          <View className="gap-2.5 rounded-lg border border-border bg-surface p-4">
+            {detailRow(t("donation.detail.amount"), f.currency(Number(d.gross_amount)))}
+            {detailRow(t("donation.detail.fee"), f.currency(Number(d.fee_amount)))}
+            {detailRow(t("donation.detail.net"), f.currency(Number(d.net_amount)))}
+            {detailRow(t("donation.detail.category"), t(`donation.category.${d.category}`))}
+            {d.receipt_number ? detailRow(t("donation.detail.receiptNumber"), d.receipt_number) : null}
+            {d.gateway_payment_method
+              ? detailRow(t("donation.detail.method"), d.gateway_payment_method)
+              : null}
+          </View>
+          {d.receipt_number ? (
+            <Button
+              variant="secondary"
+              label={t("donation.detail.downloadReceipt")}
+              leftIcon={<Feather name="download" size={16} color={c["text-primary"]} />}
+              onPress={() => router.push({ pathname: "/receipt/[id]", params: { id: d.donation_id } })}
+            />
+          ) : null}
+          <Button
+            variant="text"
+            label={t("donation.detail.giveAgain")}
+            onPress={() => router.push({ pathname: "/donate/[id]", params: { id: d.masjid_id } })}
+          />
+        </ScrollView>
       </SafeAreaView>
     );
   }
