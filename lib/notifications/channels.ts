@@ -15,6 +15,8 @@ import type { PrayerName } from "@/lib/prayer/types";
 import type { ReminderPrefs } from "./settingsStore";
 
 export const RAMADAN_CHANNEL = "ramadan";
+/** Phase 9 — journal/streak/reflection nudges. */
+export const GAMIFICATION_CHANNEL = "gamification";
 
 const CHANNELS: { id: string; name: string }[] = [
   { id: "prayer_reminder_main", name: "Prayer reminders" },
@@ -22,6 +24,7 @@ const CHANNELS: { id: string; name: string }[] = [
   { id: "azan_default_main", name: "Azan" },
   { id: "azan_default_fajr", name: "Fajr azan" },
   { id: RAMADAN_CHANNEL, name: "Ramadan (suhoor & iftar)" },
+  { id: GAMIFICATION_CHANNEL, name: "Journal & streak reminders" },
 ];
 
 export function channelForReminder(prayer: PrayerName): string {

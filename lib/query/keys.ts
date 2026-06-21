@@ -78,4 +78,22 @@ export const qk = {
   recurring: {
     mine: () => ["recurring", "mine"] as const,
   },
+  // Phase 9 — gamification. All user-scoped private data, deliberately OUTSIDE
+  // the "masjids"/"app-config" persistence root (never cached to disk; dropped
+  // on logout — same treatment as donations/checkins).
+  journal: {
+    entry: (date: string) => ["journal", "entry", date] as const,
+    history: (filters?: { date_from?: string; date_to?: string }) =>
+      ["journal", "history", filters ?? {}] as const,
+  },
+  streak: {
+    mine: () => ["streak", "mine"] as const,
+  },
+  badges: {
+    mine: () => ["badges", "mine"] as const,
+  },
+  goals: {
+    mine: (status?: string) => ["goals", "mine", status ?? "all"] as const,
+    detail: (id: string) => ["goals", "detail", id] as const,
+  },
 } as const;

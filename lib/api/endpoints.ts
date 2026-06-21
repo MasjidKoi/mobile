@@ -19,6 +19,17 @@ export const ENDPOINTS = {
     // Phase 8 — community. Followed-masjid feed (type-segmented) + check-in history.
     feed: "/users/me/feed",
     checkins: "/users/me/checkins",
+    // Phase 9 — gamification. Journal (prayer/Qur'an log), journal-derived streak,
+    // tiered badges, and goals (+ templates, recurring check-offs). All Bearer.
+    journal: "/users/me/journal",
+    streak: "/users/me/streak",
+    badges: "/users/me/badges",
+    goals: "/users/me/goals",
+    goalTemplates: "/users/me/goals/templates",
+    goalById: (id: string) => `/users/me/goals/${id}`,
+    goalCompletions: (id: string) => `/users/me/goals/${id}/completions`,
+    goalCompletionByDate: (id: string, date: string) =>
+      `/users/me/goals/${id}/completions/${date}`,
   },
   masjids: {
     nearby: "/masjids/nearby",
