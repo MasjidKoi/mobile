@@ -632,6 +632,27 @@
       "completedNote": "This campaign has ended — jazakAllah khairan to everyone who gave.",
       "notFoundTitle": "Campaign not found",
       "notFoundCaption": "This campaign may have ended or been removed."
+    },
+    "recurring": {
+      "setupTitle": "Regular donation",
+      "last10Title": "Last 10 Nights",
+      "last10Caption": "A nightly reminder for the last 10 nights of Ramadan.",
+      "last10Cta": "Set up nightly reminders",
+      "frequencyLabel": "How often",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "nightly": "Nightly",
+      "amountLabel": "Amount each time",
+      "reminderNote": "This is a reminder, not an auto-charge — we'll remind you and you complete each gift yourself.",
+      "cta": "Turn on {{frequency}} reminder",
+      "creating": "Setting up…",
+      "managerTitle": "Recurring giving",
+      "estMonthly": "~{{amount}} / month (estimated)",
+      "pause": "Pause",
+      "resume": "Resume",
+      "newCta": "New recurring gift",
+      "emptyTitle": "No recurring reminders yet",
+      "emptyCaption": "After a donation, set one up to give regularly."
     }
   }
 }

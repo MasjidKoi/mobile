@@ -122,6 +122,24 @@ export default function DonationStatusScreen() {
               />
             }
           />
+          {/* Recurring nudge (48) — offer to make this a regular gift */}
+          {d ? (
+            <Button
+              variant="text"
+              label={t("donation.success.recurringNudge")}
+              leftIcon={<Feather name="repeat" size={16} color={c.primary} />}
+              onPress={() =>
+                router.push({
+                  pathname: "/recurring-setup",
+                  params: {
+                    masjidId: d.masjid_id,
+                    ...(d.campaign_id ? { campaignId: d.campaign_id } : {}),
+                    amount: d.gross_amount,
+                  },
+                })
+              }
+            />
+          ) : null}
           {d?.receipt_number ? (
             <Text variant="caption" className="text-content-secondary">
               {t("donation.success.txn", { id: d.receipt_number })}

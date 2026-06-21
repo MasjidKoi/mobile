@@ -9,3 +9,6 @@ export type { ConfirmingStateProps } from "./ConfirmingState";
 
 export { FundedBadge } from "./FundedBadge";
 export type { FundedBadgeProps } from "./FundedBadge";
+
+export { RecurringRow } from "./RecurringRow";
+export type { RecurringRowProps } from "./RecurringRow";
