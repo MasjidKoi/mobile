@@ -13,6 +13,8 @@ export type OtpInputProps = {
   onChangeText: (value: string) => void;
   length?: number;
   autoFocus?: boolean;
+  /** Render every box with the error border (wrong / expired code). */
+  error?: boolean;
   className?: string;
 };
 
@@ -21,6 +23,7 @@ export function OtpInput({
   onChangeText,
   length = 6,
   autoFocus,
+  error,
   className,
 }: OtpInputProps) {
   const inputRef = useRef<TextInput>(null);
@@ -36,12 +39,15 @@ export function OtpInput({
     >
       {digits.map((digit, i) => {
         const highlighted = digit !== "" || (focused && i === activeIndex);
+        const borderClass = error
+          ? "border-[1.5px] border-error"
+          : highlighted
+            ? "border-[1.5px] border-primary"
+            : "border border-border";
         return (
           <View
             key={i}
-            className={`h-14 w-12 items-center justify-center rounded-md bg-surface ${
-              highlighted ? "border-[1.5px] border-primary" : "border border-border"
-            }`}
+            className={`h-14 w-12 items-center justify-center rounded-md bg-surface ${borderClass}`}
           >
             <Text variant="title" className="text-content-primary">
               {digit}
