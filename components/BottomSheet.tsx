@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /**
  * Bottom sheet from the Mobile Components kit: a rounded surface that slides up
@@ -30,6 +31,7 @@ const SPRING = { useNativeDriver: true, damping: 20, stiffness: 200, mass: 0.6 }
 
 export function BottomSheet({ visible, onClose, children, className }: BottomSheetProps) {
   const { height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const translateY = useRef(new Animated.Value(height)).current;
   const backdrop = useRef(new Animated.Value(0)).current;
   const [mounted, setMounted] = useState(visible);
@@ -110,9 +112,10 @@ export function BottomSheet({ visible, onClose, children, className }: BottomShe
 
         <Animated.View style={{ transform: [{ translateY }] }} {...pan.panHandlers}>
           <View
-            className={`gap-3.5 rounded-t-[20px] bg-surface px-5 pb-6 pt-2.5${
+            className={`gap-3.5 rounded-t-[20px] bg-surface px-5 pt-2.5${
               className ? ` ${className}` : ""
             }`}
+            style={{ paddingBottom: insets.bottom + 24 }}
           >
             <View className="items-center">
               <View className="h-1 w-9 rounded-[2px] bg-border" />
