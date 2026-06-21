@@ -177,13 +177,15 @@
     "placeholder": "Onboarding complete — the app home will appear here.",
     "replayOnboarding": "Replay onboarding",
     "yourArea": "Your area",
+    "gpsLocation": "GPS location",
     "greeting": "Assalamu Alaikum",
     "homeMasjid": "Home masjid",
     "calculatedSource": "Calculated times",
     "reminders": "Reminders",
     "qibla": "Qibla",
     "addMasjid": "Set your home masjid",
-    "addMasjidCaption": "See jamaat times for your masjid",
+    "addMasjidCaption": "Get exact azan & jamaat times",
+    "addMasjidCta": "Find",
     "todaysPrayers": "Today's prayers",
     "todaysPrayersCalculated": "Today's prayers (calculated)",
     "calculatedTitle": "Local prayer times",
@@ -342,8 +344,9 @@
     "heroSubtitle": "Suhoor ends {{sehri}} · Iftar {{iftar}}",
     "iftarAt": "Iftar {{time}}",
     "sehriEndsAt": "Suhoor ends {{time}}",
-    "last10Title": "Last 10 nights",
-    "last10Subtitle": "Set up a recurring gift",
+    "last10Title": "Last 10 nights — give nightly",
+    "last10Subtitle": "Don't miss Laylatul Qadr",
+    "last10Cta": "Turn on",
     "donate": "Donate",
     "notif": {
       "sehriTitle": "Suhoor reminder",
@@ -383,6 +386,7 @@
     "fajrSeparateSub": "Make the 5 o'clock alarm different from the 8 o'clock one",
     "fajrSoftName": "Fajr azan · soft tune",
     "preview": "Preview",
+    "stop": "Stop",
     "disclaimer": "The full azan plays only in-app; notifications play a ~28-second clip.",
     "options": {
       "mecca": "Dawn azan · Makkah",
@@ -448,7 +452,8 @@
     "sehriEnd": "Suhoor-ending alert",
     "sehriEndSub": "Right at suhoor end",
     "iftar": "Iftar reminder",
-    "iftarSub": "10 min before iftar"
+    "iftarSub": "10 min before iftar",
+    "note": "Taraweeh & iftar arrangements appear in your followed masjids' announcements."
   },
   "setHome": {
     "title": "Set home masjid",

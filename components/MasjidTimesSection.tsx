@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 import { usePrayerTableRows } from "@/hooks/usePrayerClock";
-import { formatClockString } from "@/lib/prayer/format";
+import { useFormat } from "@/lib/i18n/format";
+import { formatBareClock } from "@/lib/prayer/format";
 import type { JumahResponse, PrayerTimeResponse } from "@/lib/prayer/types";
 import { useColors } from "@/lib/theme/useColors";
 
@@ -68,8 +69,9 @@ export function MasjidTimesSection({
   showDisclaimer = true,
   className,
 }: MasjidTimesSectionProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const c = useColors();
+  const f = useFormat();
   const rows = usePrayerTableRows(times);
   const jrows = jumah ? jumahRows(jumah) : [];
 
@@ -113,7 +115,7 @@ export function MasjidTimesSection({
           <SectionHeader title={t("jumuah.scheduleTitle")} />
           <Card>
             {jrows.map((r) => (
-              <Row key={r.key} title={t(r.labelKey)} value={formatClockString(r.time, i18n.language)} />
+              <Row key={r.key} title={t(r.labelKey)} value={f.localizeDigits(formatBareClock(r.time))} />
             ))}
           </Card>
         </View>

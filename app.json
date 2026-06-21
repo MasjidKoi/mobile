@@ -54,7 +54,15 @@
           "locationWhenInUsePermission": "MasjidKoi uses your location to find nearby masjids, show prayer times, and point you toward the Qibla."
         }
       ],
-      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "sounds": [
+            "./assets/sounds/azan_mecca.wav",
+            "./assets/sounds/azan_madina.wav"
+          ]
+        }
+      ],
       [
         "expo-image-picker",
         {

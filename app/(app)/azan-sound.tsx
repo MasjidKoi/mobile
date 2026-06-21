@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +15,9 @@ export default function AzanSoundScreen() {
   const { t } = useTranslation();
   const c = useColors();
   const { prefs, setPrefs } = useReminderPrefs();
+  // Which sound is previewing right now (drives the play↔stop toggle). Cleared
+  // on natural end (via the onDone callback), manual stop, or unmount.
+  const [playingId, setPlayingId] = useState<AzanSoundId | null>(null);
 
   useEffect(() => () => stopAzanPreview(), []);
 
@@ -24,17 +27,34 @@ export default function AzanSoundScreen() {
     </Pressable>
   );
 
-  // Solid green play button shown on every sound row (preview is a no-op until
-  // the bundled azan clip ships, but the affordance matches the design).
-  const playButton = (id: AzanSoundId) => (
-    <Pressable
-      accessibilityLabel={t("azanSound.preview")}
-      onPress={() => previewAzanSound(id)}
-      className="h-8 w-8 items-center justify-center rounded-full bg-primary"
-    >
-      <Feather name="play" size={14} color={c["on-inverse"]} />
-    </Pressable>
-  );
+  // Start/stop a preview, keeping `playingId` in sync. `silent`/`default` carry
+  // no clip, so previewAzanSound returns false and no stop state is shown.
+  const startPreview = (id: AzanSoundId) => {
+    const started = previewAzanSound(id, () => setPlayingId(null));
+    setPlayingId(started ? id : null);
+  };
+  const togglePreview = (id: AzanSoundId) => {
+    if (playingId === id) {
+      stopAzanPreview();
+      setPlayingId(null);
+    } else {
+      startPreview(id);
+    }
+  };
+
+  // Solid green button: play when idle, stop (■) while this clip is previewing.
+  const playButton = (id: AzanSoundId) => {
+    const isPlaying = playingId === id;
+    return (
+      <Pressable
+        accessibilityLabel={isPlaying ? t("azanSound.stop") : t("azanSound.preview")}
+        onPress={() => togglePreview(id)}
+        className="h-8 w-8 items-center justify-center rounded-full bg-primary"
+      >
+        <Feather name={isPlaying ? "square" : "play"} size={isPlaying ? 12 : 14} color={c["on-inverse"]} />
+      </Pressable>
+    );
+  };
 
   const selectMark = (isSelected: boolean) => (
     <View
@@ -51,10 +71,9 @@ export default function AzanSoundScreen() {
     return (
       <Row
         title={title}
-        onPress={() => {
-          onSelect(id);
-          previewAzanSound(id);
-        }}
+        // Selecting only moves the tick — playback is the ▶ button's job, so
+        // changing the chosen sound never auto-plays a clip.
+        onPress={() => onSelect(id)}
         trailing={
           <View className="flex-row items-center gap-3">
             {playButton(id)}

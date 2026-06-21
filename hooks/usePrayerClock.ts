@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 
 import type { PrayerTableRow } from "@/components/PrayerTable";
 import { toBengaliDigits } from "@/lib/i18n/format";
+import { useNumerals } from "@/lib/i18n/numerals";
 import { azanTime, computePrayerClock, iqamahTime, PRAYER_ORDER } from "@/lib/prayer/clock";
-import { formatClockString, splitCountdown } from "@/lib/prayer/format";
+import { formatBareClock, splitCountdown } from "@/lib/prayer/format";
 import type { PrayerName, PrayerTimeResponse } from "@/lib/prayer/types";
 
 import { useNow } from "./useNow";
@@ -31,6 +32,7 @@ export interface UsePrayerClockResult {
 export function usePrayerClock(prayer: PrayerTimeResponse | null | undefined): UsePrayerClockResult {
   const { t, i18n } = useTranslation();
   const language = i18n.language;
+  const { enabled: bengaliNumerals } = useNumerals();
   const now = useNow();
 
   const state = useMemo(
@@ -47,7 +49,9 @@ export function usePrayerClock(prayer: PrayerTimeResponse | null | undefined): U
       hours > 0
         ? t("prayerClock.countdownHM", { hours, minutes })
         : t("prayerClock.countdownM", { minutes });
-    countdownLabel = language === "bn" ? toBengaliDigits(raw) : raw;
+    // Follow the app-wide Bengali-numerals toggle (default OFF → Western) so the
+    // countdown matches the prayer times and Hijri date around it.
+    countdownLabel = language === "bn" && bengaliNumerals ? toBengaliDigits(raw) : raw;
   }
 
   return {
@@ -72,18 +76,27 @@ export function usePrayerTableRows(
 ): PrayerTableRow[] {
   const { t, i18n } = useTranslation();
   const language = i18n.language;
+  // `enabled` is unused in the body (formatClockString reads the numerals cache),
+  // but it MUST stay in the deps so the rows recompute when the toggle flips —
+  // otherwise the table keeps stale digits while the rest of the screen updates.
+  const { enabled } = useNumerals();
   const { currentPrayer } = usePrayerClock(prayer);
 
   return useMemo(() => {
     if (!prayer) return [];
-    return PRAYER_ORDER.map((name) => {
-      const iqamah = iqamahTime(prayer, name);
-      return {
-        name: t(`prayers.${name}`),
-        azan: formatClockString(azanTime(prayer, name), language),
-        iqamah: iqamah ? formatClockString(iqamah, language) : "—",
-        current: currentPrayer === name,
-      };
-    });
-  }, [prayer, language, t, currentPrayer]);
+    // Bare 12-hour clock (no meridiem), matching the design's Prayer Table —
+    // the prayer name already disambiguates morning/evening. Digits follow the
+    // Bengali-numerals toggle, like the hero card's times.
+    const bare = (hhmm: string | null) => {
+      if (!hhmm) return "—";
+      const s = formatBareClock(hhmm);
+      return language === "bn" && enabled ? toBengaliDigits(s) : s;
+    };
+    return PRAYER_ORDER.map((name) => ({
+      name: t(`prayers.${name}`),
+      azan: bare(azanTime(prayer, name)),
+      iqamah: bare(iqamahTime(prayer, name)),
+      current: currentPrayer === name,
+    }));
+  }, [prayer, language, t, currentPrayer, enabled]);
 }

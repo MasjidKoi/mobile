@@ -42,7 +42,7 @@ import { openDirections } from "@/lib/masjids/directions";
 import { buildContactLinks } from "@/lib/masjids/profile/contactLinks";
 import { presentMasjidFacilities } from "@/lib/masjids/profile/facilityPresenter";
 import { azanTime } from "@/lib/prayer/clock";
-import { formatClockString } from "@/lib/prayer/format";
+import { formatBareClock } from "@/lib/prayer/format";
 import { useColors } from "@/lib/theme/useColors";
 import { useLocation } from "@/providers/LocationProvider";
 import { useLoginGate } from "@/providers/LoginGateProvider";
@@ -55,7 +55,7 @@ import { useLoginGate } from "@/providers/LoginGateProvider";
  * collapses sparse sections, and gates the contribution actions.
  */
 export default function MasjidProfileScreen() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const c = useColors();
   const f = useFormat();
   const insets = useSafeAreaInsets();
@@ -269,7 +269,7 @@ export default function MasjidProfileScreen() {
             <NextPrayerCard
               kicker={clock.nextPrayerKicker}
               prayerName={clock.nextPrayerLabel}
-              prayerTime={formatClockString(azanTime(today, clock.nextPrayer), i18n.language)}
+              prayerTime={f.localizeDigits(formatBareClock(azanTime(today, clock.nextPrayer)))}
               countdownLabel={clock.countdownLabel}
             />
           ) : null}

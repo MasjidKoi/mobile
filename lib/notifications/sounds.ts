@@ -19,9 +19,8 @@ export interface AzanSoundOption {
 }
 
 export const AZAN_SOUNDS: readonly AzanSoundOption[] = [
-  // asset: require("@/assets/sounds/azan-mecca.mp3"), — add when the clip lands.
-  { id: "mecca", nameKey: "azanSound.options.mecca" },
-  { id: "classic", nameKey: "azanSound.options.classic" },
+  { id: "mecca", nameKey: "azanSound.options.mecca", asset: require("@/assets/sounds/azan-mecca.mp3") },
+  { id: "classic", nameKey: "azanSound.options.classic", asset: require("@/assets/sounds/azan-madina.mp3") },
   { id: "default", nameKey: "azanSound.options.default" },
   { id: "silent", nameKey: "azanSound.options.silent" },
 ];
@@ -31,25 +30,46 @@ export function azanSoundOption(id: AzanSoundId): AzanSoundOption {
 }
 
 let activePlayer: AudioPlayer | null = null;
+let activeSub: { remove: () => void } | null = null;
 
-/** Preview a sound choice. No-op for `silent`/`default` or until the asset ships. */
-export function previewAzanSound(id: AzanSoundId): void {
+/**
+ * Preview a sound choice. Stops any current preview first. Returns whether
+ * playback actually started (`false` for silent/default or a missing asset, so
+ * the caller can skip showing a "stop" state). `onDone` fires when the clip
+ * finishes on its own — adhan clips run a couple of minutes, so the UI needs to
+ * reset its play/stop button both on natural end and on a manual stop.
+ */
+export function previewAzanSound(id: AzanSoundId, onDone?: () => void): boolean {
+  stopAzanPreview();
   const option = azanSoundOption(id);
-  if (!option.asset) return;
+  if (!option.asset) return false;
   try {
-    activePlayer?.remove();
-    activePlayer = createAudioPlayer(option.asset);
-    activePlayer.play();
+    const player = createAudioPlayer(option.asset);
+    activePlayer = player;
+    activeSub = player.addListener("playbackStatusUpdate", (status) => {
+      if (status.didJustFinish) {
+        stopAzanPreview();
+        onDone?.();
+      }
+    });
+    player.play();
+    return true;
   } catch {
     // Non-fatal — preview is best-effort.
+    return false;
   }
 }
 
 export function stopAzanPreview(): void {
   try {
+    activeSub?.remove();
+    // pause() halts audio immediately; remove() alone releases the player object
+    // but doesn't reliably stop in-flight playback.
+    activePlayer?.pause();
     activePlayer?.remove();
   } catch {
     // Non-fatal.
   }
+  activeSub = null;
   activePlayer = null;
 }

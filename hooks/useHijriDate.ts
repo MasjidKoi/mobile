@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { formatHijri, hijriMonthName, toHijriDate, type HijriDate } from "@/lib/hijri";
+import { useNumerals } from "@/lib/i18n/numerals";
 
 import { useAppConfig } from "./useAppConfig";
 import { useNow } from "./useNow";
@@ -18,6 +19,7 @@ export interface UseHijriDateResult extends HijriDate {
 export function useHijriDate(): UseHijriDateResult {
   const now = useNow();
   const { i18n } = useTranslation();
+  const { enabled: bengaliNumerals } = useNumerals();
   const offset = useAppConfig().data?.hijri_offset_days ?? 0;
 
   return useMemo(() => {
@@ -26,7 +28,7 @@ export function useHijriDate(): UseHijriDateResult {
       ...h,
       offset,
       monthName: hijriMonthName(h.month, i18n.language),
-      label: formatHijri(h, i18n.language),
+      label: formatHijri(h, i18n.language, bengaliNumerals),
     };
-  }, [now, offset, i18n.language]);
+  }, [now, offset, i18n.language, bengaliNumerals]);
 }

@@ -77,6 +77,10 @@ export default function RamadanRemindersScreen() {
             trailing={<Switch value={r.iftar} onValueChange={(v) => setPrefs({ ramadan: { iftar: v } })} />}
           />
         </Card>
+
+        <Text variant="micro" className="px-1">
+          {t("ramadanReminders.note")}
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );

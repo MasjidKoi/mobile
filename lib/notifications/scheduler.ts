@@ -14,8 +14,9 @@ import * as Notifications from "expo-notifications";
 import { azanTime, iqamahTime, PRAYER_ORDER, parseHHMM } from "@/lib/prayer/clock";
 import type { PrayerName, PrayerTimeResponse } from "@/lib/prayer/types";
 
+import { azanContentSound } from "./azanSounds";
 import { cancelScheduledByPrefix, PRAYER_NOTIF_PREFIXES } from "./cancel";
-import { channelForAzan, channelForReminder, RAMADAN_CHANNEL } from "./channels";
+import { azanVoiceFor, channelForAzan, channelForReminder, RAMADAN_CHANNEL } from "./channels";
 import type { ReminderPrefs } from "./settingsStore";
 
 const MAX_PENDING = 60;
@@ -37,6 +38,8 @@ export interface PlannedNotification {
   minutesBefore: number;
   masjidId: string | null;
   channelId: string;
+  /** iOS per-notification sound (azan-moment only); Android uses the channel. */
+  sound?: string | false;
 }
 
 export interface BuildReminderPlanInput {
@@ -105,6 +108,7 @@ export function buildReminderPlan(input: BuildReminderPlanInput): PlannedNotific
           minutesBefore: 0,
           masjidId,
           channelId: channelForAzan(prayer, prefs),
+          sound: azanContentSound(azanVoiceFor(prayer, prefs)),
         });
       }
     }
@@ -196,6 +200,9 @@ export async function applyReminderPlan(
         content: {
           title: content.title,
           body: content.body,
+          // iOS plays this per-notification; Android takes the sound from the
+          // channel. Undefined → system default; a filename → bundled azan.
+          ...(n.sound !== undefined ? { sound: n.sound } : {}),
           data: { url: deepLink(n), masjidId: n.masjidId, prayer: n.label, kind: n.kind },
         },
         trigger: {

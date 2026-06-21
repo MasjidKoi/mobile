@@ -193,6 +193,9 @@ export default function HomeTab() {
               </Text>
               <Text className="text-[13px]" style={{ color: c["text-muted"] }} numberOfLines={1}>
                 {headerArea}
+                {home.variant === "calculated" && permission === "granted"
+                  ? ` · ${t("home.gpsLocation")}`
+                  : ""}
               </Text>
             </View>
             <Pressable
@@ -211,7 +214,7 @@ export default function HomeTab() {
             onPress={() => router.push("/hijri-calendar")}
           >
             <Text className="text-[13px] font-semibold" style={{ color: c["accent-gold"] }}>
-              {hijri.label} {t("hijri.suffix")}
+              {hijri.label}
             </Text>
             <View className="h-[3px] w-[3px] rounded-full" style={{ backgroundColor: c["text-muted"] }} />
             <Text className="text-[13px]" style={{ color: c["text-muted"] }}>
@@ -252,7 +255,9 @@ export default function HomeTab() {
                 <Text className="text-body font-semibold text-content-primary">{t("home.addMasjid")}</Text>
                 <Text className="text-caption text-content-secondary">{t("home.addMasjidCaption")}</Text>
               </View>
-              <Feather name="chevron-right" size={18} color={c.primary} />
+              <View className="rounded-sm bg-primary px-3.5 py-2">
+                <Text className="text-caption font-semibold text-on-inverse">{t("home.addMasjidCta")}</Text>
+              </View>
             </Pressable>
           ) : null}
 
@@ -283,7 +288,7 @@ export default function HomeTab() {
           {/* Last 10 nights nudge */}
           {ramadan.isLast10Nights ? (
             <Last10NightsCard
-              icon={<Feather name="moon" size={20} color={c["on-inverse"]} />}
+              icon={<Feather name="moon" size={20} color={c["accent-gold-soft"]} />}
               title={t("ramadan.last10Title")}
               subtitle={t("ramadan.last10Subtitle")}
               action={
@@ -293,9 +298,10 @@ export default function HomeTab() {
                       ? router.push({ pathname: "/masjid/[id]", params: { id: home.masjidId } })
                       : router.push("/set-home-masjid")
                   }
-                  className="rounded-full bg-overlay px-3.5 py-1.5"
+                  className="rounded-sm px-4 py-2"
+                  style={{ backgroundColor: "#FFFFFF" }}
                 >
-                  <Text className="text-caption font-semibold text-on-inverse">{t("ramadan.donate")}</Text>
+                  <Text className="text-caption font-bold text-primary">{t("ramadan.last10Cta")}</Text>
                 </Pressable>
               }
             />
