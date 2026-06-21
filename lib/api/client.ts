@@ -9,7 +9,11 @@ export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export type RequestOptions = {
   method?: HttpMethod;
-  /** JSON-serializable body. Sets `Content-Type: application/json` when present. */
+  /**
+   * Request body. A `FormData` is sent as-is (multipart — `fetch` sets the
+   * boundary; e.g. `PATCH /users/me` photo/profile). Anything else is
+   * JSON-serialized with `Content-Type: application/json`.
+   */
   body?: unknown;
   /** Attach the Bearer token and attempt a refresh on 401. Defaults to `true`. */
   auth?: boolean;
@@ -56,16 +60,20 @@ async function doFetch(
     else signal.addEventListener("abort", forwardAbort);
   }
 
+  // FormData is sent verbatim: skip JSON.stringify AND omit Content-Type so
+  // fetch can set the multipart boundary itself. Everything else is JSON.
+  const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+
   try {
     return await fetch(`${env.apiBaseUrl}${path}`, {
       method,
       headers: {
         Accept: "application/json",
-        ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+        ...(body !== undefined && !isFormData ? { "Content-Type": "application/json" } : {}),
         ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         ...headers,
       },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: body === undefined ? undefined : isFormData ? (body as FormData) : JSON.stringify(body),
       signal: controller.signal,
     });
   } finally {

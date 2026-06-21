@@ -77,17 +77,40 @@ export function formatDate(date: Date, language: string): string {
 }
 
 /**
+ * Distance for list/map/peek rows: metres under 1 km (rounded to 10 m),
+ * kilometres with one decimal above. The unit label is localized; the number
+ * routes through `formatNumber` so Bengali numerals stay consistent
+ * (e.g. "৪১০ মিটার", "১.২ কিমি"). `unitM`/`unitKm` are the resolved unit words.
+ */
+export function formatDistance(
+  meters: number,
+  language: string,
+  unitM: string,
+  unitKm: string,
+): string {
+  if (meters < 1000) {
+    const m = Math.round(meters / 10) * 10;
+    return `${formatNumber(m, language)} ${unitM}`;
+  }
+  const km = Math.round((meters / 1000) * 10) / 10;
+  return `${formatNumber(km, language)} ${unitKm}`;
+}
+
+/**
  * Locale-bound formatters for the active i18n language. Every screen renders
- * numbers/currency/time through this so Bengali numerals stay consistent.
+ * numbers/currency/time/distance through this so Bengali numerals stay
+ * consistent.
  */
 export function useFormat() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const language = i18n.language;
   return {
     number: (value: number) => formatNumber(value, language),
     currency: (amount: number) => formatCurrency(amount, language),
     time: (date: Date) => formatTime(date, language),
     date: (date: Date) => formatDate(date, language),
+    distance: (meters: number) =>
+      formatDistance(meters, language, t("units.m"), t("units.km")),
     toBengaliDigits,
   };
 }

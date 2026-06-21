@@ -54,7 +54,14 @@
           "locationWhenInUsePermission": "MasjidKoi uses your location to find nearby masjids, show prayer times, and point you toward the Qibla."
         }
       ],
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "MasjidKoi uses your photos so you can attach a picture when you submit a masjid."
+        }
+      ],
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true,

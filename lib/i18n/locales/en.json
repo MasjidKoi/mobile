@@ -7,7 +7,11 @@
     "retry": "Try again",
     "cancel": "Cancel",
     "ok": "OK",
-    "done": "Done"
+    "done": "Done",
+    "continue": "Continue",
+    "notNow": "Not now",
+    "later": "Later",
+    "close": "Close"
   },
   "onboarding": {
     "skip": "Skip",
@@ -35,13 +39,523 @@
       }
     }
   },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "feed": "Feed",
+    "profile": "Profile"
+  },
+  "shell": {
+    "comingSoon": "Coming soon",
+    "home": "Prayer times will appear here.",
+    "explore": "The masjid map and search will appear here.",
+    "feed": "Masjid announcements and events will appear here.",
+    "masjidStub": "Masjid profile — coming soon."
+  },
+  "auth": {
+    "appBarLogin": "Log in",
+    "gate": {
+      "continueWithEmail": "Continue with email",
+      "donate": {
+        "title": "Log in to donate",
+        "body": "An account keeps your donation receipts and history safe. No password needed — just your email."
+      },
+      "community": {
+        "title": "Sign in",
+        "body": "You'll need an account to join the event. After signing in you'll return exactly where you were."
+      },
+      "submit": {
+        "title": "Sign in to add a masjid",
+        "body": "An account lets us track your submission and keep the map trustworthy. No password needed — just your email."
+      },
+      "generic": {
+        "title": "Sign in",
+        "body": "Keep your donations, ibadah and saved masjids in one place. No password needed — just your email."
+      }
+    },
+    "email": {
+      "title": "Enter your email",
+      "subtitle": "We'll send a 6-digit code — no password needed.",
+      "label": "Email address",
+      "placeholder": "rahim@gmail.com",
+      "implicitSignup": "New email? Your account is created automatically.",
+      "sendCode": "Send code",
+      "sendError": "Couldn't send the code — please try again."
+    },
+    "otp": {
+      "appBar": "Verify code",
+      "title": "Check your email",
+      "subtitle": "Enter the code sent to {{email}}. The code is valid for 10 minutes.",
+      "editEmail": "Change email",
+      "resendIn": "Resend — {{seconds}}s",
+      "resend": "Resend",
+      "verify": "Verify",
+      "errorInvalid": "Wrong code — {{count}} attempts left",
+      "errorInvalidNoCount": "Wrong code — please try again",
+      "errorExpired": "Code expired — request a new one",
+      "errorTooMany": "Too many attempts — request a new code",
+      "errorGeneric": "Couldn't verify — please try again"
+    },
+    "profileSetup": {
+      "appBar": "Profile setup",
+      "addPhoto": "Add photo",
+      "photoComingSoon": "Adding a photo is coming soon — from Settings",
+      "nameLabel": "Name (optional)",
+      "namePlaceholder": "Your name",
+      "madhabLabel": "Madhab",
+      "madhabHint": "Used to keep your Asr time correct",
+      "laterNote": "You can change this later in Settings",
+      "continue": "Continue",
+      "saveError": "Couldn't save — please try again."
+    },
+    "madhab": {
+      "hanafi": "Hanafi",
+      "shafi": "Shafi'i",
+      "maliki": "Maliki",
+      "hanbali": "Hanbali"
+    },
+    "session": {
+      "reloginPrompt": "Your session ended — please sign in again",
+      "signIn": "Sign in"
+    }
+  },
+  "permissions": {
+    "location": {
+      "title": "Why do we need your location?",
+      "benefits": [
+        "Nearest masjids first — a list sorted by distance",
+        "Accurate directions to the masjid",
+        "Your location stays on your phone — never shared"
+      ],
+      "enable": "Enable location",
+      "pickCity": "Pick a city for now"
+    },
+    "notification": {
+      "title": "Turn on prayer reminders?",
+      "benefits": [
+        "Only for the masjids and prayers you choose",
+        "Instant or a daily digest — your choice",
+        "Turn off anytime with one tap"
+      ],
+      "enable": "Enable notifications",
+      "notNow": "Not now"
+    }
+  },
+  "profileTab": {
+    "title": "Profile",
+    "guest": {
+      "title": "Sign in",
+      "subtitle": "Keep your donations, ibadah and saved masjids in one place",
+      "cta": "Sign in or register"
+    },
+    "editProfile": "Edit profile",
+    "soon": "Soon",
+    "rows": {
+      "settings": "Settings",
+      "help": "Help & support",
+      "about": "About",
+      "donations": "Donation history",
+      "journal": "Ibadah Journal",
+      "signOut": "Sign out"
+    }
+  },
   "home": {
     "placeholder": "Onboarding complete — the app home will appear here.",
-    "replayOnboarding": "Replay onboarding"
+    "replayOnboarding": "Replay onboarding",
+    "yourArea": "Your area",
+    "reminders": "Reminders",
+    "qibla": "Qibla",
+    "addMasjid": "Set your home masjid",
+    "todaysPrayers": "Today's prayers",
+    "todaysPrayersCalculated": "Today's prayers (calculated)",
+    "calculatedTitle": "Local prayer times",
+    "travelBanner": "You're {{km}} km away — showing {{area}} times",
+    "offlineBanner": "Offline — showing last saved times",
+    "jumuahToday": "Today is Jumu'ah",
+    "fullSchedule": "Calendar",
+    "needsLocationTitle": "Set your location",
+    "needsLocationCaption": "Enable location or pick your district to see prayer times.",
+    "enableLocation": "Enable location",
+    "pickCity": "Pick a district",
+    "calculatedDisclaimer": "Calculated times — set a home masjid to see jamaat times."
+  },
+  "prayers": {
+    "fajr": "Fajr",
+    "dhuhr": "Dhuhr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha",
+    "jumuah": "Jumu'ah"
+  },
+  "prayerClock": {
+    "nextPrayer": "Next prayer",
+    "startsIn": "Starts in",
+    "azan": "Azan",
+    "iqamah": "Jamaat",
+    "countdownHM": "{{hours}}h {{minutes}}m",
+    "countdownM": "{{minutes}}m",
+    "jamaahIn": "Jama'ah in {{minutes}} min",
+    "jamaahLikely": "Jama'ah likely in progress"
+  },
+  "units": {
+    "m": "m",
+    "km": "km",
+    "min": "min"
+  },
+  "discovery": {
+    "searchPlaceholder": "Search masjid or area…",
+    "view": {
+      "map": "Map",
+      "list": "List"
+    },
+    "favourites": "Favourites",
+    "nearby": "Nearby masjids",
+    "nearestKicker": "Nearest masjid",
+    "filters": "Filters",
+    "facilities": "Facilities",
+    "distanceKm": "{{km}} km",
+    "apply": "Show results",
+    "clear": "Clear",
+    "directions": "Directions",
+    "viewDetails": "View details",
+    "submitMasjid": "Add a masjid",
+    "enableLocation": {
+      "title": "Find masjids near you",
+      "caption": "Turn on location to see the nearest masjids first.",
+      "cta": "Enable location",
+      "pickCity": "Choose a city instead"
+    },
+    "locationDenied": "Location is off — showing {{city}}.",
+    "empty": {
+      "title": "No masjids here",
+      "caption": "Try a wider distance, or search by name."
+    },
+    "offline": "You're offline — showing saved results.",
+    "facilityNames": {
+      "has_wudu_area": "Wudu",
+      "has_sisters_section": "Sisters' section",
+      "has_parking": "Parking",
+      "has_wheelchair_access": "Wheelchair",
+      "has_janazah": "Janazah",
+      "has_school": "Madrasa"
+    },
+    "search": {
+      "title": "Search",
+      "recent": "Recent",
+      "results": "Results",
+      "noResults": "No masjids found for “{{query}}”.",
+      "hint": "Search by masjid name or area."
+    },
+    "cityPicker": {
+      "title": "Choose a city",
+      "placeholder": "Search city…",
+      "useCurrent": "Use current location"
+    },
+    "submit": {
+      "title": "Add a masjid",
+      "pinHint": "Drag the pin to the masjid's location",
+      "nameLabel": "Masjid name",
+      "namePlaceholder": "e.g. Baitul Aman Jame Masjid",
+      "addressLabel": "Address (optional)",
+      "addressPlaceholder": "Area, city",
+      "addPhoto": "Add a photo (optional)",
+      "uploading": "Uploading…",
+      "changePhoto": "Change photo",
+      "removePhoto": "Remove",
+      "reviewNote": "New masjids are checked by our team before they appear — usually within a few days.",
+      "submit": "Submit",
+      "submitting": "Submitting…",
+      "photoError": "Couldn't upload the photo — try another.",
+      "rateLimited": "Submission limit reached — try again in {{minutes}} min.",
+      "error": "Couldn't submit — please try again."
+    },
+    "dedupe": {
+      "title": "Quick check",
+      "heading": "Is it one of these?",
+      "caption": "We found these masjids nearby. Tap one if it's the same — no need to add a duplicate.",
+      "addNew": "No — add a new masjid",
+      "back": "Go back"
+    },
+    "success": {
+      "title": "Submitted for review",
+      "caption": "Thanks! We'll review it and let you know. Track it in My submissions.",
+      "viewSubmissions": "My submissions",
+      "done": "Done"
+    },
+    "mySubmissions": {
+      "title": "My submissions",
+      "status": {
+        "pending": "Under review",
+        "approved": "Approved",
+        "rejected": "Not added"
+      },
+      "note": "Approved masjids appear on the map for everyone — thank you!",
+      "empty": {
+        "title": "No submissions yet",
+        "caption": "Masjids you add show up here with their review status."
+      }
+    }
+  },
+  "ramadan": {
+    "untilIftar": "Until iftar",
+    "iftarAt": "Iftar {{time}}",
+    "sehriEndsAt": "Suhoor ends {{time}}",
+    "last10Title": "Last 10 nights",
+    "last10Subtitle": "Set up a recurring gift",
+    "donate": "Donate",
+    "notif": {
+      "sehriTitle": "Suhoor reminder",
+      "sehriBody": "Suhoor ends at {{time}} — {{minutes}} min left",
+      "sehriEndTitle": "Suhoor ending soon",
+      "sehriEndBody": "Suhoor ends at {{time}}",
+      "iftarTitle": "Iftar time",
+      "iftarBody": "Maghrib at {{time}} — time to break your fast"
+    }
+  },
+  "reminders": {
+    "title": "Prayer reminders",
+    "perPrayer": "Each prayer",
+    "general": "General",
+    "reminderBefore": "Remind {{minutes}} min before",
+    "offset": "Reminder time",
+    "azanMoment": "Azan-time alert",
+    "azanMomentSub": "A notification at the exact azan",
+    "azanSound": "Azan sound",
+    "permissionDenied": "Notifications are off",
+    "enableInSettings": "Open settings",
+    "notif": {
+      "azanBody": "Azan at {{time}}",
+      "reminderBody": "Azan in {{minutes}} min — {{time}}",
+      "iqamahBody": "Jama'ah at {{time}} — leave now"
+    }
+  },
+  "azanSound": {
+    "title": "Azan sound",
+    "allPrayers": "For all prayers",
+    "fajrSection": "Fajr separately",
+    "fajrSeparate": "Separate sound for Fajr",
+    "fajrSeparateSub": "Use a different sound at Fajr",
+    "preview": "Preview",
+    "disclaimer": "The bundled azan plays for up to 30 seconds.",
+    "options": {
+      "mecca": "Makkah azan",
+      "classic": "Classic azan",
+      "default": "Default tone",
+      "silent": "Silent"
+    }
+  },
+  "qibla": {
+    "title": "Qibla compass",
+    "calibrated": "Compass OK",
+    "unreliable": "Unreliable",
+    "calibrateHint": "Move your phone in a figure-8 to calibrate",
+    "rotateHint": "Turn until the needle points to the Kaaba",
+    "kaaba": "Kaaba",
+    "needLocationTitle": "Location needed",
+    "needLocationCaption": "We need your location to point to the Qibla.",
+    "compass": {
+      "n": "N",
+      "ne": "NE",
+      "e": "E",
+      "se": "SE",
+      "s": "S",
+      "sw": "SW",
+      "w": "W",
+      "nw": "NW"
+    }
+  },
+  "hijri": {
+    "title": "Hijri calendar",
+    "suffix": "AH",
+    "myDates": "My Islamic dates"
+  },
+  "ramadanReminders": {
+    "title": "Ramadan reminders",
+    "autoTitle": "Ramadan mode is automatic",
+    "autoSubtitle": "These turn on during Ramadan, based on the Hijri date.",
+    "sehri": "Suhoor reminder",
+    "sehriSub": "30 min before Fajr",
+    "sehriEnd": "Suhoor-ending alert",
+    "sehriEndSub": "10 min before Fajr",
+    "iftar": "Iftar reminder",
+    "iftarSub": "At Maghrib"
+  },
+  "setHome": {
+    "title": "Set home masjid",
+    "subtitle": "Your home masjid's azan & jamaat times power your home screen and reminders.",
+    "clear": "Remove",
+    "emptyTitle": "No masjids nearby",
+    "emptyCaption": "Try moving the map or search by name."
+  },
+  "jumuah": {
+    "azan1": "1st azan",
+    "azan2": "2nd azan",
+    "khutbahStart": "Khutbah starts",
+    "start2": "2nd start"
   },
   "validation": {
     "email_required": "Enter your email",
     "email_invalid": "Enter a valid email",
-    "otp_invalid": "Enter the 6-digit code"
+    "otp_invalid": "Enter the 6-digit code",
+    "name_too_long": "That name is too long",
+    "masjid_name_required": "Enter the masjid name",
+    "masjid_name_too_long": "That name is too long",
+    "address_too_long": "That address is too long"
+  },
+  "masjid": {
+    "profile": {
+      "noPhotos": "No photos of this masjid yet",
+      "addPhoto": "Add photo",
+      "directions": "Directions",
+      "follow": "Follow",
+      "following": "Following",
+      "todaysPrayers": "Today's prayers",
+      "facilities": "Facilities",
+      "imam": "Imam",
+      "languages": "Languages",
+      "contact": "Contact",
+      "campaigns": "Campaigns",
+      "visitorPhotos": "Photos from visitors",
+      "visitorPhotosNote": "Submitted by visitors · shown after review",
+      "qna": "Questions & answers",
+      "reviews": "Reviews & ratings",
+      "errorTitle": "Couldn't load this masjid",
+      "errorCaption": "Check your connection and try again.",
+      "staleBanner": "Offline — showing saved info",
+      "unclaimedBanner": "This masjid hasn't been claimed yet. Your photos and details are reviewed by our team before they appear.",
+      "capacity": {
+        "male": "Men",
+        "female": "Women",
+        "parking": "Parking"
+      }
+    },
+    "facility": {
+      "sisters": "Sisters' section",
+      "wuduMale": "Wudu (men)",
+      "wuduFemale": "Wudu (women)",
+      "wheelchair": "Wheelchair",
+      "parking": "Parking",
+      "janazah": "Janazah",
+      "school": "Madrasa"
+    },
+    "verified": {
+      "label": "Verified",
+      "title": "Verified masjid",
+      "body": "Our team has confirmed this masjid's location and details on the ground."
+    },
+    "contact": {
+      "call": "Call",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "website": "Website"
+    },
+    "qna": {
+      "ask": "Ask a question",
+      "empty": "No questions answered yet — be the first to ask.",
+      "answeredByMasjid": "Answered by the masjid",
+      "answeredByNgo": "Answered by MasjidKoi"
+    },
+    "reviews": {
+      "count": "{{formatted}} reviews",
+      "comingSoon": "Reviews are coming soon.",
+      "empty": "No reviews yet."
+    },
+    "campaign": {
+      "daysLeft": "{{formatted}} days left",
+      "raised": "{{raised}} of {{target}}",
+      "donate": "Donate"
+    },
+    "donate": {
+      "label": "Donate to this masjid",
+      "methods": "bKash · Nagad · Card",
+      "cta": "Donate",
+      "comingSoon": "Donations open here soon."
+    },
+    "gallery": {
+      "adminGallery": "Masjid gallery"
+    },
+    "suggestEdit": {
+      "row": "Suggest a change to the info shown",
+      "title": "Suggest an edit",
+      "intro": "What information needs fixing?",
+      "describeLabel": "Describe the change",
+      "describePlaceholder": "Tell us what's wrong and what it should be…",
+      "emailLabel": "Your email (optional)",
+      "emailPlaceholder": "So we can follow up",
+      "note": "Your suggestion goes to the masjid / our team for review.",
+      "submit": "Submit",
+      "submitting": "Submitting…",
+      "sentTitle": "Thanks for the suggestion",
+      "sentCaption": "We'll review it and update the masjid if it checks out.",
+      "rateLimited": "Too many reports — please try again later.",
+      "error": "Couldn't submit — please try again.",
+      "fields": {
+        "name": "Name",
+        "address": "Address / location",
+        "prayerTimes": "Prayer times",
+        "facilities": "Facilities",
+        "capacity": "Capacity",
+        "imam": "Imam",
+        "contact": "Contact details",
+        "photos": "Photos",
+        "other": "Something else"
+      }
+    },
+    "contribute": {
+      "photo": {
+        "title": "Add a photo",
+        "intro": "Add a photo to help others see this masjid before they visit.",
+        "camera": "Camera",
+        "library": "Gallery",
+        "reviewNote": "Photos are checked by our team before they appear — usually within a few days.",
+        "submit": "Submit photo",
+        "uploading": "Uploading…",
+        "pickError": "Couldn't open that photo — try another.",
+        "cameraDenied": "Camera access is off — enable it in Settings to take a photo.",
+        "error": "Couldn't upload — please try again.",
+        "sentTitle": "Photo submitted",
+        "sentCaption": "Thanks! We'll review it and add it if it checks out.",
+        "addAnother": "Add another",
+        "limitTitle": "Daily limit reached",
+        "limitCaption": "You've added a lot today — please try again tomorrow.",
+        "limitRetry": "You've hit the limit — try again in {{minutes}} min.",
+        "status": {
+          "pending": "Under review",
+          "approved": "Published",
+          "rejected": "Not added"
+        }
+      },
+      "question": {
+        "title": "Ask a question",
+        "deflect": "Already answered:",
+        "label": "Your question",
+        "placeholder": "e.g. Is there women's parking?",
+        "note": "Questions go to the masjid. Only answered questions are shown publicly.",
+        "send": "Send",
+        "sending": "Sending…",
+        "rateLimited": "Too many questions — please try again later.",
+        "error": "Couldn't send — please try again.",
+        "sentTitle": "Question sent",
+        "sentCaption": "The masjid will answer it — you'll be notified when they do.",
+        "answerLabel": "Answer",
+        "status": {
+          "pending": "Awaiting answer",
+          "answered": "Answered",
+          "rejected": "Not posted"
+        }
+      },
+      "myPhotos": {
+        "cta": "My photo submissions",
+        "title": "My photo submissions",
+        "emptyTitle": "No photos yet",
+        "emptyCaption": "Photos you add show up here with their review status."
+      },
+      "myQuestions": {
+        "cta": "My questions",
+        "title": "My questions",
+        "emptyTitle": "No questions yet",
+        "emptyCaption": "Questions you ask show up here with their status."
+      }
+    }
   }
 }

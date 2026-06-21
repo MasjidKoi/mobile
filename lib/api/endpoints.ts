@@ -18,5 +18,22 @@ export const ENDPOINTS = {
     nearby: "/masjids/nearby",
     search: "/masjids/search",
     byId: (id: string) => `/masjids/${id}`,
+    prayerTimes: (id: string) => `/masjids/${id}/prayer-times`,
+    jumah: (id: string) => `/masjids/${id}/jumah`,
+    submissions: "/masjids/submissions",
+    submissionPhoto: "/masjids/submissions/photo",
+    // Phase 5 — profile extras + contribution channels
+    campaigns: (id: string) => `/masjids/${id}/campaigns`,
+    questions: (id: string) => `/masjids/${id}/questions`,
+    reviews: (id: string) => `/masjids/${id}/reviews`,
+    communityPhotos: (id: string) => `/masjids/${id}/community-photos`,
+    report: (id: string) => `/masjids/${id}/report`,
+    follow: (id: string) => `/masjids/${id}/follow`,
+    followersCount: (id: string) => `/masjids/${id}/followers/count`,
+  },
+  me: {
+    submissions: "/me/submissions",
+    photoSubmissions: "/me/photo-submissions",
+    questions: "/me/questions",
   },
 } as const;

@@ -9,7 +9,9 @@ import { ApiError } from "@/lib/api/errors";
  * - 4xx (auth/validation) never retry; transient 5xx / network errors retry once.
  * - `refetchOnWindowFocus` is off — that web concept is noisy on mobile.
  *
- * Offline/MMKV persistence is layered on in Phase 2 (shared data layer).
+ * Offline persistence (AsyncStorage) wraps this client in
+ * `providers/AppProviders.tsx` via `lib/query/persister.ts` (Phase 2). Only
+ * public masjid/app-config reads are written to disk — never user/auth data.
  */
 export function createQueryClient(): QueryClient {
   return new QueryClient({

@@ -64,6 +64,9 @@ export type { NearestMasjidCardProps } from "./NearestMasjidCard";
 export { PrayerTable } from "./PrayerTable";
 export type { PrayerTableProps, PrayerTableRow } from "./PrayerTable";
 
+export { MasjidTimesSection } from "./MasjidTimesSection";
+export type { MasjidTimesSectionProps } from "./MasjidTimesSection";
+
 export { Banner } from "./Banner";
 export type { BannerProps, BannerVariant } from "./Banner";
 

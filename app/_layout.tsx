@@ -11,6 +11,9 @@ import * as SplashScreen from "expo-splash-screen";
 
 import { initRTL } from "@/lib/theme/rtl";
 import { AppProviders } from "@/providers/AppProviders";
+import { AuthProvider } from "@/providers/AuthProvider";
+import { LoginGateProvider } from "@/providers/LoginGateProvider";
+import { NotificationsBootstrap } from "@/providers/NotificationsBootstrap";
 
 SplashScreen.preventAutoHideAsync();
 // Allow RTL at startup so an Arabic build can flip layout (forcing it needs a
@@ -33,7 +36,12 @@ export default function RootLayout() {
 
   return (
     <AppProviders>
-      <Stack screenOptions={{ headerShown: false }} />
+      <AuthProvider>
+        <LoginGateProvider>
+          <NotificationsBootstrap />
+          <Stack screenOptions={{ headerShown: false }} />
+        </LoginGateProvider>
+      </AuthProvider>
     </AppProviders>
   );
 }
