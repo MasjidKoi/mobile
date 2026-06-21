@@ -905,6 +905,29 @@
         "instant": "Instant",
         "mute": "Muted"
       }
+    },
+    "reviews": {
+      "yours": "Your review",
+      "anonymous": "Anonymous",
+      "edit": "Edit",
+      "delete": "Delete",
+      "writeCta": "Write a review",
+      "writeFirstCta": "Be the first to review",
+      "seeAll": "See all",
+      "offline": "You're offline — showing your last saved reviews.",
+      "emptyTitle": "No reviews yet",
+      "emptyCaption": "Be the first to share your experience.",
+      "writeTitle": "Write a review",
+      "editTitle": "Edit your review",
+      "ratingPrompt": "How would you rate this masjid?",
+      "bodyLabel": "Your review (optional)",
+      "bodyPlaceholder": "Share what others should know…",
+      "lowStarHint": "A 1–2 star review needs at least {{min}} characters explaining why.",
+      "submit": "Submit review",
+      "update": "Update review",
+      "saveError": "Couldn't save your review — try again.",
+      "deleteConfirmTitle": "Delete your review?",
+      "deleteConfirmBody": "This permanently removes your review and rating."
     }
   }
 }

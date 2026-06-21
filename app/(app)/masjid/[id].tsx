@@ -283,7 +283,18 @@ export default function MasjidProfileScreen() {
 
           <QnASection questions={answered} onAsk={() => goGated("/ask-question")} />
 
-          <ReviewsSlot averageRating={reviews?.average_rating ?? null} total={reviews?.total ?? 0} />
+          <ReviewsSlot
+            averageRating={reviews?.average_rating ?? null}
+            total={reviews?.total ?? 0}
+            preview={reviews?.items ?? []}
+            onSeeAll={() => router.push({ pathname: "/reviews/[id]", params: { id: masjidId } })}
+            onWrite={() =>
+              requireAuth(
+                () => router.push({ pathname: "/review/[id]", params: { id: masjidId } }),
+                "community",
+              )
+            }
+          />
 
           <SuggestEditRow
             onPress={() => router.push({ pathname: "/suggest-edit", params: { masjidId } })}

@@ -58,6 +58,8 @@ export default function AppLayout() {
         {/* Phase 8 — community */}
         <Stack.Screen name="announcement/[id]" />
         <Stack.Screen name="event/[id]" />
+        <Stack.Screen name="reviews/[id]" />
+        <Stack.Screen name="review/[id]" />
         <Stack.Screen name="following" />
         <Stack.Screen name="set-home-masjid" options={{ presentation: "modal" }} />
         <Stack.Screen name="email" options={{ presentation: "modal" }} />

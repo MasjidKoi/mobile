@@ -34,6 +34,7 @@ export const ENDPOINTS = {
     reviews: (id: string) => `/masjids/${id}/reviews`,
     communityPhotos: (id: string) => `/masjids/${id}/community-photos`,
     report: (id: string) => `/masjids/${id}/report`,
+    reviewById: (id: string, reviewId: string) => `/masjids/${id}/reviews/${reviewId}`,
     follow: (id: string) => `/masjids/${id}/follow`,
     followersCount: (id: string) => `/masjids/${id}/followers/count`,
     // Phase 6 — start a donation against a masjid (Bearer; SSLCommerz checkout).
