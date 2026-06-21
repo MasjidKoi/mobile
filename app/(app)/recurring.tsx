@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, EmptyState, SectionHeader, Text } from "@/components";
+import { AppBar, Button, EmptyState, SectionHeader, Text } from "@/components";
 import { RecurringRow } from "@/components/donation";
 import { useMasjid } from "@/hooks/useMasjid";
 import {
@@ -116,6 +116,13 @@ export default function RecurringManagerScreen() {
               />
             ))}
           </View>
+          {/* New recurring gift (53) — start another schedule */}
+          <Button
+            variant="secondary"
+            label={t("donation.recurring.newCta")}
+            leftIcon={<Feather name="plus" size={16} color={c.primary} />}
+            onPress={() => router.push("/explore")}
+          />
         </ScrollView>
       )}
     </SafeAreaView>

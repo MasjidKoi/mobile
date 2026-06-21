@@ -638,7 +638,10 @@
       "receipt": "الإيصال",
       "done": "تم",
       "txn": "المعاملة {{id}}",
-      "recurringNudge": "اجعله تبرّعًا منتظمًا"
+      "recurringNudge": "اجعله تبرّعًا منتظمًا",
+      "emailNote": "تم إرسال الإيصال إلى {{email}}",
+      "emailNoteGeneric": "تم إرسال الإيصال إلى بريدك الإلكتروني",
+      "campaignPill": "{{title}} · ممول {{pct}}٪"
     },
     "failed": {
       "title": "فشل الدفع",
@@ -683,7 +686,11 @@
       "resume": "استئناف",
       "newCta": "تبرّع منتظم جديد",
       "emptyTitle": "لا توجد تذكيرات منتظمة بعد",
-      "emptyCaption": "بعد التبرّع، أنشئ تذكيرًا للتبرّع بانتظام."
+      "emptyCaption": "بعد التبرّع، أنشئ تذكيرًا للتبرّع بانتظام.",
+      "givingTo": "التبرع إلى",
+      "reminderDayLabel": "يوم التذكير",
+      "reminderDayWeekly": "كل جمعة",
+      "reminderDayMonthly": "أول كل شهر"
     },
     "status": {
       "pending": "قيد الانتظار",
@@ -730,8 +737,17 @@
       "open": "فتح / مشاركة PDF",
       "loading": "جارٍ التحضير…",
       "taxNote": "احتفظ بهذا الإيصال لسجلّاتك.",
-      "error": "تعذّر فتح الإيصال — حاول مرة أخرى."
-    }
+      "error": "تعذّر فتح الإيصال — حاول مرة أخرى.",
+      "ngoName": "مؤسسة مسجدكوي",
+      "ngoReg": "رقم التسجيل: NGO-12345 · دكا، بنغلاديش",
+      "documentTitle": "إيصال إقرار التبرع",
+      "receivedFrom": "مستلَم من {{name}}",
+      "masjidLabel": "المسجد",
+      "txnLabel": "معرّف المعاملة",
+      "taxDeductible": "قابل للخصم الضريبي وفق قانون ضريبة الدخل · معتمد من NBR",
+      "computerGenerated": "تم إنشاؤه آليًا · لا يتطلب توقيعًا"
+    },
+    "campaignTitle": "تبرع للحملة"
   },
   "settings": {
     "hub": {

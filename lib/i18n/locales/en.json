@@ -638,7 +638,10 @@
       "receipt": "Receipt",
       "done": "Done",
       "txn": "Transaction {{id}}",
-      "recurringNudge": "Make this a regular gift"
+      "recurringNudge": "Make this a regular gift",
+      "emailNote": "Receipt sent to {{email}}",
+      "emailNoteGeneric": "Receipt sent to your email",
+      "campaignPill": "{{title}} · {{pct}}% funded"
     },
     "failed": {
       "title": "Payment failed",
@@ -683,7 +686,11 @@
       "resume": "Resume",
       "newCta": "New recurring gift",
       "emptyTitle": "No recurring reminders yet",
-      "emptyCaption": "After a donation, set one up to give regularly."
+      "emptyCaption": "After a donation, set one up to give regularly.",
+      "givingTo": "Giving to",
+      "reminderDayLabel": "Reminder day",
+      "reminderDayWeekly": "Every Friday",
+      "reminderDayMonthly": "1st of each month"
     },
     "status": {
       "pending": "Pending",
@@ -730,8 +737,17 @@
       "open": "Open / Share PDF",
       "loading": "Preparing…",
       "taxNote": "Keep this receipt for your records.",
-      "error": "Couldn't open the receipt — please try again."
-    }
+      "error": "Couldn't open the receipt — please try again.",
+      "ngoName": "MasjidKoi Foundation",
+      "ngoReg": "Reg. No: NGO-12345 · Dhaka, Bangladesh",
+      "documentTitle": "Donation Acknowledgment Receipt",
+      "receivedFrom": "Received from {{name}}",
+      "masjidLabel": "Masjid",
+      "txnLabel": "Transaction ID",
+      "taxDeductible": "Tax-deductible under the Income Tax Ordinance · NBR approved",
+      "computerGenerated": "Computer-generated · no signature required"
+    },
+    "campaignTitle": "Campaign donation"
   },
   "settings": {
     "hub": {

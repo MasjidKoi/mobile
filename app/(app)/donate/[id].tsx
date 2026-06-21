@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, Banner, Button, Chip, Input, Text } from "@/components";
+import { AppBar, Banner, Button, CampaignCard, Chip, Input, Text } from "@/components";
 import { AmountField, AnonymityRow, FeeDisclosure } from "@/components/donation";
 import { useCampaign } from "@/hooks/useCampaign";
 import { useCreateDonation } from "@/hooks/useCreateDonation";
@@ -160,7 +160,11 @@ export default function DonateScreen() {
   // ---- Amount step (35/36) ----------------------------------------------
   return (
     <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
-      <AppBar title={t("donation.title")} left={backButton} right={closeButton} />
+      <AppBar
+        title={t(campaignId ? "donation.campaignTitle" : "donation.title")}
+        left={backButton}
+        right={closeButton}
+      />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView contentContainerClassName="gap-lg px-5 py-3 pb-6" keyboardShouldPersistTaps="handled">
           {/* Masjid header */}
@@ -181,14 +185,21 @@ export default function DonateScreen() {
             ) : null}
           </View>
 
-          {/* Campaign context when this gift is campaign-scoped */}
+          {/* Campaign context when this gift is campaign-scoped (38 Donate Campaign):
+              full progress card — name, days left, percent, bar, raised/goal. */}
           {campaign ? (
-            <View className="flex-row items-center gap-2 rounded-md bg-accent-gold-soft px-3.5 py-2.5">
-              <Feather name="flag" size={14} color={c["accent-gold"]} />
-              <Text variant="caption" numberOfLines={1} className="flex-1 font-medium text-accent-gold">
-                {campaign.title}
-              </Text>
-            </View>
+            <CampaignCard
+              name={campaign.title}
+              daysLabel={t("masjid.campaign.daysLeft", {
+                formatted: f.number(Math.max(0, campaign.days_remaining)),
+              })}
+              percentLabel={`${f.number(Math.round(campaign.progress_pct))}%`}
+              value={Math.min(1, Math.max(0, campaign.progress_pct / 100))}
+              raisedLabel={t("masjid.campaign.raised", {
+                raised: f.currency(Number(campaign.raised_amount) || 0),
+                target: f.currency(Number(campaign.target_amount) || 0),
+              })}
+            />
           ) : null}
 
           {/* Amount display + presets */}
