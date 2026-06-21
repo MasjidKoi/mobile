@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
 import { Pressable, type PressableProps, View } from "react-native";
 
+import { useColors } from "@/lib/theme/useColors";
+
 import { Text } from "./Text";
 
 /**
@@ -30,6 +32,7 @@ export function NearestMasjidCard({
   className,
   ...props
 }: NearestMasjidCardProps) {
+  const c = useColors();
   return (
     <Pressable
       className={`gap-3.5 rounded-lg bg-primary p-[18px]${className ? ` ${className}` : ""}`}
@@ -46,8 +49,10 @@ export function NearestMasjidCard({
           <Text className="text-display font-bold text-on-inverse">{countdown}</Text>
         </View>
         <View className="flex-row items-center gap-1.5 rounded-full bg-overlay px-3 py-1.5">
-          {statusIcon}
-          <Text className="text-caption font-semibold text-accent-gold-soft">{statusLabel}</Text>
+          <View style={{ transform: [{ translateY: -1.5 }] }}>{statusIcon}</View>
+          <Text className="text-caption font-semibold" style={{ color: c["accent-gold-soft"] }}>
+            {statusLabel}
+          </Text>
         </View>
       </View>
     </Pressable>

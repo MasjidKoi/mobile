@@ -1,5 +1,7 @@
 import { View } from "react-native";
 
+import { useColors } from "@/lib/theme/useColors";
+
 import { Text } from "./Text";
 
 /**
@@ -29,6 +31,7 @@ export function PrayerTable({
   iqamahLabel = "জামাত",
   className,
 }: PrayerTableProps) {
+  const c = useColors();
   return (
     <View
       className={`overflow-hidden rounded-lg border border-border bg-surface${
@@ -37,10 +40,10 @@ export function PrayerTable({
     >
       <View className="flex-row items-center bg-background px-4 py-3">
         <Text className="flex-1 text-[12px] font-semibold text-content-secondary">{date}</Text>
-        <Text className="w-20 text-right text-[12px] font-semibold text-content-muted">
+        <Text className="w-20 text-right text-[12px] font-semibold" style={{ color: c["text-muted"] }}>
           {azanLabel}
         </Text>
-        <Text className="w-20 text-right text-[12px] font-semibold text-content-muted">
+        <Text className="w-20 text-right text-[12px] font-semibold" style={{ color: c["text-muted"] }}>
           {iqamahLabel}
         </Text>
       </View>
