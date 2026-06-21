@@ -23,6 +23,7 @@ import {
 } from "@/components/profile";
 import { useAnsweredQuestions } from "@/hooks/useAnsweredQuestions";
 import { useCampaigns } from "@/hooks/useCampaigns";
+import { useCheckIn, CheckInPermissionError } from "@/hooks/useCheckIn";
 import { useCommunityPhotos } from "@/hooks/useCommunityPhotos";
 import { useEvents } from "@/hooks/useEvents";
 import { useFollow } from "@/hooks/useFollow";
@@ -81,6 +82,7 @@ export default function MasjidProfileScreen() {
   const communityPhotos = photosQuery.data?.pages.flatMap((p) => p.items) ?? [];
 
   const follow = useFollow(masjidId, masjid?.name);
+  const checkin = useCheckIn(masjidId);
 
   // `recordView` is a fresh closure each render — call it through a ref so this
   // records once per masjid, not on every re-render.
@@ -142,6 +144,38 @@ export default function MasjidProfileScreen() {
       "donate",
     );
 
+  // Check-in is gated; the hook acquires a fresh GPS fix (the server enforces the
+  // 100m radius). Route to the result screen on success / too-far; permission
+  // denial diverts to the location explainer.
+  const goCheckIn = () =>
+    requireAuth(() => {
+      if (checkin.isPending) return;
+      checkin.mutate(undefined, {
+        onSuccess: (res) =>
+          router.push({
+            pathname: "/checkin/[id]",
+            params: {
+              id: masjidId,
+              status: "success",
+              checkedInAt: res.checked_in_at,
+              masjidName: masjid.name,
+              badges: JSON.stringify(res.new_badges ?? []),
+            },
+          }),
+        onError: (e) => {
+          if (e instanceof CheckInPermissionError) {
+            router.push("/location-explainer");
+            return;
+          }
+          const status = e instanceof ApiError && e.status === 400 ? "too_far" : "error";
+          router.push({
+            pathname: "/checkin/[id]",
+            params: { id: masjidId, status, masjidName: masjid.name },
+          });
+        },
+      });
+    }, "community");
+
   return (
     <View className="flex-1 bg-background">
       <ScrollView
@@ -193,6 +227,14 @@ export default function MasjidProfileScreen() {
             isFollowing={follow.isFollowing}
             onToggleFollow={() => requireAuth(() => follow.toggle(), "community")}
             followPending={follow.isPending}
+          />
+
+          <Button
+            variant="secondary"
+            label={checkin.isPending ? t("community.checkin.checking") : t("community.checkin.cta")}
+            disabled={checkin.isPending}
+            leftIcon={<Feather name="map-pin" size={16} color={c.primary} />}
+            onPress={goCheckIn}
           />
 
           {stale ? (

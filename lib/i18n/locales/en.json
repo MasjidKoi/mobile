@@ -928,6 +928,25 @@
       "saveError": "Couldn't save your review — try again.",
       "deleteConfirmTitle": "Delete your review?",
       "deleteConfirmBody": "This permanently removes your review and rating."
+    },
+    "checkin": {
+      "cta": "Check in",
+      "checking": "Checking in…",
+      "successTitle": "Checked in!",
+      "successAt": "You're checked in at {{masjid}}.",
+      "successCaption": "You're checked in.",
+      "tooFarTitle": "You're too far away",
+      "tooFarCaption": "You need to be within {{meters}} m of the masjid to check in.",
+      "errorTitle": "Check-in failed",
+      "errorCaption": "Something went wrong — try again.",
+      "newBadges": "New badges earned",
+      "review": "Leave a review",
+      "retry": "Try again",
+      "badge": {
+        "FajrWarrior": "Fajr Warrior",
+        "GenerousGiver": "Generous Giver",
+        "CommunityPillar": "Community Pillar"
+      }
     }
   }
 }

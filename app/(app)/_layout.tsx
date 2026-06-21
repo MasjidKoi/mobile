@@ -60,6 +60,7 @@ export default function AppLayout() {
         <Stack.Screen name="event/[id]" />
         <Stack.Screen name="reviews/[id]" />
         <Stack.Screen name="review/[id]" />
+        <Stack.Screen name="checkin/[id]" />
         <Stack.Screen name="following" />
         <Stack.Screen name="set-home-masjid" options={{ presentation: "modal" }} />
         <Stack.Screen name="email" options={{ presentation: "modal" }} />

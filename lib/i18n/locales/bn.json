@@ -928,6 +928,25 @@
       "saveError": "রিভিউ সংরক্ষণ করা যায়নি — আবার চেষ্টা করুন।",
       "deleteConfirmTitle": "আপনার রিভিউ মুছবেন?",
       "deleteConfirmBody": "এটি আপনার রিভিউ ও রেটিং স্থায়ীভাবে মুছে দেবে।"
+    },
+    "checkin": {
+      "cta": "চেক-ইন",
+      "checking": "চেক-ইন হচ্ছে…",
+      "successTitle": "চেক-ইন সম্পন্ন!",
+      "successAt": "আপনি {{masjid}}-এ চেক-ইন করেছেন।",
+      "successCaption": "আপনি চেক-ইন করেছেন।",
+      "tooFarTitle": "আপনি অনেক দূরে আছেন",
+      "tooFarCaption": "চেক-ইন করতে মসজিদের {{meters}} মিটারের মধ্যে থাকতে হবে।",
+      "errorTitle": "চেক-ইন ব্যর্থ",
+      "errorCaption": "কিছু সমস্যা হয়েছে — আবার চেষ্টা করুন।",
+      "newBadges": "নতুন ব্যাজ অর্জিত",
+      "review": "রিভিউ দিন",
+      "retry": "আবার চেষ্টা করুন",
+      "badge": {
+        "FajrWarrior": "ফজর যোদ্ধা",
+        "GenerousGiver": "উদার দাতা",
+        "CommunityPillar": "কমিউনিটি স্তম্ভ"
+      }
     }
   }
 }

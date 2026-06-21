@@ -928,6 +928,25 @@
       "saveError": "تعذّر حفظ مراجعتك — حاول مجددًا.",
       "deleteConfirmTitle": "حذف مراجعتك؟",
       "deleteConfirmBody": "سيؤدي هذا إلى إزالة مراجعتك وتقييمك نهائيًا."
+    },
+    "checkin": {
+      "cta": "تسجيل الحضور",
+      "checking": "جارٍ تسجيل الحضور…",
+      "successTitle": "تم تسجيل حضورك!",
+      "successAt": "تم تسجيل حضورك في {{masjid}}.",
+      "successCaption": "تم تسجيل حضورك.",
+      "tooFarTitle": "أنت بعيد جدًا",
+      "tooFarCaption": "يجب أن تكون ضمن {{meters}} متر من المسجد لتسجيل الحضور.",
+      "errorTitle": "فشل تسجيل الحضور",
+      "errorCaption": "حدث خطأ ما — حاول مجددًا.",
+      "newBadges": "أوسمة جديدة",
+      "review": "اترك مراجعة",
+      "retry": "حاول مجددًا",
+      "badge": {
+        "FajrWarrior": "محارب الفجر",
+        "GenerousGiver": "المعطي الكريم",
+        "CommunityPillar": "ركيزة المجتمع"
+      }
     }
   }
 }
