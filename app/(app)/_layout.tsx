@@ -32,6 +32,7 @@ export default function AppLayout() {
         <Stack.Screen name="my-photo-submissions" />
         <Stack.Screen name="my-questions" />
         <Stack.Screen name="donate/[id]" />
+        <Stack.Screen name="donation/[id]" />
         <Stack.Screen name="qibla" />
         <Stack.Screen name="hijri-calendar" />
         <Stack.Screen name="prayer-reminders" />

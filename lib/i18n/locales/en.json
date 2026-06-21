@@ -400,7 +400,12 @@
     "name_too_long": "That name is too long",
     "masjid_name_required": "Enter the masjid name",
     "masjid_name_too_long": "That name is too long",
-    "address_too_long": "That address is too long"
+    "address_too_long": "That address is too long",
+    "amount_required": "Enter an amount",
+    "amount_too_low": "Minimum is ৳10",
+    "amount_too_high": "Maximum is ৳5,00,000",
+    "donor_name_required": "Enter your name",
+    "donor_name_too_long": "That name is too long"
   },
   "masjid": {
     "profile": {
@@ -556,6 +561,66 @@
         "emptyTitle": "No questions yet",
         "emptyCaption": "Questions you ask show up here with their status."
       }
+    }
+  },
+  "donation": {
+    "title": "Donate",
+    "amount": {
+      "title": "Amount",
+      "customPlaceholder": "Enter an amount",
+      "categoryLabel": "Category",
+      "categoryOptional": "Category (optional)",
+      "fee": "Masjid receives ~{{net}} · after platform fee",
+      "anonymityLabel": "Donate anonymously",
+      "anonymityHint": "Your name won't be shown to the masjid",
+      "cta": "Donate {{amount}}",
+      "toMasjid": "To {{masjid}}"
+    },
+    "category": {
+      "general": "General",
+      "building": "Building",
+      "zakat": "Zakat",
+      "sadaqah": "Sadaqah",
+      "lillah": "Lillah",
+      "campaign": "Campaign"
+    },
+    "name": {
+      "title": "Enter your name",
+      "subtitle": "Shown on your receipt. You can choose to stay anonymous instead.",
+      "label": "Full name",
+      "placeholder": "Your name",
+      "note": "Your name is shared with the masjid for this gift only.",
+      "cta": "Continue"
+    },
+    "checkout": {
+      "opening": "Opening secure checkout…",
+      "error": "Couldn't start payment — please try again."
+    },
+    "confirming": {
+      "title": "Confirming payment",
+      "caption": "Checking with the gateway — this takes a few seconds.",
+      "cancel": "Cancel"
+    },
+    "success": {
+      "title": "JazakAllah Khairan",
+      "subtitle": "Your donation went through.",
+      "receipt": "Receipt",
+      "done": "Done",
+      "txn": "Transaction {{id}}",
+      "recurringNudge": "Make this a regular gift"
+    },
+    "failed": {
+      "title": "Payment failed",
+      "caption": "Your payment didn't go through and you weren't charged.",
+      "notCharged": "No money was deducted.",
+      "retry": "Try again",
+      "dismiss": "Not now"
+    },
+    "recovery": {
+      "title": "Finish your donation?",
+      "caption": "We didn't get a confirmation. You can retry or check the status.",
+      "retry": "Try again",
+      "checkStatus": "Check status"
     }
   }
 }

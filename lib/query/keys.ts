@@ -1,3 +1,4 @@
+import type { DonationHistoryFilters } from "@/lib/donations/types";
 import type { Coords } from "@/lib/location/types";
 import type { MasjidFacilityFilters } from "@/lib/masjids/types";
 
@@ -48,5 +49,16 @@ export const qk = {
   // Session-optimistic follow state (no read endpoint until Phase 8).
   follows: {
     status: (id: string) => ["follows", id] as const,
+  },
+  // Phase 6 — donations + recurring. User-scoped private data, deliberately
+  // OUTSIDE the "masjids"/"app-config" persistence root (never cached to disk).
+  donations: {
+    detail: (id: string) => ["donations", "detail", id] as const,
+    mine: (filters?: DonationHistoryFilters) =>
+      ["donations", "mine", filters ?? {}] as const,
+    summary: () => ["donations", "summary"] as const,
+  },
+  recurring: {
+    mine: () => ["recurring", "mine"] as const,
   },
 } as const;

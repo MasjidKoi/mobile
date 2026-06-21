@@ -128,6 +128,17 @@ export default function MasjidProfileScreen() {
   const goGated = (pathname: "/add-photo" | "/ask-question") =>
     requireAuth(() => router.push({ pathname, params: { masjidId } }), "community");
 
+  // Donating is a gated action — request login first, then open the flow.
+  const goDonate = (campaignId?: string) =>
+    requireAuth(
+      () =>
+        router.push({
+          pathname: "/donate/[id]",
+          params: { id: masjidId, ...(campaignId ? { campaignId } : {}) },
+        }),
+      "donate",
+    );
+
   return (
     <View className="flex-1 bg-background">
       <ScrollView
@@ -227,12 +238,7 @@ export default function MasjidProfileScreen() {
           {facilities.imam ? <ImamCard imam={facilities.imam} /> : null}
           <ContactSection links={contactLinks} />
 
-          <CampaignsSection
-            campaigns={campaigns}
-            onDonate={(campaignId) =>
-              router.push({ pathname: "/donate/[id]", params: { id: masjidId, campaignId } })
-            }
-          />
+          <CampaignsSection campaigns={campaigns} onDonate={(campaignId) => goDonate(campaignId)} />
 
           <VisitorPhotoStrip
             photos={communityPhotos}
@@ -269,7 +275,7 @@ export default function MasjidProfileScreen() {
               <Button
                 label={t("masjid.donate.cta")}
                 leftIcon={<Feather name="heart" size={16} color={c["on-inverse"]} />}
-                onPress={() => router.push({ pathname: "/donate/[id]", params: { id: masjidId } })}
+                onPress={() => goDonate()}
               />
             }
           />

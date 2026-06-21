@@ -400,7 +400,12 @@
     "name_too_long": "هذا الاسم طويل جدًا",
     "masjid_name_required": "أدخل اسم المسجد",
     "masjid_name_too_long": "هذا الاسم طويل جدًا",
-    "address_too_long": "هذا العنوان طويل جدًا"
+    "address_too_long": "هذا العنوان طويل جدًا",
+    "amount_required": "أدخل مبلغًا",
+    "amount_too_low": "الحد الأدنى ৳10",
+    "amount_too_high": "الحد الأقصى ৳500,000",
+    "donor_name_required": "أدخل اسمك",
+    "donor_name_too_long": "هذا الاسم طويل جدًا"
   },
   "masjid": {
     "profile": {
@@ -556,6 +561,66 @@
         "emptyTitle": "لا توجد أسئلة بعد",
         "emptyCaption": "تظهر الأسئلة التي تطرحها هنا مع حالتها."
       }
+    }
+  },
+  "donation": {
+    "title": "تبرّع",
+    "amount": {
+      "title": "المبلغ",
+      "customPlaceholder": "أدخل مبلغًا",
+      "categoryLabel": "الفئة",
+      "categoryOptional": "الفئة (اختياري)",
+      "fee": "يصل المسجد ~{{net}} · بعد رسوم المنصة",
+      "anonymityLabel": "تبرّع دون اسم",
+      "anonymityHint": "لن يظهر اسمك للمسجد",
+      "cta": "تبرّع بـ {{amount}}",
+      "toMasjid": "إلى {{masjid}}"
+    },
+    "category": {
+      "general": "عام",
+      "building": "بناء",
+      "zakat": "زكاة",
+      "sadaqah": "صدقة",
+      "lillah": "لله",
+      "campaign": "حملة"
+    },
+    "name": {
+      "title": "أدخل اسمك",
+      "subtitle": "سيظهر على إيصالك. يمكنك أيضًا البقاء دون اسم.",
+      "label": "الاسم الكامل",
+      "placeholder": "اسمك",
+      "note": "تتم مشاركة اسمك مع المسجد لهذا التبرّع فقط.",
+      "cta": "متابعة"
+    },
+    "checkout": {
+      "opening": "جارٍ فتح الدفع الآمن…",
+      "error": "تعذّر بدء الدفع — حاول مرة أخرى."
+    },
+    "confirming": {
+      "title": "جارٍ تأكيد الدفع",
+      "caption": "نتحقق من بوابة الدفع — يستغرق ذلك بضع ثوانٍ.",
+      "cancel": "إلغاء"
+    },
+    "success": {
+      "title": "جزاك الله خيرًا",
+      "subtitle": "تمّ تبرّعك بنجاح.",
+      "receipt": "الإيصال",
+      "done": "تم",
+      "txn": "المعاملة {{id}}",
+      "recurringNudge": "اجعله تبرّعًا منتظمًا"
+    },
+    "failed": {
+      "title": "فشل الدفع",
+      "caption": "لم يتمّ الدفع ولم يُخصم منك أي مبلغ.",
+      "notCharged": "لم يُخصم أي مبلغ.",
+      "retry": "حاول مرة أخرى",
+      "dismiss": "ليس الآن"
+    },
+    "recovery": {
+      "title": "إكمال التبرّع؟",
+      "caption": "لم نتلقَّ تأكيدًا. يمكنك المحاولة مجددًا أو التحقق من الحالة.",
+      "retry": "حاول مرة أخرى",
+      "checkStatus": "تحقق من الحالة"
     }
   }
 }
