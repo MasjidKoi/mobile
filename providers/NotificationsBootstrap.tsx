@@ -22,7 +22,9 @@ export function NotificationsBootstrap() {
         kind?: string;
       } | null;
       if (data?.masjidId) {
-        router.push({
+        // navigate (not push): a tapped reminder shouldn't stack a second masjid
+        // profile when one is already open.
+        router.navigate({
           pathname: "/masjid/[id]",
           params: { id: data.masjidId, prayer: data.prayer ?? "" },
         });
@@ -30,7 +32,7 @@ export function NotificationsBootstrap() {
       }
       // Phase 9 — a gamification nudge opens the journal hub.
       if (data?.kind && (NUDGE_KINDS as readonly string[]).includes(data.kind)) {
-        router.push("/journal");
+        router.navigate("/journal");
       }
     };
 

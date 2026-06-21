@@ -58,6 +58,7 @@ export default function FeedTab() {
         <View className="px-4 pt-2">{title}</View>
         <View className="flex-1 items-center justify-center px-lg">
           <EmptyState
+            variant="plain"
             icon={<Feather name="user" size={28} color={c.primary} />}
             title={t("feed.guest.title")}
             caption={t("feed.guest.caption")}
@@ -138,7 +139,8 @@ export default function FeedTab() {
       <FlatList
         data={items}
         keyExtractor={feedKey}
-        contentContainerClassName="gap-2.5 px-4 py-3 pb-8"
+        className="flex-1"
+        contentContainerClassName="grow gap-2.5 px-4 py-3 pb-8"
         renderItem={({ item }) =>
           item.kind === "announcement" ? renderAnnouncement(item) : renderEvent(item)
         }
@@ -151,20 +153,21 @@ export default function FeedTab() {
         }
         ListEmptyComponent={
           q.isLoading ? (
-            <View className="items-center py-16">
+            <View className="flex-1 items-center justify-center py-16">
               <ActivityIndicator color={c.primary} />
             </View>
           ) : offline ? null : (
-            <View className="items-center px-6 py-12">
+            <View className="flex-1 items-center justify-center px-6">
               <EmptyState
+                variant="plain"
                 icon={<Feather name="rss" size={26} color={c.primary} />}
                 title={t(type === "events" ? "feed.empty.eventsTitle" : "feed.empty.announcementsTitle")}
                 caption={t("feed.empty.caption")}
                 action={
                   <Button
-                    variant="text"
                     label={t("feed.empty.cta")}
-                    onPress={() => router.push("/explore")}
+                    className="mt-1"
+                    onPress={() => router.navigate("/explore")}
                   />
                 }
               />

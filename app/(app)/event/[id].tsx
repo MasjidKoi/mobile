@@ -141,7 +141,9 @@ export default function EventDetailScreen() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() =>
-                  router.push({ pathname: "/masjid/[id]", params: { id: event.masjid_id } })
+                  // navigate (not push): jump back to this masjid if it's already
+                  // on the stack rather than stacking a duplicate profile.
+                  router.navigate({ pathname: "/masjid/[id]", params: { id: event.masjid_id } })
                 }
               >
                 <Text variant="caption" className="text-primary">

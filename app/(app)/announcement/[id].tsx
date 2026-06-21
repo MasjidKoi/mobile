@@ -28,8 +28,10 @@ export default function AnnouncementDetailScreen() {
   const offline = isOfflineQuery(q);
 
   const back = <BackButton onPress={() => router.back()} />;
+  // navigate (not push): if this masjid is already on the stack, jump back to it
+  // instead of stacking a duplicate profile.
   const goMasjid = () =>
-    a ? router.push({ pathname: "/masjid/[id]", params: { id: a.masjid_id } }) : undefined;
+    a ? router.navigate({ pathname: "/masjid/[id]", params: { id: a.masjid_id } }) : undefined;
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-background">

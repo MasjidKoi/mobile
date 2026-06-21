@@ -69,7 +69,7 @@ export default function RecurringManagerScreen() {
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={t("donation.recurring.newCta")}
-      onPress={() => router.push("/explore")}
+      onPress={() => router.navigate("/explore")}
       hitSlop={12}
     >
       <Feather name="plus" size={22} color={c.primary} />
@@ -121,7 +121,7 @@ export default function RecurringManagerScreen() {
             variant="secondary"
             label={t("donation.recurring.newCta")}
             leftIcon={<Feather name="plus" size={16} color={c.primary} />}
-            onPress={() => router.push("/explore")}
+            onPress={() => router.navigate("/explore")}
           />
         </ScrollView>
       )}

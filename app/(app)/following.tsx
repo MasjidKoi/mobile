@@ -115,7 +115,7 @@ export default function FollowingScreen() {
                   <Button
                     variant="text"
                     label={t("feed.empty.cta")}
-                    onPress={() => router.push("/explore")}
+                    onPress={() => router.navigate("/explore")}
                   />
                 }
               />

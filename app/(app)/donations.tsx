@@ -55,8 +55,9 @@ export default function DonationsDashboardScreen() {
 
   const header = (
     <View className="gap-4 pb-2">
-      {/* Summary */}
-      <View className="gap-3 rounded-lg border border-border bg-surface p-4">
+      {/* Summary — flat on the screen background so the two StatCards below read
+          as distinct cards instead of white-on-white inside an outer card. */}
+      <View className="gap-3">
         <View className="gap-0.5">
           <Text variant="caption" className="text-content-secondary">
             {t("donation.dashboard.lifetime")}
@@ -176,6 +177,7 @@ export default function DonationsDashboardScreen() {
           ) : offline ? null : (
             <View className="items-center px-6 py-12">
               <EmptyState
+                variant="plain"
                 icon={<Feather name="heart" size={26} color={c.primary} />}
                 title={t("donation.dashboard.emptyTitle")}
                 caption={t("donation.dashboard.emptyCaption")}
@@ -183,7 +185,7 @@ export default function DonationsDashboardScreen() {
                   <Button
                     variant="text"
                     label={t("donation.dashboard.emptyCta")}
-                    onPress={() => router.push("/explore")}
+                    onPress={() => router.navigate("/explore")}
                   />
                 }
               />
