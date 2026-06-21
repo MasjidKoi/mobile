@@ -29,13 +29,17 @@ export const asyncStoragePersister = createAsyncStoragePersister({
 });
 
 /**
- * Whitelist of what reaches disk: only successful, public, non-PII masjid and
- * app-config reads — so pins, prayer-times and config hydrate offline. User /
- * auth / profile queries are never persisted. (The first key tuple element is
- * the persistence root; see `lib/query/keys.ts`.)
+ * Whitelist of what reaches disk: successful, public, non-PII masjid and
+ * app-config reads — so pins, prayer-times and config hydrate offline — plus the
+ * followed-masjid `feed` (announcements/events of masjids the user chose to
+ * follow) so the Feed-Offline variant works on a cold start. The feed is
+ * user-scoped, so `AuthProvider` drops it from the cache on logout/session-expiry
+ * to avoid it bleeding across accounts. Other user/auth/profile queries are never
+ * persisted. (The first key tuple element is the persistence root; see
+ * `lib/query/keys.ts`.)
  */
 export function shouldDehydrateQuery(query: Query): boolean {
   if (query.state.status !== "success") return false;
   const root = query.queryKey[0];
-  return root === "masjids" || root === "app-config";
+  return root === "masjids" || root === "app-config" || root === "feed";
 }

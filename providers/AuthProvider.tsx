@@ -118,6 +118,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await resetGuestMigration();
     setStatus("guest");
     queryClient.removeQueries({ queryKey: qk.user.me() });
+    // Drop user-scoped community caches so a persisted feed never bleeds across
+    // accounts (the feed is the only user-scoped query written to disk).
+    queryClient.removeQueries({ queryKey: ["feed"] });
+    queryClient.removeQueries({ queryKey: qk.checkins.mine() });
+    queryClient.removeQueries({ queryKey: qk.notificationPrefs() });
   }, [queryClient]);
 
   // A soft-deleted account (410) can't be used — drop to guest.
@@ -133,6 +138,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUnauthorizedHandler(() => {
       setStatus("guest");
       queryClient.removeQueries({ queryKey: qk.user.me() });
+      queryClient.removeQueries({ queryKey: ["feed"] });
+      queryClient.removeQueries({ queryKey: qk.checkins.mine() });
+      queryClient.removeQueries({ queryKey: qk.notificationPrefs() });
       setReloginPrompt(true);
     });
     return () => setUnauthorizedHandler(null);

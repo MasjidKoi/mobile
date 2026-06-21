@@ -55,6 +55,10 @@ export default function AppLayout() {
         <Stack.Screen name="delete-confirm" />
         <Stack.Screen name="account-deleted" />
         <Stack.Screen name="about" />
+        {/* Phase 8 — community */}
+        <Stack.Screen name="announcement/[id]" />
+        <Stack.Screen name="event/[id]" />
+        <Stack.Screen name="following" />
         <Stack.Screen name="set-home-masjid" options={{ presentation: "modal" }} />
         <Stack.Screen name="email" options={{ presentation: "modal" }} />
         <Stack.Screen name="otp" options={{ presentation: "modal" }} />

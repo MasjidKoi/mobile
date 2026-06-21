@@ -16,6 +16,9 @@ export const ENDPOINTS = {
     // Phase 7 — settings. `me` doubles as the DELETE target (202 soft-delete).
     export: "/users/me/export",
     notificationPreferences: "/users/me/notification-preferences",
+    // Phase 8 — community. Followed-masjid feed (type-segmented) + check-in history.
+    feed: "/users/me/feed",
+    checkins: "/users/me/checkins",
   },
   masjids: {
     nearby: "/masjids/nearby",
@@ -35,6 +38,14 @@ export const ENDPOINTS = {
     followersCount: (id: string) => `/masjids/${id}/followers/count`,
     // Phase 6 — start a donation against a masjid (Bearer; SSLCommerz checkout).
     donations: (id: string) => `/masjids/${id}/donations`,
+    // Phase 8 — community. Announcements + events (public reads), RSVP toggle,
+    // and the geofenced check-in (Bearer).
+    announcements: (id: string) => `/masjids/${id}/announcements`,
+    announcementById: (id: string, announcementId: string) =>
+      `/masjids/${id}/announcements/${announcementId}`,
+    events: (id: string) => `/masjids/${id}/events`,
+    eventRsvp: (id: string, eventId: string) => `/masjids/${id}/events/${eventId}/rsvp`,
+    checkin: (id: string) => `/masjids/${id}/checkin`,
   },
   // Phase 6 — campaign-scoped donations + single-donation reads.
   campaigns: {

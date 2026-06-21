@@ -9,6 +9,7 @@ import { Banner, Button, DonateBar, EmptyState, MasjidTimesSection, SectionHeade
 import {
   CampaignsSection,
   ContactSection,
+  EventsSection,
   FacilitiesSection,
   ImamCard,
   NextPrayerCard,
@@ -23,6 +24,7 @@ import {
 import { useAnsweredQuestions } from "@/hooks/useAnsweredQuestions";
 import { useCampaigns } from "@/hooks/useCampaigns";
 import { useCommunityPhotos } from "@/hooks/useCommunityPhotos";
+import { useEvents } from "@/hooks/useEvents";
 import { useFollow } from "@/hooks/useFollow";
 import { useHijriDate } from "@/hooks/useHijriDate";
 import { useJumah } from "@/hooks/useJumah";
@@ -72,12 +74,13 @@ export default function MasjidProfileScreen() {
   const clock = usePrayerClock(today);
 
   const campaigns = useCampaigns(masjidId).data?.items ?? [];
+  const events = useEvents(masjidId).data?.items ?? [];
   const answered = useAnsweredQuestions(masjidId).data?.items ?? [];
   const reviews = useReviewsSummary(masjidId).data;
   const photosQuery = useCommunityPhotos(masjidId);
   const communityPhotos = photosQuery.data?.pages.flatMap((p) => p.items) ?? [];
 
-  const follow = useFollow(masjidId);
+  const follow = useFollow(masjidId, masjid?.name);
 
   // `recordView` is a fresh closure each render — call it through a ref so this
   // records once per masjid, not on every re-render.
@@ -244,6 +247,22 @@ export default function MasjidProfileScreen() {
               router.push({ pathname: "/campaign/[id]", params: { id: campaignId, masjidId } })
             }
             onDonate={(campaignId) => goDonate(campaignId)}
+          />
+
+          <EventsSection
+            events={events}
+            onOpen={(ev) =>
+              router.push({
+                pathname: "/event/[id]",
+                params: {
+                  id: ev.event_id,
+                  masjidId,
+                  // The public list lacks the caller's own RSVP — the detail screen
+                  // defaults it to "not going" and trusts the toggle's response.
+                  e: JSON.stringify({ ...ev, masjid_name: masjid.name, is_rsvped: false }),
+                },
+              })
+            }
           />
 
           <VisitorPhotoStrip

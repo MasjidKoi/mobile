@@ -31,6 +31,13 @@ export const qk = {
     answeredQuestions: (id: string) => ["masjids", "questions", id] as const,
     reviewsSummary: (id: string) => ["masjids", "reviews-summary", id] as const,
     communityPhotos: (id: string) => ["masjids", "community-photos", id] as const,
+    // Phase 8 — community reads kept under the "masjids" persistence root so a
+    // viewed profile's announcements/events/reviews survive offline.
+    announcements: (id: string) => ["masjids", "announcements", id] as const,
+    announcement: (id: string, announcementId: string) =>
+      ["masjids", "announcement", id, announcementId] as const,
+    events: (id: string) => ["masjids", "events", id] as const,
+    reviews: (id: string) => ["masjids", "reviews", id] as const,
   },
   user: {
     me: () => ["user", "me"] as const,
@@ -46,13 +53,20 @@ export const qk = {
   questions: {
     mine: () => ["questions", "mine"] as const,
   },
-  // Session-optimistic follow state (no read endpoint until Phase 8).
-  follows: {
-    status: (id: string) => ["follows", id] as const,
-  },
   // Phase 7 — server notification preferences (digest hour, mute toggles,
   // donate-anonymously default, and the followed-masjid list with per-masjid mode).
+  // Phase 8 makes this the single source of truth for "am I following?" — the
+  // follow toggle reads/optimistically patches `.masjids[]` here.
   notificationPrefs: () => ["notification-preferences"] as const,
+  // Phase 8 — followed-masjid feed (type-segmented; user-scoped). Persisted so the
+  // Feed-Offline variant + Storage feed-cache row work; dropped on logout.
+  feed: {
+    list: (type: "announcements" | "events") => ["feed", type] as const,
+  },
+  // Phase 8 — check-in history (user-scoped, not persisted).
+  checkins: {
+    mine: () => ["checkins", "mine"] as const,
+  },
   // Phase 6 — donations + recurring. User-scoped private data, deliberately
   // OUTSIDE the "masjids"/"app-config" persistence root (never cached to disk).
   donations: {

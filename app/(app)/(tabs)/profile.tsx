@@ -145,6 +145,12 @@ export default function ProfileTab() {
                 onPress={() => router.push("/donations")}
               />
               <SettingsRow
+                icon="bookmark"
+                tileColor={c["accent-gold"]}
+                label={t("profileTab.rows.following")}
+                onPress={() => router.push("/following")}
+              />
+              <SettingsRow
                 icon="moon"
                 tileColor={c["text-muted"]}
                 label={t("profileTab.rows.journal")}
