@@ -621,6 +621,17 @@
       "caption": "We didn't get a confirmation. You can retry or check the status.",
       "retry": "Try again",
       "checkStatus": "Check status"
+    },
+    "campaign": {
+      "label": "Campaign",
+      "raised": "{{raised}} of {{target}}",
+      "percentRaised": "{{pct}}% raised",
+      "daysLeft": "{{days}} days left",
+      "donateCta": "Donate to this campaign",
+      "fundedBadge": "Goal reached",
+      "completedNote": "This campaign has ended — jazakAllah khairan to everyone who gave.",
+      "notFoundTitle": "Campaign not found",
+      "notFoundCaption": "This campaign may have ended or been removed."
     }
   }
 }

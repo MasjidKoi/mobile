@@ -6,3 +6,6 @@ export type { AnonymityRowProps } from "./AnonymityRow";
 
 export { ConfirmingState } from "./ConfirmingState";
 export type { ConfirmingStateProps } from "./ConfirmingState";
+
+export { FundedBadge } from "./FundedBadge";
+export type { FundedBadgeProps } from "./FundedBadge";

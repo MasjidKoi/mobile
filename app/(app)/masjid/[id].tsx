@@ -238,7 +238,13 @@ export default function MasjidProfileScreen() {
           {facilities.imam ? <ImamCard imam={facilities.imam} /> : null}
           <ContactSection links={contactLinks} />
 
-          <CampaignsSection campaigns={campaigns} onDonate={(campaignId) => goDonate(campaignId)} />
+          <CampaignsSection
+            campaigns={campaigns}
+            onOpen={(campaignId) =>
+              router.push({ pathname: "/campaign/[id]", params: { id: campaignId, masjidId } })
+            }
+            onDonate={(campaignId) => goDonate(campaignId)}
+          />
 
           <VisitorPhotoStrip
             photos={communityPhotos}

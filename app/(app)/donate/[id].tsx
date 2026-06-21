@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppBar, Banner, Button, Chip, Input, Text } from "@/components";
 import { AnonymityRow, FeeDisclosure } from "@/components/donation";
+import { useCampaign } from "@/hooks/useCampaign";
 import { useCreateDonation } from "@/hooks/useCreateDonation";
 import { useMasjid } from "@/hooks/useMasjid";
 import { openCheckout } from "@/lib/donations/checkout";
@@ -36,6 +37,7 @@ export default function DonateScreen() {
   const { user } = useAuth();
   const { id, campaignId } = useLocalSearchParams<{ id: string; campaignId?: string }>();
   const masjid = useMasjid(id);
+  const { campaign } = useCampaign(id, campaignId ?? "");
   const create = useCreateDonation();
 
   const [step, setStep] = useState<Step>("amount");
@@ -178,6 +180,16 @@ export default function DonateScreen() {
               <Feather name="check-circle" size={18} color={c.primary} />
             ) : null}
           </View>
+
+          {/* Campaign context when this gift is campaign-scoped */}
+          {campaign ? (
+            <View className="flex-row items-center gap-2 rounded-md bg-accent-gold-soft px-3.5 py-2.5">
+              <Feather name="flag" size={14} color={c["accent-gold"]} />
+              <Text variant="caption" numberOfLines={1} className="flex-1 font-medium text-accent-gold">
+                {campaign.title}
+              </Text>
+            </View>
+          ) : null}
 
           {/* Amount display + presets */}
           <View className="items-center gap-3">

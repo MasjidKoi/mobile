@@ -621,6 +621,17 @@
       "caption": "لم نتلقَّ تأكيدًا. يمكنك المحاولة مجددًا أو التحقق من الحالة.",
       "retry": "حاول مرة أخرى",
       "checkStatus": "تحقق من الحالة"
+    },
+    "campaign": {
+      "label": "حملة",
+      "raised": "{{raised}} من {{target}}",
+      "percentRaised": "{{pct}}% تم جمعه",
+      "daysLeft": "{{days}} يومًا متبقية",
+      "donateCta": "تبرّع لهذه الحملة",
+      "fundedBadge": "تم بلوغ الهدف",
+      "completedNote": "انتهت هذه الحملة — جزى الله خيرًا كل من تبرّع.",
+      "notFoundTitle": "الحملة غير موجودة",
+      "notFoundCaption": "ربما انتهت الحملة أو تمت إزالتها."
     }
   }
 }
