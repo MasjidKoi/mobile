@@ -6,11 +6,12 @@ import { BottomSheet, Button, Text } from "@/components";
 import { useColors } from "@/lib/theme/useColors";
 
 /** Which gated action triggered the gate — picks the icon + copy. */
-export type GateReason = "donate" | "community" | "submit" | "generic";
+export type GateReason = "donate" | "community" | "contribute" | "submit" | "generic";
 
 const ICON: Record<GateReason, keyof typeof Feather.glyphMap> = {
   donate: "heart",
   community: "lock",
+  contribute: "edit-3",
   submit: "plus-circle",
   generic: "user",
 };
@@ -31,6 +32,10 @@ export function LoginGateSheet({ visible, reason, onContinue, onClose }: LoginGa
   const { t } = useTranslation();
   const c = useColors();
 
+  // Some reasons (e.g. `contribute`) add a "you'll return here" reassurance note;
+  // others omit it. defaultValue keeps the raw key from leaking when absent.
+  const note = t(`auth.gate.${reason}.note`, { defaultValue: "" });
+
   return (
     <BottomSheet visible={visible} onClose={onClose}>
       <View className="items-center gap-3 pt-1">
@@ -43,6 +48,11 @@ export function LoginGateSheet({ visible, reason, onContinue, onClose }: LoginGa
         <Text variant="body" className="text-center text-content-secondary">
           {t(`auth.gate.${reason}.body`)}
         </Text>
+        {note ? (
+          <Text variant="caption" className="text-center text-content-muted">
+            {note}
+          </Text>
+        ) : null}
       </View>
       <Button
         label={t("auth.gate.continueWithEmail")}

@@ -2,13 +2,14 @@ import { Feather } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, BackButton, Banner, Button, Input, Text } from "@/components";
+import { AppBar, BackButton, Banner, Button, Dialog, Input, Text } from "@/components";
 import { RatingInput } from "@/components/review";
-import { useReviewUpsert } from "@/hooks/useReviews";
+import { useReviewDelete, useReviewUpsert } from "@/hooks/useReviews";
 import { ApiError } from "@/lib/api/errors";
+import { useColors } from "@/lib/theme/useColors";
 import { useFormat } from "@/lib/i18n/format";
 import { isLowStar, LOW_STAR_MIN_BODY } from "@/lib/reviews/api";
 
@@ -18,15 +19,29 @@ import { isLowStar, LOW_STAR_MIN_BODY } from "@/lib/reviews/api";
 export default function WriteReviewScreen() {
   const { t } = useTranslation();
   const f = useFormat();
-  const params = useLocalSearchParams<{ id: string; rating?: string; body?: string }>();
+  const c = useColors();
+  const params = useLocalSearchParams<{ id: string; rating?: string; body?: string; reviewId?: string }>();
   const masjidId = params.id;
   const isEdit = params.rating != null;
+  const reviewId = params.reviewId;
 
   const [rating, setRating] = useState<number>(Number(params.rating) || 0);
   const [body, setBody] = useState<string>(params.body ?? "");
   const [error, setError] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const upsert = useReviewUpsert(masjidId);
+  const del = useReviewDelete(masjidId);
+
+  const remove = () => {
+    if (!reviewId) return;
+    setConfirmDelete(false);
+    setError(null);
+    del.mutate(reviewId, {
+      onSuccess: () => router.back(),
+      onError: () => setError(t("community.reviews.deleteError")),
+    });
+  };
 
   const trimmed = body.trim();
   const lowStar = isLowStar(rating);
@@ -56,6 +71,18 @@ export default function WriteReviewScreen() {
       <AppBar
         title={isEdit ? t("community.reviews.editTitle") : t("community.reviews.writeTitle")}
         left={<BackButton onPress={() => router.back()} />}
+        right={
+          isEdit && reviewId ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t("community.reviews.delete")}
+              onPress={() => setConfirmDelete(true)}
+              hitSlop={12}
+            >
+              <Feather name="trash-2" size={20} color={c.error} />
+            </Pressable>
+          ) : undefined
+        }
       />
       <KeyboardAvoidingView
         className="flex-1"
@@ -110,6 +137,18 @@ export default function WriteReviewScreen() {
           />
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <Dialog
+        visible={confirmDelete}
+        onClose={() => setConfirmDelete(false)}
+        title={t("community.reviews.deleteConfirmTitle")}
+        description={t("community.reviews.deleteConfirmBody")}
+      >
+        <View className="flex-row justify-end gap-2 pt-1">
+          <Button variant="text" label={t("common.cancel")} onPress={() => setConfirmDelete(false)} />
+          <Button variant="text" label={t("community.reviews.delete")} onPress={remove} />
+        </View>
+      </Dialog>
     </SafeAreaView>
   );
 }

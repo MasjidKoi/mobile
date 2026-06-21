@@ -4,7 +4,15 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, Button, EmptyState, StatusBadge, Text } from "@/components";
+import {
+  AppBar,
+  Button,
+  EmptyState,
+  SegmentedControl,
+  type SegmentedControlOption,
+  StatusBadge,
+  Text,
+} from "@/components";
 import type { StatusTone } from "@/components/StatusBadge";
 import { useMyQuestions } from "@/hooks/useMyQuestions";
 import { useFormat } from "@/lib/i18n/format";
@@ -40,12 +48,20 @@ export default function MyQuestionsScreen() {
     rejected: c.error,
   };
 
+  const tabs: SegmentedControlOption[] = [
+    { key: "photos", label: t("masjid.contribute.tabs.photos") },
+    { key: "questions", label: t("masjid.contribute.tabs.questions") },
+  ];
+
   const renderRow = (q: MyQuestion) => (
     <View key={q.question_id} className="gap-2 rounded-md border border-border bg-surface p-4">
       <View className="flex-row items-start justify-between gap-3">
-        <Text variant="body" numberOfLines={3} className="flex-1 font-semibold">
-          {q.question}
-        </Text>
+        <View className="flex-1 flex-row items-start gap-2">
+          <Feather name="message-circle" size={16} color={c["text-muted"]} style={{ marginTop: 2 }} />
+          <Text variant="body" numberOfLines={3} className="flex-1 font-semibold">
+            {q.question}
+          </Text>
+        </View>
         <StatusBadge
           tone={STATUS_TONE[q.status]}
           label={t(`masjid.contribute.question.status.${q.status}`)}
@@ -78,6 +94,17 @@ export default function MyQuestionsScreen() {
           </Pressable>
         }
       />
+      {isAuthenticated ? (
+        <View className="px-4 pt-2">
+          <SegmentedControl
+            options={tabs}
+            value="questions"
+            onChange={(k) => {
+              if (k === "photos") router.replace("/my-photo-submissions");
+            }}
+          />
+        </View>
+      ) : null}
       {!isAuthenticated ? (
         <View className="flex-1 items-center justify-center px-lg">
           <EmptyState

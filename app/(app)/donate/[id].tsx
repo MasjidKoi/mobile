@@ -196,7 +196,7 @@ export default function DonateScreen() {
             <Text variant="caption" className="text-content-secondary">
               {t("donation.amount.title")}
             </Text>
-            <Text className="text-display font-bold text-content-primary">
+            <Text className={`text-display font-bold ${errorMsg ? "text-error" : "text-content-primary"}`}>
               {f.currency(amount)}
             </Text>
             <AmountField
@@ -208,6 +208,14 @@ export default function DonateScreen() {
                 setErrorMsg(null);
               }}
             />
+            {errorMsg ? (
+              <View className="flex-row items-center gap-1.5">
+                <Feather name="alert-circle" size={14} color={c.error} />
+                <Text variant="caption" className="text-error">
+                  {errorMsg}
+                </Text>
+              </View>
+            ) : null}
           </View>
 
           {/* Category (masjid gifts only; campaigns force the category server-side) */}
@@ -239,8 +247,6 @@ export default function DonateScreen() {
             label={t("donation.amount.anonymityLabel")}
             hint={t("donation.amount.anonymityHint")}
           />
-
-          {errorMsg ? <Text variant="caption" className="text-error">{errorMsg}</Text> : null}
         </ScrollView>
         <View className="border-t border-border bg-surface px-4 pb-2 pt-3">
           <Button

@@ -36,6 +36,19 @@ export default function ExemptModeScreen() {
     <SafeAreaView edges={["top"]} className="flex-1 bg-background">
       <AppBar title={t("streak.exempt.title")} left={<BackButton />} />
       <ScrollView contentContainerClassName="gap-md px-4 py-3 pb-8">
+        {/* Intro explainer */}
+        <View className="flex-row gap-3 rounded-lg bg-primary-soft p-4">
+          <Feather name="calendar" size={20} color={c.primary} />
+          <View className="flex-1 gap-1">
+            <Text variant="body" className="font-semibold text-primary">
+              {t("streak.exempt.introTitle")}
+            </Text>
+            <Text variant="caption" className="text-content-secondary">
+              {t("streak.exempt.introBody")}
+            </Text>
+          </View>
+        </View>
+
         <Text variant="body" className="text-content-secondary">
           {t("streak.exempt.subtitle")}
         </Text>

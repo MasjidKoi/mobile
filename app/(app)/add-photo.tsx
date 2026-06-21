@@ -81,14 +81,22 @@ export default function AddPhotoScreen() {
             title={t("masjid.contribute.photo.sentTitle")}
             caption={t("masjid.contribute.photo.sentCaption")}
             action={
-              <View className="w-full gap-2 pt-1">
-                <Button label={t("masjid.contribute.photo.addAnother")} onPress={reset} />
-                <Button
-                  variant="secondary"
-                  label={t("masjid.contribute.myPhotos.cta")}
-                  onPress={() => router.replace("/my-photo-submissions")}
-                />
-                <Button variant="text" label={t("common.done")} onPress={() => router.back()} />
+              <View className="w-full items-center gap-3 pt-1">
+                <View className="flex-row items-center gap-1.5 rounded-full bg-[#F5EEDC] px-3 py-1.5">
+                  <Feather name="clock" size={13} color="#8A6A1F" />
+                  <Text className="text-caption font-semibold text-[#8A6A1F]">
+                    {t("masjid.contribute.photo.status.pending")}
+                  </Text>
+                </View>
+                <View className="w-full gap-2">
+                  <Button label={t("masjid.contribute.backToProfile")} onPress={() => router.back()} />
+                  <Button
+                    variant="secondary"
+                    label={t("masjid.contribute.myPhotos.cta")}
+                    onPress={() => router.replace("/my-photo-submissions")}
+                  />
+                  <Button variant="text" label={t("masjid.contribute.photo.addAnother")} onPress={reset} />
+                </View>
               </View>
             }
           />
@@ -111,7 +119,12 @@ export default function AddPhotoScreen() {
                 : t("masjid.contribute.photo.limitCaption")
             }
             action={
-              <Button variant="text" label={t("common.close")} onPress={() => router.back()} />
+              <View className="w-full items-center gap-3 pt-1">
+                <Text className="text-center text-caption text-content-muted">
+                  {t("masjid.contribute.photo.limitReassure")}
+                </Text>
+                <Button variant="text" label={t("common.close")} onPress={() => router.back()} />
+              </View>
             }
           />
         </View>

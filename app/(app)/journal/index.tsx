@@ -107,13 +107,17 @@ function CheckinPrefillSheet({
   onPick: (k: PrayerKey) => void;
 }) {
   const { t } = useTranslation();
+  const c = useColors();
   return (
     <BottomSheet visible={visible} onClose={onClose}>
       <View className="gap-3">
         <Text variant="heading">{t("journal.checkinPrefill.title")}</Text>
-        <Text variant="body" className="text-content-secondary">
-          {masjidName ?? t("common.brand")}
-        </Text>
+        <View className="flex-row items-center gap-1.5 self-start rounded-full bg-primary-soft px-3 py-1.5">
+          <Feather name="map-pin" size={13} color={c.primary} />
+          <Text className="text-caption font-semibold text-primary">
+            {masjidName ?? t("common.brand")}
+          </Text>
+        </View>
         <View className="flex-row flex-wrap gap-2 pt-1">
           {unlogged.map((k) => (
             <Chip key={k} label={t(`prayers.${k}`)} onPress={() => onPick(k)} />

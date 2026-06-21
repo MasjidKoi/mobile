@@ -105,7 +105,7 @@ export default function SuggestEditScreen() {
           }
         />
         <ScrollView contentContainerClassName="gap-2 px-4 py-3 pb-8">
-          <Text className="pb-1 text-caption font-regular text-content-secondary">
+          <Text variant="heading" className="pb-1">
             {t("masjid.suggestEdit.intro")}
           </Text>
           {FIELDS.map((fld) => (
@@ -123,6 +123,14 @@ export default function SuggestEditScreen() {
               <Feather name="chevron-right" size={18} color={c["text-muted"]} />
             </Pressable>
           ))}
+          {!isAuthenticated ? (
+            <View className="mt-1 flex-row items-center gap-2 rounded-md bg-primary-soft px-3.5 py-3">
+              <Feather name="lock" size={15} color={c.primary} />
+              <Text className="flex-1 text-caption font-medium text-primary">
+                {t("masjid.suggestEdit.guestNote")}
+              </Text>
+            </View>
+          ) : null}
         </ScrollView>
       </SafeAreaView>
     );
@@ -141,6 +149,18 @@ export default function SuggestEditScreen() {
       />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView contentContainerClassName="gap-md px-4 py-3 pb-8" keyboardShouldPersistTaps="handled">
+          <View className="flex-row items-center justify-between rounded-md bg-primary-soft px-3.5 py-2.5">
+            <View className="flex-1 gap-0.5">
+              <Text variant="micro" className="text-content-muted">
+                {t("masjid.suggestEdit.fieldSelected")}
+              </Text>
+              <Text variant="body" numberOfLines={1} className="font-semibold text-primary">
+                {field ? t(field.labelKey) : ""}
+              </Text>
+            </View>
+            <Button variant="text" label={t("masjid.suggestEdit.changeField")} onPress={() => setStep("field")} />
+          </View>
+
           <View className="gap-1.5">
             <Text className="text-caption font-medium text-content-secondary">
               {t("masjid.suggestEdit.describeLabel")}

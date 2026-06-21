@@ -132,7 +132,7 @@ export default function MasjidProfileScreen() {
   const unclaimed = !masjid.verified;
 
   const goGated = (pathname: "/add-photo" | "/ask-question") =>
-    requireAuth(() => router.push({ pathname, params: { masjidId } }), "community");
+    requireAuth(() => router.push({ pathname, params: { masjidId } }), "contribute");
 
   // Donating is a gated action — request login first, then open the flow.
   const goDonate = (campaignId?: string) =>

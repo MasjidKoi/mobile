@@ -72,6 +72,11 @@
       "generic": {
         "title": "Sign in",
         "body": "Keep your donations, ibadah and saved masjids in one place. No password needed — just your email."
+      },
+      "contribute": {
+        "title": "Sign in to contribute",
+        "body": "An account lets us verify and track your contributions and keeps masjid info reliable. No password needed — just email.",
+        "note": "After signing in, you'll return right where you left off."
       }
     },
     "email": {
@@ -520,7 +525,10 @@
         "contact": "Contact details",
         "photos": "Photos",
         "other": "Something else"
-      }
+      },
+      "guestNote": "You can suggest edits as a guest — add an email if you'd like us to follow up.",
+      "fieldSelected": "Selected field",
+      "changeField": "Change"
     },
     "contribute": {
       "photo": {
@@ -537,21 +545,23 @@
         "sentTitle": "Photo submitted",
         "sentCaption": "Thanks! We'll review it and add it if it checks out.",
         "addAnother": "Add another",
-        "limitTitle": "Daily limit reached",
+        "limitTitle": "Today's upload limit reached",
         "limitCaption": "You've added a lot today — please try again tomorrow.",
         "limitRetry": "You've hit the limit — try again in {{minutes}} min.",
         "status": {
           "pending": "Under review",
           "approved": "Published",
           "rejected": "Not added"
-        }
+        },
+        "limitReassure": "Your earlier submissions are safely in the queue.",
+        "visibleInProfile": "Visible in profile →"
       },
       "question": {
         "title": "Ask a question",
         "deflect": "Already answered:",
         "label": "Your question",
         "placeholder": "e.g. Is there women's parking?",
-        "note": "Questions go to the masjid. Only answered questions are shown publicly.",
+        "note": "Only the masjid authority answers — so every answer is verified. You'll be notified when it arrives.",
         "send": "Send",
         "sending": "Sending…",
         "rateLimited": "Too many questions — please try again later.",
@@ -576,6 +586,11 @@
         "title": "My questions",
         "emptyTitle": "No questions yet",
         "emptyCaption": "Questions you ask show up here with their status."
+      },
+      "backToProfile": "Back to profile",
+      "tabs": {
+        "photos": "Photos",
+        "questions": "Questions"
       }
     }
   },
@@ -706,7 +721,8 @@
       "category": "Category",
       "all": "All",
       "apply": "Apply",
-      "clear": "Clear"
+      "clear": "Clear",
+      "status": "Status"
     },
     "receipt": {
       "title": "Receipt",
@@ -888,7 +904,8 @@
       "title": "Announcement",
       "errorTitle": "Couldn't load announcement",
       "offlineTitle": "You're offline",
-      "errorCaption": "Please try again."
+      "errorCaption": "Please try again.",
+      "viewMasjid": "View masjid profile"
     },
     "events": {
       "attendees": "{{formatted}} going",
@@ -1059,7 +1076,8 @@
     "freezeApplied": {
       "title": "Freeze applied",
       "body": "A freeze covered a missed day — your streak continues.",
-      "ok": "Got it"
+      "ok": "Got it",
+      "chip": "{{n}} freezes used"
     },
     "exempt": {
       "title": "Exempt mode",
@@ -1076,12 +1094,15 @@
         "travel": "Travel",
         "illness": "Illness",
         "other": "Other"
-      }
+      },
+      "introTitle": "What is exempt mode?",
+      "introBody": "Mark days when prayer doesn't apply — menstruation, postpartum, travel or illness — so your streak stays intact."
     },
     "milestone": {
       "title": "{{days}}-day streak!",
       "body": "MashaAllah — your consistency is paying off. Keep going.",
-      "cta": "Continue"
+      "cta": "Continue",
+      "kicker": "MashaAllah!"
     }
   },
   "badges": {

@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -73,15 +73,29 @@ export default function StreakDetailScreen() {
         </ScrollView>
       )}
 
-      {/* 99 Freeze Applied */}
-      <Dialog
-        visible={freezeDialog}
-        onClose={() => setFreezeDialog(false)}
-        title={t("streak.freezeApplied.title")}
-        description={t("streak.freezeApplied.body")}
-      >
-        <View className="flex-row justify-end pt-1">
-          <Button variant="text" label={t("streak.freezeApplied.ok")} onPress={() => setFreezeDialog(false)} />
+      {/* 99 Freeze Applied — centered snowflake celebration. */}
+      <Dialog visible={freezeDialog} onClose={() => setFreezeDialog(false)}>
+        <View className="items-center gap-3">
+          <View className="h-16 w-16 items-center justify-center rounded-full bg-[#E8F0F5]">
+            <MaterialCommunityIcons name="snowflake" size={32} color="#4A7FA5" />
+          </View>
+          <Text className="text-center text-[19px] font-semibold text-content-primary">
+            {t("streak.freezeApplied.title")}
+          </Text>
+          <Text className="text-center text-body font-regular text-content-secondary">
+            {t("streak.freezeApplied.body")}
+          </Text>
+          {data && data.freezes_applied > 0 ? (
+            <View className="flex-row items-center gap-1.5 rounded-full bg-[#E8F0F5] px-3 py-1.5">
+              <MaterialCommunityIcons name="snowflake" size={13} color="#4A7FA5" />
+              <Text className="text-caption font-semibold text-[#4A7FA5]">
+                {t("streak.freezeApplied.chip", { n: f.number(data.freezes_applied) })}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+        <View className="pt-2">
+          <Button label={t("streak.freezeApplied.ok")} onPress={() => setFreezeDialog(false)} />
         </View>
       </Dialog>
     </SafeAreaView>

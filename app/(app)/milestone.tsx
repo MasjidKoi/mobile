@@ -24,6 +24,9 @@ export default function MilestoneScreen() {
           <View className="h-24 w-24 items-center justify-center rounded-full bg-primary-soft">
             <Feather name="zap" size={44} color={c.primary} />
           </View>
+          <Text variant="title" className="text-accent-gold">
+            {t("streak.milestone.kicker")}
+          </Text>
           <Text variant="display" className="text-[44px] text-primary">
             {f.number(count)}
           </Text>

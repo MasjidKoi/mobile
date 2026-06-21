@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AppBar, Button, Card, EmptyState, Text } from "@/components";
 import { useAnsweredQuestions } from "@/hooks/useAnsweredQuestions";
 import { useAskQuestion } from "@/hooks/useAskQuestion";
+import { useMasjid } from "@/hooks/useMasjid";
 import { ApiError } from "@/lib/api/errors";
 import { useColors } from "@/lib/theme/useColors";
 
@@ -33,6 +34,7 @@ export default function AskQuestionScreen() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const answered = useAnsweredQuestions(masjidId).data?.items ?? [];
+  const masjid = useMasjid(masjidId);
   const ask = useAskQuestion(masjidId ?? "");
 
   const trimmed = text.trim();
@@ -62,13 +64,28 @@ export default function AskQuestionScreen() {
             title={t("masjid.contribute.question.sentTitle")}
             caption={t("masjid.contribute.question.sentCaption")}
             action={
-              <View className="w-full gap-2 pt-1">
-                <Button
-                  variant="secondary"
-                  label={t("masjid.contribute.myQuestions.cta")}
-                  onPress={() => router.replace("/my-questions")}
-                />
-                <Button variant="text" label={t("common.done")} onPress={() => router.back()} />
+              <View className="w-full items-center gap-3 pt-1">
+                {text.trim() ? (
+                  <View className="w-full gap-2 rounded-md border border-border bg-surface p-3.5">
+                    <Text variant="caption" numberOfLines={3} className="text-content-primary">
+                      {text.trim()}
+                    </Text>
+                    <View className="flex-row items-center gap-1.5 self-start rounded-full bg-[#F5EEDC] px-2.5 py-1">
+                      <Feather name="clock" size={12} color="#8A6A1F" />
+                      <Text className="text-micro font-semibold text-[#8A6A1F]">
+                        {t("masjid.contribute.question.status.pending")}
+                      </Text>
+                    </View>
+                  </View>
+                ) : null}
+                <View className="w-full gap-2">
+                  <Button label={t("masjid.contribute.backToProfile")} onPress={() => router.back()} />
+                  <Button
+                    variant="secondary"
+                    label={t("masjid.contribute.myQuestions.cta")}
+                    onPress={() => router.replace("/my-questions")}
+                  />
+                </View>
               </View>
             }
           />
@@ -89,6 +106,24 @@ export default function AskQuestionScreen() {
       />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView contentContainerClassName="gap-md px-4 py-3 pb-8" keyboardShouldPersistTaps="handled">
+          {masjid.data?.name ? (
+            <View className="flex-row items-center gap-2.5 rounded-md border border-border bg-surface px-3.5 py-3">
+              <View className="h-9 w-9 items-center justify-center rounded-full bg-primary-soft">
+                <Feather name="home" size={16} color={c.primary} />
+              </View>
+              <View className="flex-1">
+                <Text variant="body" numberOfLines={1} className="font-semibold">
+                  {masjid.data.name}
+                </Text>
+                {masjid.data.admin_region ? (
+                  <Text variant="caption" className="text-content-secondary">
+                    {masjid.data.admin_region}
+                  </Text>
+                ) : null}
+              </View>
+            </View>
+          ) : null}
+
           {answered.length > 0 ? (
             <View className="gap-2">
               <Text className="text-caption font-medium text-content-secondary">

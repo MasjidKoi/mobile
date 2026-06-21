@@ -5,7 +5,15 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, Button, EmptyState, StatusBadge, Text } from "@/components";
+import {
+  AppBar,
+  Button,
+  EmptyState,
+  SegmentedControl,
+  type SegmentedControlOption,
+  StatusBadge,
+  Text,
+} from "@/components";
 import type { StatusTone } from "@/components/StatusBadge";
 import { useMyPhotoSubmissions } from "@/hooks/useMyPhotoSubmissions";
 import { useFormat } from "@/lib/i18n/format";
@@ -46,9 +54,19 @@ export default function MyPhotoSubmissionsScreen() {
         <Text variant="caption" className="text-content-secondary">
           {f.date(new Date(p.created_at))}
         </Text>
+        {p.status === "approved" ? (
+          <Text variant="caption" className="font-medium text-primary">
+            {t("masjid.contribute.photo.visibleInProfile")}
+          </Text>
+        ) : null}
       </View>
     </View>
   );
+
+  const tabs: SegmentedControlOption[] = [
+    { key: "photos", label: t("masjid.contribute.tabs.photos") },
+    { key: "questions", label: t("masjid.contribute.tabs.questions") },
+  ];
 
   return (
     <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
@@ -60,6 +78,17 @@ export default function MyPhotoSubmissionsScreen() {
           </Pressable>
         }
       />
+      {isAuthenticated ? (
+        <View className="px-4 pt-2">
+          <SegmentedControl
+            options={tabs}
+            value="photos"
+            onChange={(k) => {
+              if (k === "questions") router.replace("/my-questions");
+            }}
+          />
+        </View>
+      ) : null}
       {!isAuthenticated ? (
         <View className="flex-1 items-center justify-center px-lg">
           <EmptyState

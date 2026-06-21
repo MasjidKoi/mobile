@@ -58,7 +58,7 @@ export default function FeedTab() {
         <View className="px-4 pt-2">{title}</View>
         <View className="flex-1 items-center justify-center px-lg">
           <EmptyState
-            icon={<Feather name="rss" size={28} color={c.primary} />}
+            icon={<Feather name="user" size={28} color={c.primary} />}
             title={t("feed.guest.title")}
             caption={t("feed.guest.caption")}
             action={

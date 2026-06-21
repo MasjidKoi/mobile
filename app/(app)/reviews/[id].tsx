@@ -52,7 +52,9 @@ export default function ReviewsListScreen() {
           pathname: "/review/[id]",
           params: {
             id: masjidId,
-            ...(review ? { rating: String(review.rating), body: review.body ?? "" } : {}),
+            ...(review
+              ? { rating: String(review.rating), body: review.body ?? "", reviewId: review.review_id }
+              : {}),
           },
         }),
       "community",
