@@ -90,6 +90,7 @@ export default function SearchScreen() {
       {trimmed.length < MIN_CHARS ? (
         <View className="flex-1 items-center justify-center px-lg">
           <EmptyState
+            variant="plain"
             icon={<Feather name="search" size={26} color={c.primary} />}
             title={t("discovery.search.title")}
             caption={t("discovery.search.hint")}
@@ -102,6 +103,7 @@ export default function SearchScreen() {
       ) : results.length === 0 ? (
         <View className="flex-1 items-center justify-center px-lg">
           <EmptyState
+            variant="plain"
             icon={<Feather name="search" size={26} color={c.primary} />}
             title={t("discovery.search.noResults", { query: trimmed })}
           />

@@ -12,16 +12,27 @@ export type EmptyStateProps = {
   title: string;
   caption?: string;
   action?: ReactNode;
+  /** `card` (default) draws the bordered surface box, for inline/in-list use.
+   * `plain` is borderless — for full-screen centered hints where a floating
+   * box on the same background reads as awkward. */
+  variant?: "card" | "plain";
   className?: string;
 };
 
-export function EmptyState({ icon, title, caption, action, className }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  caption,
+  action,
+  variant = "card",
+  className,
+}: EmptyStateProps) {
+  const container =
+    variant === "plain"
+      ? "items-center gap-3 px-6"
+      : "items-center gap-3 rounded-lg border border-border bg-surface px-6 py-7";
   return (
-    <View
-      className={`items-center gap-3 rounded-lg border border-border bg-surface px-6 py-7${
-        className ? ` ${className}` : ""
-      }`}
-    >
+    <View className={`${container}${className ? ` ${className}` : ""}`}>
       <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-soft">
         {icon}
       </View>
