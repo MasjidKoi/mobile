@@ -186,10 +186,19 @@
     "todaysPrayers": "আজকের নামাজ",
     "todaysPrayersCalculated": "আজকের নামাজ (গণনাকৃত)",
     "calculatedTitle": "স্থানীয় নামাজের সময়",
-    "travelBanner": "আপনি {{km}} কিমি দূরে — {{area}}-এর সময় দেখানো হচ্ছে",
-    "offlineBanner": "অফলাইন — সর্বশেষ সংরক্ষিত সময় দেখানো হচ্ছে",
+    "travelTitle": "স্থানীয় গণনাকৃত সময়",
+    "calculatedKicker": "গণনাকৃত · {{method}} পদ্ধতি",
+    "travelKicker": "ভ্রমণ অবস্থান · {{area}}",
+    "homeMasjidWith": "হোম মসজিদ · {{name}}",
+    "heroSubtitleMasjid": "{{prayer}} আজান {{azan}} · জামাত {{jamaat}}",
+    "heroSubtitleMasjidNoJamaat": "{{prayer}} আজান {{azan}}",
+    "heroSubtitleCalculated": "{{prayer}} আজান",
+    "heroSubtitleTravel": "{{prayer}} আজান · {{method}} পদ্ধতি",
+    "nextPrayerPill": "পরবর্তী: {{label}}",
+    "travelBanner": "আপনি হোম মসজিদ থেকে দূরে — স্থানীয় সময় দেখানো হচ্ছে",
+    "offlineBanner": "অফলাইন — সর্বশেষ সংরক্ষিত তথ্য দেখানো হচ্ছে",
     "jumuahToday": "আজ জুমার দিন",
-    "fullSchedule": "ক্যালেন্ডার",
+    "fullSchedule": "মাসিক সূচি",
     "needsLocationTitle": "আপনার অবস্থান নির্ধারণ করুন",
     "needsLocationCaption": "নামাজের সময় দেখতে অবস্থান চালু করুন বা জেলা বেছে নিন।",
     "enableLocation": "অবস্থান চালু করুন",
@@ -211,8 +220,21 @@
     "iqamah": "জামাত",
     "countdownHM": "{{hours}} ঘণ্টা {{minutes}} মিনিট",
     "countdownM": "{{minutes}} মিনিট",
-    "jamaahIn": "জামাত {{minutes}} মিনিটে",
-    "jamaahLikely": "জামাত চলছে"
+    "now": "এখন",
+    "jamaahIn": "জামাত {{minutes}} মিনিট পরে",
+    "jamaahLikely": "জামাত চলছে সম্ভবত"
+  },
+  "methods": {
+    "KARACHI": "কারাচি",
+    "MWL": "মুসলিম ওয়ার্ল্ড লীগ",
+    "ISNA": "ISNA",
+    "EGYPT": "মিসর",
+    "MAKKAH": "উম্মুল কুরা",
+    "DUBAI": "দুবাই",
+    "KUWAIT": "কুয়েত",
+    "QATAR": "কাতার",
+    "SINGAPORE": "সিঙ্গাপুর",
+    "TEHRAN": "তেহরান"
   },
   "units": {
     "m": "মিটার",
@@ -315,6 +337,8 @@
   },
   "ramadan": {
     "untilIftar": "ইফতার পর্যন্ত বাকি",
+    "kicker": "রমজান কারীম · {{source}}",
+    "heroSubtitle": "সাহরি শেষ {{sehri}} · ইফতার {{iftar}}",
     "iftarAt": "ইফতার {{time}}",
     "sehriEndsAt": "সেহরি শেষ {{time}}",
     "last10Title": "শেষ ১০ রাত",
@@ -334,9 +358,13 @@
     "perPrayer": "প্রতি নামাজ",
     "general": "সাধারণ",
     "reminderBefore": "{{minutes}} মিনিট আগে রিমাইন্ডার",
+    "offsetValue": "{{minutes}} মিনিট আগে",
+    "sourceAzan": "আজান অনুসারে",
+    "sourceJamaat": "জামাত অনুসারে",
+    "perPrayerSub": "{{source}} · {{time}}",
     "offset": "রিমাইন্ডারের সময়",
     "azanMoment": "আজানের সময় বিজ্ঞপ্তি",
-    "azanMomentSub": "ঠিক আজানের সময় একটি বিজ্ঞপ্তি",
+    "azanMomentSub": "আজানের সময়েই আলাদা শব্দে",
     "azanSound": "আজানের শব্দ",
     "permissionDenied": "বিজ্ঞপ্তি বন্ধ আছে",
     "enableInSettings": "সেটিংসে চালু করুন",
@@ -348,26 +376,34 @@
   },
   "azanSound": {
     "title": "আজানের শব্দ",
-    "allPrayers": "সব নামাজের জন্য",
+    "allPrayers": "সব নামাজ (ফজর ছাড়া)",
     "fajrSection": "ফজর আলাদাভাবে",
     "fajrSeparate": "ফজরের জন্য আলাদা শব্দ",
-    "fajrSeparateSub": "ফজরে ভিন্ন শব্দ ব্যবহার করুন",
+    "fajrSeparateSub": "৫টার আলার্ম ৮টার থেকে আলাদা হোক",
+    "fajrSoftName": "ফজর আজান · নরম সুর",
     "preview": "প্রিভিউ",
-    "disclaimer": "বান্ডেল করা আজান সর্বোচ্চ ৩০ সেকেন্ড বাজবে।",
+    "disclaimer": "আজানের সম্পূর্ণ সুর শুধু অ্যাপের ভেতরে বাজে; বিজ্ঞপ্তিতে ~২৮ সেকেন্ডের অংশ বাজবে।",
     "options": {
-      "mecca": "মক্কার আজান",
-      "classic": "ক্লাসিক আজান",
+      "mecca": "প্রভাত আজান · মক্কা",
+      "classic": "মদিনা আজান",
+      "default": "ডিফল্ট টোন",
+      "silent": "নীরব"
+    },
+    "optionsShort": {
+      "mecca": "প্রভাত আজান",
+      "classic": "মদিনা আজান",
       "default": "ডিফল্ট টোন",
       "silent": "নীরব"
     }
   },
   "qibla": {
     "title": "কিবলা কম্পাস",
-    "calibrated": "ঠিকঠাক আছে",
-    "unreliable": "নির্ভরযোগ্য নয়",
-    "calibrateHint": "ক্যালিব্রেট করতে ফোনটি ৮-এর আকারে ঘোরান",
+    "calibrated": "নির্ভুলতা: উচ্চ",
+    "unreliable": "নির্ভুলতা: নিম্ন",
+    "calibrateHint": "ফোনটি হাতে নিয়ে বাতাসে কয়েকবার ৮ (∞) আকৃতিতে ঘোরান",
     "rotateHint": "কাবার দিকে নির্দেশক না যাওয়া পর্যন্ত ঘোরান",
     "kaaba": "কাবা",
+    "kaabaSharif": "কাবা শরিফ",
     "calibrateTitle": "কম্পাস ক্যালিব্রেট করুন",
     "directionUncertain": "দিকনির্দেশ অনিশ্চিত",
     "worksOffline": "ইন্টারনেট ছাড়াই কাজ করে",
@@ -382,23 +418,36 @@
       "sw": "দপ",
       "w": "প",
       "nw": "উপ"
+    },
+    "directions": {
+      "n": "উত্তর",
+      "ne": "উত্তর-পূর্ব",
+      "e": "পূর্ব",
+      "se": "দক্ষিণ-পূর্ব",
+      "s": "দক্ষিণ",
+      "sw": "দক্ষিণ-পশ্চিম",
+      "w": "পশ্চিম",
+      "nw": "উত্তর-পশ্চিম"
     }
   },
   "hijri": {
     "title": "হিজরি ক্যালেন্ডার",
     "suffix": "হিজরি",
-    "myDates": "আমার ইসলামিক দিবস"
+    "myDates": "আমার ইসলামিক দিবস",
+    "upcoming": "আসন্ন ইসলামিক দিবস",
+    "approx": "(আনুমানিক)"
   },
   "ramadanReminders": {
     "title": "রমজান রিমাইন্ডার",
     "autoTitle": "রমজান মোড স্বয়ংক্রিয়",
-    "autoSubtitle": "হিজরি তারিখ অনুযায়ী রমজানে এগুলো চালু হয়।",
-    "sehri": "সেহরি রিমাইন্ডার",
-    "sehriSub": "ফজরের ৩০ মিনিট আগে",
+    "autoSubtitle": "হিজরি তারিখ অনুযায়ী নিজে থেকেই চালু হবে",
+    "subWithTime": "{{text}} · {{time}}",
+    "sehri": "সাহরি রিমাইন্ডার",
+    "sehriSub": "সাহরি শেষের ৩০ মিনিট আগে",
     "sehriEnd": "সাহরি শেষের সতর্কতা",
-    "sehriEndSub": "ফজরের ১০ মিনিট আগে",
+    "sehriEndSub": "ঠিক সাহরি শেষের সময়",
     "iftar": "ইফতার রিমাইন্ডার",
-    "iftarSub": "মাগরিবের সময়"
+    "iftarSub": "ইফতারের ১০ মিনিট আগে"
   },
   "setHome": {
     "title": "নিজের মসজিদ নির্বাচন",
@@ -411,7 +460,10 @@
     "azan1": "১ম আজান",
     "azan2": "২য় আজান",
     "khutbahStart": "খুতবা শুরু",
-    "start2": "২য় শুরু"
+    "start2": "২য় শুরু",
+    "scheduleTitle": "জুমার সময়সূচি",
+    "jamaat1": "১ম জামাত",
+    "jamaat2": "২য় জামাত"
   },
   "validation": {
     "email_required": "ইমেইল দিন",
@@ -444,6 +496,9 @@
       "follow": "ফলো",
       "following": "ফলো করছেন",
       "todaysPrayers": "আজকের নামাজ",
+      "scheduleTitle": "নামাজের সময়সূচি",
+      "madhhabCalc": "{{madhab}} গণনা",
+      "publishedTimesNote": "এই মসজিদের প্রকাশিত সময় হুবহু দেখানো হচ্ছে — আপনার মাজহাব অনুযায়ী পুনর্গণনা করা হয় না।",
       "facilities": "সুবিধা",
       "imam": "ইমাম",
       "languages": "ভাষা",

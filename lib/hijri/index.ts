@@ -25,7 +25,7 @@ export const HIJRI_MONTHS_EN = [
 ] as const;
 
 export const HIJRI_MONTHS_BN = [
-  "মহরম",
+  "মুহাররম",
   "সফর",
   "রবিউল আউয়াল",
   "রবিউস সানি",

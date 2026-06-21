@@ -181,5 +181,11 @@ export function useFormat() {
     distance: (meters: number) =>
       formatDistance(meters, language, t("units.m"), t("units.km"), enabled),
     toBengaliDigits,
+    /**
+     * Localize the digits in an already-formatted string per the numerals
+     * toggle (Bengali ০–৯ when on, Western otherwise; no-op for en/ar). Used for
+     * pre-built strings like the hero countdown "4:08" / "৪:০৮".
+     */
+    localizeDigits: (value: string) => applyNumerals(language, enabled, value),
   };
 }

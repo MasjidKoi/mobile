@@ -5,22 +5,44 @@ import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, Card, Row, SectionHeader, Text } from "@/components";
+import { AppBar, Card, SectionHeader, Text } from "@/components";
 import { useHijriDate } from "@/hooks/useHijriDate";
 import { useNow } from "@/hooks/useNow";
 import { useFormat } from "@/lib/i18n/format";
 import { buildHijriMonth, hijriMonthName, stepHijriMonth } from "@/lib/hijri";
-import { eventName, upcomingEvents } from "@/lib/hijri/events";
+import { eventDaysForMonth, eventName, upcomingEvents } from "@/lib/hijri/events";
 import { useColors } from "@/lib/theme/useColors";
 
-/** Locale-aware short weekday names (Sun-first; 2023-01-01 was a Sunday). */
+function intlLocale(language: string): string {
+  return language === "bn" ? "bn-BD" : language === "ar" ? "ar" : "en-US";
+}
+
+/**
+ * Locale-aware short weekday names, **Saturday-first** (Bangladesh standard):
+ * শনি, রবি, সোম, মঙ্গল, বুধ, বৃহ, শুক্র. 2023-01-07 was a Saturday.
+ */
 function weekdayLabels(language: string): string[] {
-  const locale = language === "bn" ? "bn-BD" : language === "ar" ? "ar" : "en-US";
+  const locale = intlLocale(language);
   try {
     const fmt = new Intl.DateTimeFormat(locale, { weekday: "short" });
-    return Array.from({ length: 7 }, (_, i) => fmt.format(new Date(2023, 0, 1 + i)));
+    return Array.from({ length: 7 }, (_, i) => fmt.format(new Date(2023, 0, 7 + i)));
   } catch {
-    return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+  }
+}
+
+/** Map a JS weekday (0=Sun…6=Sat) to a Saturday-first column index (Sat=0). */
+function saturdayColumn(jsWeekday: number): number {
+  return (jsWeekday + 1) % 7;
+}
+
+/** Gregorian "{month} {year}" label for a representative day of the Hijri month. */
+function gregorianMonthLabel(rep: Date, language: string): string {
+  const locale = intlLocale(language);
+  try {
+    return new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(rep);
+  } catch {
+    return `${rep.getMonth() + 1}/${rep.getFullYear()}`;
   }
 }
 
@@ -39,11 +61,12 @@ export default function HijriCalendarScreen() {
   );
   const events = useMemo(() => upcomingEvents(now, hijri.offset, 5), [now, hijri.offset]);
   const weekdays = useMemo(() => weekdayLabels(language), [language]);
+  const eventDays = useMemo(() => eventDaysForMonth(view.month), [view.month]);
 
-  // Lay the days out into Sun-first week rows.
+  // Lay the days out into Saturday-first week rows (Bangladesh standard).
   const weeks = useMemo(() => {
     const cells: (typeof month.days[number] | null)[] = [];
-    const lead = month.days[0]?.weekday ?? 0;
+    const lead = saturdayColumn(month.days[0]?.weekday ?? 0);
     for (let i = 0; i < lead; i++) cells.push(null);
     cells.push(...month.days);
     while (cells.length % 7 !== 0) cells.push(null);
@@ -53,6 +76,12 @@ export default function HijriCalendarScreen() {
   }, [month]);
 
   const monthName = hijriMonthName(view.month, language);
+  // Gregorian month+year subtitle, derived from a representative day of the
+  // displayed Hijri month (mid-month avoids drifting into the neighbour month).
+  const gregorianLabel = useMemo(() => {
+    const rep = month.days[Math.floor(month.days.length / 2)]?.gregorian ?? now;
+    return gregorianMonthLabel(rep, language);
+  }, [month, language, now]);
 
   const back = (
     <Pressable accessibilityRole="button" onPress={() => router.back()} className="h-9 w-9 items-center justify-center">
@@ -73,9 +102,14 @@ export default function HijriCalendarScreen() {
           >
             <Feather name="chevron-left" size={22} color={c["text-secondary"]} />
           </Pressable>
-          <Text variant="heading">
-            {monthName} {f.number(view.year)}
-          </Text>
+          <View className="items-center">
+            <Text variant="heading" className="font-bold">
+              {monthName} {f.localizeDigits(String(view.year))}
+            </Text>
+            <Text variant="micro" className="text-content-muted">
+              {gregorianLabel}
+            </Text>
+          </View>
           <Pressable
             accessibilityRole="button"
             onPress={() => setView((v) => stepHijriMonth(v.year, v.month, 1))}
@@ -99,15 +133,22 @@ export default function HijriCalendarScreen() {
               {week.map((day, di) => (
                 <View key={di} className="flex-1 items-center py-1.5">
                   {day ? (
-                    <View
-                      className={`h-9 w-9 items-center justify-center rounded-full ${
-                        day.isToday ? "bg-primary" : ""
-                      }`}
-                    >
-                      <Text className={`text-body ${day.isToday ? "font-bold text-on-inverse" : "font-regular text-content-primary"}`}>
-                        {f.number(day.hijriDay)}
-                      </Text>
-                    </View>
+                    <>
+                      <View
+                        className={`h-9 w-9 items-center justify-center rounded-full ${
+                          day.isToday ? "bg-primary" : ""
+                        }`}
+                      >
+                        <Text className={`text-body ${day.isToday ? "font-bold text-on-inverse" : "font-regular text-content-primary"}`}>
+                          {f.number(day.hijriDay)}
+                        </Text>
+                      </View>
+                      <View className="mt-0.5 h-1.5 w-1.5 items-center justify-center">
+                        {eventDays.has(day.hijriDay) && !day.isToday ? (
+                          <View className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
+                        ) : null}
+                      </View>
+                    </>
                   ) : null}
                 </View>
               ))}
@@ -116,17 +157,31 @@ export default function HijriCalendarScreen() {
         </View>
 
         {/* Upcoming Islamic dates */}
-        <SectionHeader title={t("hijri.myDates")} className="mt-1" />
+        <SectionHeader title={t("hijri.upcoming")} className="mt-1" />
         <Card>
-          {events.map((e) => (
-            <Row
-              key={e.id}
-              icon={<Feather name="star" size={16} color={c["accent-gold"]} />}
-              title={eventName(e, language)}
-              subtitle={`${f.number(e.day)} ${hijriMonthName(e.month, language)} ${f.number(e.hijriYear)}`}
-              value={f.date(e.gregorian)}
-            />
-          ))}
+          {events.map((e) => {
+            // Near-term, moon-sighting-sensitive dates are shown as approximate.
+            const daysAway = (e.gregorian.getTime() - now.getTime()) / 86_400_000;
+            const approx = daysAway <= 60;
+            const subtitle = `${f.date(e.gregorian)}${approx ? ` ${t("hijri.approx")}` : ""}`;
+            return (
+              <View key={e.id} className="flex-row items-center gap-3 px-4 py-3">
+                <View className="h-11 w-11 items-center justify-center rounded-md bg-accent-gold-soft">
+                  <Text className="text-body font-bold" style={{ color: c["accent-gold"] }}>
+                    {f.number(e.day)}
+                  </Text>
+                </View>
+                <View className="flex-1 gap-0.5">
+                  <Text className="text-body font-bold text-content-primary">
+                    {eventName(e, language)} · {hijriMonthName(e.month, language)}
+                  </Text>
+                  <Text className="text-caption font-regular text-content-secondary">
+                    {subtitle}
+                  </Text>
+                </View>
+              </View>
+            );
+          })}
         </Card>
       </ScrollView>
     </SafeAreaView>

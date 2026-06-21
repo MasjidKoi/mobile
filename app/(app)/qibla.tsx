@@ -99,7 +99,7 @@ export default function QiblaScreen() {
             {qibla.bearing != null ? `${f.number(Math.round(qibla.bearing))}°` : "—"}
           </Text>
           <Text variant="caption" className="text-content-secondary">
-            {warn ? t("qibla.directionUncertain") : `${t(`qibla.compass.${octant}`)} · ${t("qibla.kaaba")}`}
+            {warn ? t("qibla.directionUncertain") : `${t(`qibla.directions.${octant}`)} · ${t("qibla.kaabaSharif")}`}
           </Text>
         </View>
 

@@ -51,3 +51,12 @@ export function upcomingEvents(today: Date, offsetDays = 0, count = 5): Upcoming
 export function eventName(e: HijriEvent, language: string): string {
   return language === "bn" ? e.nameBn : e.nameEn;
 }
+
+/** Set of day-of-month numbers that carry an event in the given Hijri month. */
+export function eventDaysForMonth(month: number): Set<number> {
+  const days = new Set<number>();
+  for (const e of HIJRI_EVENTS) {
+    if (e.month === month) days.add(e.day);
+  }
+  return days;
+}

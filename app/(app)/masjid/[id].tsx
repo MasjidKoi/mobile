@@ -276,7 +276,13 @@ export default function MasjidProfileScreen() {
                   </Pressable>
                 }
               />
-              <MasjidTimesSection times={today} jumah={jumah} dateLabel={hijri.label} />
+              <MasjidTimesSection
+                times={today}
+                jumah={jumah}
+                dateLabel={`${hijri.label} ${t("hijri.suffix")}`}
+                regionLabel={masjid.admin_region}
+                distanceLabel={distanceM != null ? f.distance(distanceM) : null}
+              />
             </View>
           ) : null}
 

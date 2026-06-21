@@ -24,51 +24,57 @@ export default function AzanSoundScreen() {
     </Pressable>
   );
 
-  const renderList = (selected: AzanSoundId, onSelect: (id: AzanSoundId) => void) => (
-    <Card>
-      {AZAN_SOUNDS.map((opt) => {
-        const isSelected = opt.id === selected;
-        const playable = opt.id === "mecca" || opt.id === "classic";
-        return (
-          <Row
-            key={opt.id}
-            title={t(opt.nameKey)}
-            onPress={() => {
-              onSelect(opt.id);
-              if (playable) previewAzanSound(opt.id);
-            }}
-            trailing={
-              <View className="flex-row items-center gap-3">
-                {playable ? (
-                  <Pressable
-                    accessibilityLabel={t("azanSound.preview")}
-                    onPress={() => previewAzanSound(opt.id)}
-                    className="h-8 w-8 items-center justify-center rounded-full bg-primary-soft"
-                  >
-                    <Feather name="play" size={14} color={c.primary} />
-                  </Pressable>
-                ) : null}
-                <View
-                  className={`h-6 w-6 items-center justify-center rounded-full ${
-                    isSelected ? "bg-primary" : "border border-border"
-                  }`}
-                >
-                  {isSelected ? <Feather name="check" size={14} color={c["on-inverse"]} /> : null}
-                </View>
-              </View>
-            }
-          />
-        );
-      })}
-    </Card>
+  // Solid green play button shown on every sound row (preview is a no-op until
+  // the bundled azan clip ships, but the affordance matches the design).
+  const playButton = (id: AzanSoundId) => (
+    <Pressable
+      accessibilityLabel={t("azanSound.preview")}
+      onPress={() => previewAzanSound(id)}
+      className="h-8 w-8 items-center justify-center rounded-full bg-primary"
+    >
+      <Feather name="play" size={14} color={c["on-inverse"]} />
+    </Pressable>
   );
+
+  const selectMark = (isSelected: boolean) => (
+    <View
+      className={`h-6 w-6 items-center justify-center rounded-full ${
+        isSelected ? "bg-primary" : "border border-border"
+      }`}
+    >
+      {isSelected ? <Feather name="check" size={14} color={c["on-inverse"]} /> : null}
+    </View>
+  );
+
+  const soundRow = (id: AzanSoundId, title: string, selected: AzanSoundId, onSelect: (id: AzanSoundId) => void) => {
+    const isSelected = id === selected;
+    return (
+      <Row
+        title={title}
+        onPress={() => {
+          onSelect(id);
+          previewAzanSound(id);
+        }}
+        trailing={
+          <View className="flex-row items-center gap-3">
+            {playButton(id)}
+            {selectMark(isSelected)}
+          </View>
+        }
+      />
+    );
+  };
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-background">
       <AppBar title={t("azanSound.title")} left={back} />
       <ScrollView contentContainerClassName="gap-md px-4 py-2 pb-8">
         <SectionHeader title={t("azanSound.allPrayers")} />
-        {renderList(prefs.azanSound, (id) => setPrefs({ azanSound: id }))}
+        <Card>
+          {AZAN_SOUNDS.map((opt) =>
+            soundRow(opt.id, t(opt.nameKey), prefs.azanSound, (id) => setPrefs({ azanSound: id })),
+          )}
+        </Card>
 
         <SectionHeader title={t("azanSound.fajrSection")} className="mt-1" />
         <Card>
@@ -78,8 +84,12 @@ export default function AzanSoundScreen() {
             onPress={() => setPrefs({ fajrSeparate: !prefs.fajrSeparate })}
             trailing={<Switch value={prefs.fajrSeparate} onValueChange={(v) => setPrefs({ fajrSeparate: v })} />}
           />
+          {prefs.fajrSeparate
+            ? soundRow("mecca", t("azanSound.fajrSoftName"), prefs.fajrAzanSound, (id) =>
+                setPrefs({ fajrAzanSound: id }),
+              )
+            : null}
         </Card>
-        {prefs.fajrSeparate ? renderList(prefs.fajrAzanSound, (id) => setPrefs({ fajrAzanSound: id })) : null}
 
         <Text variant="micro" className="px-1">
           {t("azanSound.disclaimer")}

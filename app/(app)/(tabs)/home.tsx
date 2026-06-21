@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useMemo } from "react";
+import { type ComponentProps, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,13 +15,23 @@ import { useRamadan } from "@/hooks/useRamadan";
 import { useFormat } from "@/lib/i18n/format";
 import { getCityById, nearestDistrict } from "@/lib/location/cities";
 import { azanTime, iqamahTime, parseHHMM } from "@/lib/prayer/clock";
-import { splitCountdown } from "@/lib/prayer/format";
+import { formatBareClock, formatCountdownClock } from "@/lib/prayer/format";
 import type { PrayerName, PrayerTimeResponse } from "@/lib/prayer/types";
 import { useTheme } from "@/lib/theme/ThemeProvider";
 import { useColors } from "@/lib/theme/useColors";
 import { useLocation } from "@/providers/LocationProvider";
 
 const JAMAAH_IN_PROGRESS_MS = 15 * 60_000;
+
+/** Force a 1s re-render while `enabled` — drives the Ramadan H:MM:SS iftar countdown. */
+function useSecondsTick(enabled: boolean): void {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (!enabled) return;
+    const id = setInterval(() => setTick((n) => n + 1), 1000);
+    return () => clearInterval(id);
+  }, [enabled]);
+}
 
 /** Congregation status pill copy for the masjid variant (PRD 03 state machine). */
 function congregationStatus(
@@ -60,6 +70,7 @@ export default function HomeTab() {
   const ramadan = useRamadan(home.times);
   const rows = usePrayerTableRows(home.times);
   const { coords, cityId, permission, requestLocation } = useLocation();
+  useSecondsTick(ramadan.isRamadan);
 
   const isFriday = now.getDay() === 5;
   const isCalculated = home.variant === "calculated" || home.variant === "travel";
@@ -105,32 +116,62 @@ export default function HomeTab() {
     );
   }
 
-  // ----- Hero content by variant -----
-  const heroTitle = home.variant === "masjid" ? home.masjidName ?? t("home.calculatedTitle") : t("home.calculatedTitle");
-  const kicker = ramadan.isRamadan
-    ? t("ramadan.untilIftar")
-    : home.variant === "masjid"
-      ? t("home.homeMasjid")
-      : t("home.calculatedSource");
+  // ----- Hero content by variant (design 01–06) -----
+  const loc = f.localizeDigits;
+  const bare = (hhmm: string | null | undefined) => (hhmm ? loc(formatBareClock(hhmm)) : "");
+  const methodLabel = t(`methods.${home.method}`, { defaultValue: home.method });
+  const shortMasjid = home.masjidName ? home.masjidName.split(/\s+/).slice(0, 2).join(" ") : "";
 
-  let primaryCountdown = clock.countdownLabel;
-  let nextLine = clock.nextPrayerLabel;
-  let statusLabel: string | null = null;
+  const nextPrayerName = clock.nextPrayerLabel;
+  const nextAzan = clock.nextPrayer ? azanTime(home.times, clock.nextPrayer) : null;
+  const nextIqamah = clock.nextPrayer ? iqamahTime(home.times, clock.nextPrayer) : null;
+  const nextPillLabel = t("home.nextPrayerPill", {
+    label: `${nextPrayerName}${nextAzan ? ` ${bare(nextAzan)}` : ""}`,
+  });
+
+  let kicker: string;
+  let heroTitle: string;
+  let heroSubtitle: string;
+  let primaryCountdown: string;
+  let statusLabel: string;
+  let pillIcon: ComponentProps<typeof Feather>["name"] = "clock";
 
   if (ramadan.isRamadan && ramadan.iftarAt) {
-    const { hours, minutes } = splitCountdown(ramadan.iftarCountdownMs ?? 0);
-    const raw = hours > 0 ? t("prayerClock.countdownHM", { hours, minutes }) : t("prayerClock.countdownM", { minutes });
-    primaryCountdown = language === "bn" ? f.toBengaliDigits(raw) : raw;
-    nextLine = t("ramadan.iftarAt", { time: f.time(ramadan.iftarAt) });
-    statusLabel = t("ramadan.sehriEndsAt", { time: ramadan.sehriEndsAt ? f.time(ramadan.sehriEndsAt) : "" });
+    const source = home.masjidId ? t("home.homeMasjid") : t("home.calculatedSource");
+    const iftarMs = Math.max(0, ramadan.iftarAt.getTime() - Date.now());
+    kicker = t("ramadan.kicker", { source });
+    heroTitle = t("ramadan.untilIftar");
+    heroSubtitle = t("ramadan.heroSubtitle", {
+      sehri: bare(home.times.fajr_azan),
+      iftar: bare(home.times.maghrib_azan),
+    });
+    primaryCountdown = loc(formatCountdownClock(iftarMs, true));
+    statusLabel = t("ramadan.iftarAt", { time: f.time(ramadan.iftarAt) });
+    pillIcon = "sunset";
+  } else if (home.variant === "masjid") {
+    const congregation = congregationStatus(home.times, clock.currentPrayer, now, t);
+    const jamaahLikely = t("prayerClock.jamaahLikely");
+    kicker = shortMasjid ? t("home.homeMasjidWith", { name: shortMasjid }) : t("home.homeMasjid");
+    heroTitle = home.masjidName ?? t("home.calculatedTitle");
+    heroSubtitle = nextIqamah
+      ? t("home.heroSubtitleMasjid", { prayer: nextPrayerName, azan: bare(nextAzan), jamaat: bare(nextIqamah) })
+      : t("home.heroSubtitleMasjidNoJamaat", { prayer: nextPrayerName, azan: bare(nextAzan) });
+    primaryCountdown =
+      congregation === jamaahLikely ? t("prayerClock.now") : loc(formatCountdownClock(clock.countdownMs ?? 0));
+    statusLabel = congregation ?? nextPillLabel;
+    if (congregation || isFriday) pillIcon = "users";
+  } else if (home.variant === "travel") {
+    kicker = t("home.travelKicker", { area: headerArea });
+    heroTitle = t("home.travelTitle");
+    heroSubtitle = t("home.heroSubtitleTravel", { prayer: nextPrayerName, method: methodLabel });
+    primaryCountdown = loc(formatCountdownClock(clock.countdownMs ?? 0));
+    statusLabel = nextPillLabel;
   } else {
-    statusLabel =
-      home.variant === "masjid"
-        ? congregationStatus(home.times, clock.currentPrayer, now, t)
-        : null;
-    if (!statusLabel && clock.nextPrayerAt) {
-      statusLabel = `${clock.nextPrayerLabel} · ${f.time(clock.nextPrayerAt)}`;
-    }
+    kicker = t("home.calculatedKicker", { method: methodLabel });
+    heroTitle = t("home.calculatedTitle");
+    heroSubtitle = t("home.heroSubtitleCalculated", { prayer: nextPrayerName });
+    primaryCountdown = loc(formatCountdownClock(clock.countdownMs ?? 0));
+    statusLabel = nextPillLabel;
   }
 
   const tableTitle = isFriday
@@ -219,15 +260,11 @@ export default function HomeTab() {
           <NearestMasjidCard
             kicker={kicker}
             name={heroTitle}
-            prayerLabel={nextLine}
+            prayerLabel={heroSubtitle}
             countdown={primaryCountdown}
-            statusLabel={statusLabel ?? clock.nextPrayerLabel}
+            statusLabel={statusLabel}
             statusIcon={
-              <Feather
-                name={isFriday ? "users" : "clock"}
-                size={13}
-                color={c["accent-gold-soft"]}
-              />
+              <Feather name={pillIcon} size={13} color={c["accent-gold-soft"]} />
             }
             arrow={
               <Feather

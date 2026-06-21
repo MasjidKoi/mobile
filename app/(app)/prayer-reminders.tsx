@@ -2,10 +2,11 @@ import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, View } from "react-native";
+import { Alert, Pressable, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, Card, Row, SectionHeader, SegmentedControl, Switch, Text } from "@/components";
+import { AppBar, Card, Row, SectionHeader, Switch, Text } from "@/components";
+import { useHomeTimes } from "@/hooks/useHomeTimes";
 import { useReminderPrefs } from "@/hooks/useReminderPrefs";
 import { useFormat } from "@/lib/i18n/format";
 import { registerDevice } from "@/lib/notifications/device";
@@ -15,9 +16,9 @@ import {
   type NotificationPermission,
 } from "@/lib/notifications/permissions";
 import { REMINDER_OFFSETS, type ReminderOffset } from "@/lib/notifications/settingsStore";
-import { azanSoundOption } from "@/lib/notifications/sounds";
 import { openAppSettings } from "@/lib/permissions";
-import { PRAYER_ORDER } from "@/lib/prayer/clock";
+import { azanTime, iqamahTime, PRAYER_ORDER } from "@/lib/prayer/clock";
+import { formatBareClock } from "@/lib/prayer/format";
 import { useColors } from "@/lib/theme/useColors";
 
 export default function PrayerRemindersScreen() {
@@ -25,6 +26,7 @@ export default function PrayerRemindersScreen() {
   const c = useColors();
   const f = useFormat();
   const { prefs, setPrefs } = useReminderPrefs();
+  const { times } = useHomeTimes();
   const [status, setStatus] = useState<NotificationPermission>("undetermined");
 
   useEffect(() => {
@@ -54,7 +56,34 @@ export default function PrayerRemindersScreen() {
   );
 
   const chevron = <Feather name="chevron-right" size={20} color={c["text-muted"]} />;
-  const offsetSub = t("reminders.reminderBefore", { minutes: f.number(prefs.offsetMinutes) });
+
+  // Sub-line shown under every prayer row, on or off: "{source} · {time}". Fajr
+  // anchors to its azan; the others to iqamah (falling back to azan if the
+  // masjid hasn't set an iqamah). Times come from the home-times resolver.
+  const prayerSub = (prayer: (typeof PRAYER_ORDER)[number]): string | undefined => {
+    const source = prayer === "fajr" ? t("reminders.sourceAzan") : t("reminders.sourceJamaat");
+    if (!times) return source;
+    const hhmm = prayer === "fajr" ? azanTime(times, prayer) : iqamahTime(times, prayer) ?? azanTime(times, prayer);
+    if (!hhmm) return source;
+    return t("reminders.perPrayerSub", { source, time: f.localizeDigits(formatBareClock(hhmm)) });
+  };
+
+  // Cycle through the offset presets on tap (5 → 10 → 15 → 30 → 5).
+  const cycleOffset = () => {
+    const i = REMINDER_OFFSETS.indexOf(prefs.offsetMinutes);
+    const next = REMINDER_OFFSETS[(i + 1) % REMINDER_OFFSETS.length] as ReminderOffset;
+    setPrefs({ offsetMinutes: next });
+  };
+
+  const pickOffset = () => {
+    Alert.alert(t("reminders.offset"), undefined, [
+      ...REMINDER_OFFSETS.map((o) => ({
+        text: t("reminders.offsetValue", { minutes: f.number(o) }),
+        onPress: () => setPrefs({ offsetMinutes: o }),
+      })),
+      { text: t("common.cancel"), style: "cancel" as const },
+    ]);
+  };
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-background">
@@ -78,7 +107,7 @@ export default function PrayerRemindersScreen() {
             <Row
               key={prayer}
               title={t(`prayers.${prayer}`)}
-              subtitle={prefs.perPrayer[prayer] ? offsetSub : undefined}
+              subtitle={prayerSub(prayer)}
               onPress={() => void togglePrayer(prayer)}
               trailing={
                 <Switch value={prefs.perPrayer[prayer]} onValueChange={() => void togglePrayer(prayer)} />
@@ -87,18 +116,16 @@ export default function PrayerRemindersScreen() {
           ))}
         </Card>
 
-        {/* Global offset */}
+        {/* General */}
         <SectionHeader title={t("reminders.general")} className="mt-1" />
-        <View className="gap-2 rounded-md border border-border bg-surface px-4 py-3.5">
-          <Text className="text-body font-medium text-content-primary">{t("reminders.offset")}</Text>
-          <SegmentedControl
-            value={String(prefs.offsetMinutes)}
-            onChange={(key) => setPrefs({ offsetMinutes: Number(key) as ReminderOffset })}
-            options={REMINDER_OFFSETS.map((o) => ({ key: String(o), label: `${f.number(o)} ${t("units.min")}` }))}
-          />
-        </View>
-
         <Card>
+          <Row
+            title={t("reminders.offset")}
+            value={t("reminders.offsetValue", { minutes: f.number(prefs.offsetMinutes) })}
+            onPress={pickOffset}
+            onLongPress={cycleOffset}
+            trailing={chevron}
+          />
           <Row
             title={t("reminders.azanMoment")}
             subtitle={t("reminders.azanMomentSub")}
@@ -107,14 +134,8 @@ export default function PrayerRemindersScreen() {
           />
           <Row
             title={t("reminders.azanSound")}
-            value={t(azanSoundOption(prefs.azanSound).nameKey)}
+            value={t(`azanSound.optionsShort.${prefs.azanSound}`)}
             onPress={() => router.push("/azan-sound")}
-            trailing={chevron}
-          />
-          <Row
-            icon={<Feather name="moon" size={18} color={c["accent-gold"]} />}
-            title={t("ramadanReminders.title")}
-            onPress={() => router.push("/ramadan-reminders")}
             trailing={chevron}
           />
         </Card>
