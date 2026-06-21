@@ -6,12 +6,12 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppBar, Banner, Button, Chip, Input, Text } from "@/components";
-import { AnonymityRow, FeeDisclosure } from "@/components/donation";
+import { AmountField, AnonymityRow, FeeDisclosure } from "@/components/donation";
 import { useCampaign } from "@/hooks/useCampaign";
 import { useCreateDonation } from "@/hooks/useCreateDonation";
 import { useMasjid } from "@/hooks/useMasjid";
 import { openCheckout } from "@/lib/donations/checkout";
-import { AMOUNT_PRESETS, DONATION_CATEGORIES } from "@/lib/donations/presets";
+import { DONATION_CATEGORIES } from "@/lib/donations/presets";
 import type { DonationCategory } from "@/lib/donations/types";
 import { DONATION_MAX, DONATION_MIN } from "@/lib/forms/schemas";
 import { useFormat } from "@/lib/i18n/format";
@@ -107,7 +107,7 @@ export default function DonateScreen() {
   );
   const backButton = (
     <Pressable accessibilityRole="button" onPress={back} hitSlop={12}>
-      <Feather name={step === "name" ? "arrow-left" : "arrow-left"} size={24} color={c["text-primary"]} />
+      <Feather name="arrow-left" size={24} color={c["text-primary"]} />
     </Pressable>
   );
 
@@ -199,31 +199,16 @@ export default function DonateScreen() {
             <Text className="text-display font-bold text-content-primary">
               {f.currency(amount)}
             </Text>
-            <View className="flex-row flex-wrap justify-center gap-2">
-              {AMOUNT_PRESETS.map((preset) => (
-                <Chip
-                  key={preset}
-                  label={f.currency(preset)}
-                  selected={amount === preset}
-                  onPress={() => {
-                    setAmountText(String(preset));
-                    setErrorMsg(null);
-                  }}
-                />
-              ))}
-            </View>
+            <AmountField
+              centerPresets
+              className="w-full"
+              value={amountText}
+              onChange={(v) => {
+                setAmountText(v);
+                setErrorMsg(null);
+              }}
+            />
           </View>
-
-          <Input
-            leftIcon={<Feather name="edit-2" size={16} color={c["text-muted"]} />}
-            placeholder={t("donation.amount.customPlaceholder")}
-            keyboardType="number-pad"
-            value={amountText}
-            onChangeText={(v) => {
-              setAmountText(v.replace(/[^0-9]/g, ""));
-              setErrorMsg(null);
-            }}
-          />
 
           {/* Category (masjid gifts only; campaigns force the category server-side) */}
           {!campaignId ? (

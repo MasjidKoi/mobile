@@ -18,6 +18,15 @@ const CONFIRM_TIMEOUT_MS = 30_000;
 
 type Mode = "loading" | "confirming" | "success" | "failed" | "recovery" | "detail";
 
+/** Full-screen centered container for the transient (loading/confirming) states. */
+function CenteredScreen({ children }: { children: React.ReactNode }) {
+  return (
+    <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
+      <View className="flex-1 items-center justify-center px-8">{children}</View>
+    </SafeAreaView>
+  );
+}
+
 /**
  * 40 Confirming → 41 Success / 42 Failed / 43 Recovery. `id` is the **donation**
  * id; `status` is the gateway outcome from `masjidkoi://donation/{id}?status=…`
@@ -78,28 +87,22 @@ export default function DonationStatusScreen() {
     }
   };
 
-  const Centered = ({ children }: { children: React.ReactNode }) => (
-    <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
-      <View className="flex-1 items-center justify-center px-8">{children}</View>
-    </SafeAreaView>
-  );
-
   if (mode === "loading") {
     return (
-      <Centered>
+      <CenteredScreen>
         <ActivityIndicator color={c.primary} />
-      </Centered>
+      </CenteredScreen>
     );
   }
 
   if (mode === "confirming") {
     return (
-      <Centered>
+      <CenteredScreen>
         <ConfirmingState
           title={t("donation.confirming.title")}
           caption={t("donation.confirming.caption")}
         />
-      </Centered>
+      </CenteredScreen>
     );
   }
 
@@ -165,6 +168,9 @@ export default function DonationStatusScreen() {
 
   // 51 Donation Detail — reached from history (no `status` param).
   if (mode === "detail" && d) {
+    const gross = Number(d.gross_amount);
+    const fee = Number(d.fee_amount);
+    const net = Number(d.net_amount);
     const backButton = (
       <Pressable accessibilityRole="button" onPress={() => router.back()} hitSlop={12}>
         <Feather name="arrow-left" size={24} color={c["text-primary"]} />
@@ -189,7 +195,7 @@ export default function DonationStatusScreen() {
               <Feather name="check" size={26} color={c.primary} />
             </View>
             <Text className="text-[26px] font-bold text-content-primary">
-              {f.currency(Number(d.gross_amount))}
+              {f.currency(gross)}
             </Text>
             <StatusBadge tone={donationStatusTone(d.status)} label={t(`donation.status.${d.status}`)} />
             <Text variant="caption" className="text-content-secondary">
@@ -197,9 +203,9 @@ export default function DonationStatusScreen() {
             </Text>
           </View>
           <View className="gap-2.5 rounded-lg border border-border bg-surface p-4">
-            {detailRow(t("donation.detail.amount"), f.currency(Number(d.gross_amount)))}
-            {detailRow(t("donation.detail.fee"), f.currency(Number(d.fee_amount)))}
-            {detailRow(t("donation.detail.net"), f.currency(Number(d.net_amount)))}
+            {detailRow(t("donation.detail.amount"), f.currency(gross))}
+            {detailRow(t("donation.detail.fee"), f.currency(fee))}
+            {detailRow(t("donation.detail.net"), f.currency(net))}
             {detailRow(t("donation.detail.category"), t(`donation.category.${d.category}`))}
             {d.receipt_number ? detailRow(t("donation.detail.receiptNumber"), d.receipt_number) : null}
             {d.gateway_payment_method

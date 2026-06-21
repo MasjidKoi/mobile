@@ -5,13 +5,12 @@ import { useTranslation } from "react-i18next";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, Banner, Button, Chip, Input, Last10NightsCard, SegmentedControl, Text } from "@/components";
+import { AppBar, Banner, Button, Last10NightsCard, SegmentedControl, Text } from "@/components";
+import { AmountField } from "@/components/donation";
 import { useCreateRecurring } from "@/hooks/useRecurringSchedules";
 import { useMasjid } from "@/hooks/useMasjid";
-import { AMOUNT_PRESETS } from "@/lib/donations/presets";
 import type { RecurringFrequency, RecurringScheduleCreate } from "@/lib/donations/types";
 import { DONATION_MAX, DONATION_MIN } from "@/lib/forms/schemas";
-import { useFormat } from "@/lib/i18n/format";
 import { useColors } from "@/lib/theme/useColors";
 
 /**
@@ -23,7 +22,6 @@ import { useColors } from "@/lib/theme/useColors";
 export default function RecurringSetupScreen() {
   const { t } = useTranslation();
   const c = useColors();
-  const f = useFormat();
   const { masjidId, campaignId, amount, preset } = useLocalSearchParams<{
     masjidId: string;
     campaignId?: string;
@@ -111,26 +109,10 @@ export default function RecurringSetupScreen() {
             <Text variant="caption" className="text-content-secondary">
               {t("donation.recurring.amountLabel")}
             </Text>
-            <View className="flex-row flex-wrap gap-2">
-              {AMOUNT_PRESETS.map((preset) => (
-                <Chip
-                  key={preset}
-                  label={f.currency(preset)}
-                  selected={amt === preset}
-                  onPress={() => {
-                    setAmountText(String(preset));
-                    setErrorMsg(null);
-                  }}
-                />
-              ))}
-            </View>
-            <Input
-              leftIcon={<Feather name="edit-2" size={16} color={c["text-muted"]} />}
-              placeholder={t("donation.amount.customPlaceholder")}
-              keyboardType="number-pad"
+            <AmountField
               value={amountText}
-              onChangeText={(v) => {
-                setAmountText(v.replace(/[^0-9]/g, ""));
+              onChange={(v) => {
+                setAmountText(v);
                 setErrorMsg(null);
               }}
             />

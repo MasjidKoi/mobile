@@ -15,3 +15,6 @@ export type { RecurringRowProps } from "./RecurringRow";
 
 export { DonationHistoryRow } from "./DonationHistoryRow";
 export type { DonationHistoryRowProps } from "./DonationHistoryRow";
+
+export { AmountField } from "./AmountField";
+export type { AmountFieldProps } from "./AmountField";
