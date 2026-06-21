@@ -17,16 +17,13 @@ import {
   Text,
 } from "@/components";
 import { useReviewDelete, useReviews } from "@/hooks/useReviews";
-import { ApiError } from "@/lib/api/errors";
+import { isOfflineQuery } from "@/lib/api/errors";
+import { initials } from "@/lib/community/format";
 import { useFormat } from "@/lib/i18n/format";
 import type { MasjidReview } from "@/lib/masjids/profile-api";
 import { useColors } from "@/lib/theme/useColors";
 import { useAuth } from "@/providers/AuthProvider";
 import { useLoginGate } from "@/providers/LoginGateProvider";
-
-function initials(name: string | null): string {
-  return (name?.trim().slice(0, 2) || "🙂").toUpperCase();
-}
 
 /** 85 Reviews List / 91 Profile Community — aggregate + paginated reviews, with
  * the caller's own review surfaced for edit/delete and a gated write CTA. */
@@ -38,6 +35,7 @@ export default function ReviewsListScreen() {
   const { requireAuth } = useLoginGate();
   const { id: masjidId } = useLocalSearchParams<{ id: string }>();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [delError, setDelError] = useState<string | null>(null);
 
   const q = useReviews(masjidId);
   const del = useReviewDelete(masjidId);
@@ -45,8 +43,7 @@ export default function ReviewsListScreen() {
   const all = q.data?.pages.flatMap((p) => p.items) ?? [];
   const mine = user ? all.find((r) => r.user_id === user.user_id) : undefined;
   const others = mine ? all.filter((r) => r.review_id !== mine.review_id) : all;
-  const offline =
-    q.isError && q.failureReason instanceof ApiError && q.failureReason.isNetworkError;
+  const offline = isOfflineQuery(q);
 
   const goWrite = (review?: MasjidReview) =>
     requireAuth(
@@ -112,6 +109,14 @@ export default function ReviewsListScreen() {
           message={t("community.reviews.offline")}
         />
       ) : null}
+
+      {delError ? (
+        <Banner
+          variant="warning"
+          icon={<Feather name="alert-triangle" size={15} color="#8A6A1F" />}
+          message={delError}
+        />
+      ) : null}
     </View>
   );
 
@@ -173,7 +178,12 @@ export default function ReviewsListScreen() {
             label={t("community.reviews.delete")}
             onPress={() => {
               setConfirmDelete(false);
-              if (mine) del.mutate(mine.review_id);
+              if (mine) {
+                setDelError(null);
+                del.mutate(mine.review_id, {
+                  onError: () => setDelError(t("community.reviews.deleteError")),
+                });
+              }
             }}
           />
         </View>

@@ -927,7 +927,9 @@
       "update": "Update review",
       "saveError": "Couldn't save your review — try again.",
       "deleteConfirmTitle": "Delete your review?",
-      "deleteConfirmBody": "This permanently removes your review and rating."
+      "deleteConfirmBody": "This permanently removes your review and rating.",
+      "deleteError": "Couldn't delete your review — try again.",
+      "starLabel": "{{n}} stars"
     },
     "checkin": {
       "cta": "Check in",

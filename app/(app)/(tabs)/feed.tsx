@@ -9,35 +9,30 @@ import {
   AnnouncementCard,
   Banner,
   Button,
+  CommunityEventCard,
   EmptyState,
-  EventCard,
   SegmentedControl,
   Text,
   type SegmentedControlOption,
 } from "@/components";
 import { useFeed } from "@/hooks/useFeed";
-import { ApiError } from "@/lib/api/errors";
-import { monthShortLabel, parseLocalDate, parseLocalDateTime } from "@/lib/community/format";
-import type { EventDetailParam } from "@/lib/events/types";
+import { isOfflineQuery } from "@/lib/api/errors";
+import { initials } from "@/lib/community/format";
+import { feedEventToDetailParam } from "@/lib/events/types";
 import type { FeedAnnouncementItem, FeedEventItem, FeedItem, FeedType } from "@/lib/feed/types";
 import { useFormat } from "@/lib/i18n/format";
 import { useColors } from "@/lib/theme/useColors";
 import { useAuth } from "@/providers/AuthProvider";
 import { useLoginGate } from "@/providers/LoginGateProvider";
 
-/** First character of a masjid name, for the card avatar circle. */
-function initial(name: string): string {
-  return name.trim().slice(0, 1).toUpperCase() || "م";
-}
-
 function feedKey(item: FeedItem): string {
   return item.kind === "announcement" ? `a-${item.announcement_id}` : `e-${item.event_id}`;
 }
 
 /** Feed tab — the followed-masjid feed (75 Announcements / 76 Events, with 77
- * Empty / 78 Guest / 79 Offline variants). RSVP on event cards lands in 8b. */
+ * Empty / 78 Guest / 79 Offline variants). */
 export default function FeedTab() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const c = useColors();
   const f = useFormat();
   const { isAuthenticated } = useAuth();
@@ -46,8 +41,7 @@ export default function FeedTab() {
 
   const q = useFeed(type);
   const items = q.data?.pages.flatMap((p) => p.items) ?? [];
-  const offline =
-    q.isError && q.failureReason instanceof ApiError && q.failureReason.isNetworkError;
+  const offline = isOfflineQuery(q);
 
   const title = (
     <View className="py-1">
@@ -100,52 +94,33 @@ export default function FeedTab() {
         time={f.date(new Date(item.published_at))}
         title={item.title}
         body={item.body.length > 160 ? `${item.body.slice(0, 160).trimEnd()}…` : item.body}
-        avatar={<Text className="text-caption font-bold text-primary">{initial(item.masjid_name)}</Text>}
+        avatar={<Text className="text-caption font-bold text-primary">{initials(item.masjid_name, 1)}</Text>}
       />
     </Pressable>
   );
 
-  const renderEvent = (item: FeedEventItem) => {
-    const date = parseLocalDate(item.event_date);
-    const at = parseLocalDateTime(item.event_date, item.event_time);
-    // The feed item carries `is_rsvped`/`attendee_count` but not `rsvp_enabled`
-    // (assume enabled; a 422 on toggle corrects it). Pass the whole event so the
-    // detail screen needs no single-GET.
-    const param: EventDetailParam = {
-      event_id: item.event_id,
-      masjid_id: item.masjid_id,
-      masjid_name: item.masjid_name,
-      title: item.title,
-      description: item.description,
-      event_date: item.event_date,
-      event_time: item.event_time,
-      location: item.location,
-      capacity: item.capacity,
-      rsvp_count: item.attendee_count,
-      rsvp_enabled: true,
-      is_rsvped: item.is_rsvped,
-    };
-    return (
-      <Pressable
-        accessibilityRole="button"
-        onPress={() =>
-          router.push({
-            pathname: "/event/[id]",
-            params: { id: item.event_id, masjidId: item.masjid_id, e: JSON.stringify(param) },
-          })
-        }
-      >
-        <EventCard
-          day={f.number(date.getDate())}
-          month={monthShortLabel(date, i18n.language)}
-          title={item.title}
-          meta={`${item.masjid_name} · ${f.time(at)} · ${item.location}`}
-          attendees={t("community.events.attendees", { formatted: f.number(item.attendee_count) })}
-          attendeesIcon={<Feather name="users" size={13} color={c["text-muted"]} />}
-        />
-      </Pressable>
-    );
-  };
+  const renderEvent = (item: FeedEventItem) => (
+    <CommunityEventCard
+      eventDate={item.event_date}
+      eventTime={item.event_time}
+      title={item.title}
+      location={item.location}
+      attendees={item.attendee_count}
+      masjidName={item.masjid_name}
+      onPress={() =>
+        router.push({
+          pathname: "/event/[id]",
+          // Pass the whole event (the backend has no single-event GET); the feed
+          // omits `rsvp_enabled`, so `feedEventToDetailParam` assumes enabled.
+          params: {
+            id: item.event_id,
+            masjidId: item.masjid_id,
+            e: JSON.stringify(feedEventToDetailParam(item)),
+          },
+        })
+      }
+    />
+  );
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-background">

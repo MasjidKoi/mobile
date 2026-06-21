@@ -1,9 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
 import { ApiError } from "@/lib/api/errors";
 import { followMasjid, unfollowMasjid } from "@/lib/masjids/profile-api";
-import type { NotificationPreferences } from "@/lib/notifications/preferences";
+import {
+  fetchNotificationPreferences,
+  type NotificationPreferences,
+} from "@/lib/notifications/preferences";
 import { qk } from "@/lib/query/keys";
 import { useAuth } from "@/providers/AuthProvider";
 
@@ -26,9 +28,13 @@ export function useFollow(id: string | null | undefined, name?: string | null) {
   const { isAuthenticated } = useAuth();
   const prefsKey = qk.notificationPrefs();
 
-  // Reading prefs here populates the cache on profile view (authed only); the
-  // Notifications screen reads the same query.
-  const { prefs } = useNotificationPreferences({ enabled: isAuthenticated });
+  // Read the followed set straight from the prefs cache (shared key with the
+  // Notifications screen) — no need for the full preferences hook's mutations.
+  const { data: prefs } = useQuery({
+    queryKey: prefsKey,
+    queryFn: fetchNotificationPreferences,
+    enabled: isAuthenticated,
+  });
   const isFollowing = !!id && !!prefs?.masjids.some((m) => m.masjid_id === id);
 
   const mutation = useMutation({

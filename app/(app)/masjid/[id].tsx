@@ -35,6 +35,7 @@ import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import { useRecentMasjids } from "@/hooks/useRecentMasjids";
 import { useReviewsSummary } from "@/hooks/useReviewsSummary";
 import { ApiError } from "@/lib/api/errors";
+import { listEventToDetailParam } from "@/lib/events/types";
 import { useFormat } from "@/lib/i18n/format";
 import { haversineMeters } from "@/lib/location/geo";
 import { openDirections } from "@/lib/masjids/directions";
@@ -299,9 +300,9 @@ export default function MasjidProfileScreen() {
                 params: {
                   id: ev.event_id,
                   masjidId,
-                  // The public list lacks the caller's own RSVP — the detail screen
-                  // defaults it to "not going" and trusts the toggle's response.
-                  e: JSON.stringify({ ...ev, masjid_name: masjid.name, is_rsvped: false }),
+                  // The public list lacks the caller's own RSVP — the builder
+                  // defaults it to "not going"; the toggle's response is authoritative.
+                  e: JSON.stringify(listEventToDetailParam(ev, masjid.name)),
                 },
               })
             }

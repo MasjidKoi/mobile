@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppBar, BackButton, Button, EmptyState, Text } from "@/components";
 import { useAnnouncement } from "@/hooks/useAnnouncement";
-import { ApiError } from "@/lib/api/errors";
+import { isOfflineQuery } from "@/lib/api/errors";
 import { useFormat } from "@/lib/i18n/format";
 import { useColors } from "@/lib/theme/useColors";
 
@@ -21,8 +21,7 @@ export default function AnnouncementDetailScreen() {
 
   const q = useAnnouncement(masjidId, announcementId);
   const a = q.data;
-  const offline =
-    q.isError && q.failureReason instanceof ApiError && q.failureReason.isNetworkError;
+  const offline = isOfflineQuery(q);
 
   const back = <BackButton onPress={() => router.back()} />;
 

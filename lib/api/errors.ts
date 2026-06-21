@@ -60,6 +60,16 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Whether a React Query result failed because the device is offline (transport
+ * error), as opposed to a 4xx/5xx. Screens use this to show the "offline,
+ * showing cached" variant. Structural (no react-query import) so it works for
+ * both `useQuery` and `useInfiniteQuery` results.
+ */
+export function isOfflineQuery(query: { isError: boolean; failureReason: unknown }): boolean {
+  return query.isError && query.failureReason instanceof ApiError && query.failureReason.isNetworkError;
+}
+
 /** Build an `ApiError` from an HTTP status + parsed response body. */
 export function normalizeApiError(status: number, body: ApiErrorBody | null): ApiError {
   const detail = body?.detail;

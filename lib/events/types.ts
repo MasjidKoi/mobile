@@ -6,6 +6,7 @@
  * `rsvp_enabled`. The event-detail screen reconciles both via nav params and
  * trusts the RSVP toggle's response as the authority after the first tap.
  */
+import type { FeedEventItem } from "@/lib/feed/types";
 
 export interface EventResponse {
   event_id: string;
@@ -54,4 +55,42 @@ export interface EventDetailParam {
   rsvp_count: number;
   rsvp_enabled: boolean;
   is_rsvped: boolean;
+}
+
+/** Normalize a feed event item into the detail param. The feed omits
+ * `rsvp_enabled`, so assume enabled — a 422 on the toggle corrects it. */
+export function feedEventToDetailParam(item: FeedEventItem): EventDetailParam {
+  return {
+    event_id: item.event_id,
+    masjid_id: item.masjid_id,
+    masjid_name: item.masjid_name,
+    title: item.title,
+    description: item.description,
+    event_date: item.event_date,
+    event_time: item.event_time,
+    location: item.location,
+    capacity: item.capacity,
+    rsvp_count: item.attendee_count,
+    rsvp_enabled: true,
+    is_rsvped: item.is_rsvped,
+  };
+}
+
+/** Normalize a public list event into the detail param. The list can't report
+ * the caller's own RSVP, so `is_rsvped` defaults to false. */
+export function listEventToDetailParam(ev: EventResponse, masjidName: string): EventDetailParam {
+  return {
+    event_id: ev.event_id,
+    masjid_id: ev.masjid_id,
+    masjid_name: masjidName,
+    title: ev.title,
+    description: ev.description,
+    event_date: ev.event_date,
+    event_time: ev.event_time,
+    location: ev.location,
+    capacity: ev.capacity,
+    rsvp_count: ev.rsvp_count,
+    rsvp_enabled: ev.rsvp_enabled,
+    is_rsvped: false,
+  };
 }

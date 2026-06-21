@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Pressable, View } from "react-native";
 
 import { Button, RatingSummary, ReviewCard, SectionHeader, Text } from "@/components";
+import { initials } from "@/lib/community/format";
 import { useFormat } from "@/lib/i18n/format";
 import type { MasjidReview } from "@/lib/masjids/profile-api";
 import { useColors } from "@/lib/theme/useColors";
@@ -17,10 +18,6 @@ export type ReviewsSlotProps = {
   /** Start the write/edit flow (gated by the caller). */
   onWrite: () => void;
 };
-
-function initials(name: string | null): string {
-  return (name?.trim().slice(0, 2) || "🙂").toUpperCase();
-}
 
 /**
  * Reviews slot on the masjid profile (design 20). Phase 8 fills it in: the

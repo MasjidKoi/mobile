@@ -15,7 +15,11 @@ export function useReviews(masjidId: string | null | undefined) {
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       const loaded = allPages.reduce((n, p) => n + p.items.length, 0);
-      return loaded < lastPage.total ? allPages.length + 1 : undefined;
+      // Stop on an empty trailing page too: relying on `loaded < total` alone
+      // loops forever if `total` drifts above the real count (e.g. a review
+      // deleted between fetches), since `loaded` would never reach it.
+      if (lastPage.items.length === 0 || loaded >= lastPage.total) return undefined;
+      return allPages.length + 1;
     },
     enabled: !!masjidId,
   });

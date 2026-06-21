@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Pressable, View } from "react-native";
 
 import { Text } from "../Text";
@@ -15,13 +16,14 @@ export type RatingInputProps = {
 };
 
 export function RatingInput({ value, onChange, size = 36, className }: RatingInputProps) {
+  const { t } = useTranslation();
   return (
     <View className={`flex-row gap-2${className ? ` ${className}` : ""}`}>
       {[1, 2, 3, 4, 5].map((n) => (
         <Pressable
           key={n}
           accessibilityRole="button"
-          accessibilityLabel={`${n}`}
+          accessibilityLabel={t("community.reviews.starLabel", { n })}
           accessibilityState={{ selected: n <= value }}
           hitSlop={6}
           onPress={() => onChange(n)}

@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppBar, BackButton, Banner, Button, EmptyState, Text } from "@/components";
 import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
-import { ApiError } from "@/lib/api/errors";
+import { ApiError, isOfflineQuery } from "@/lib/api/errors";
 import { unfollowMasjid } from "@/lib/masjids/profile-api";
 import type { FollowedMasjidPreference, NotificationPreferences } from "@/lib/notifications/preferences";
 import { qk } from "@/lib/query/keys";
@@ -27,8 +27,7 @@ export default function FollowingScreen() {
 
   const { prefs, query } = useNotificationPreferences({ enabled: isAuthenticated });
   const masjids = prefs?.masjids ?? [];
-  const offline =
-    query.isError && query.failureReason instanceof ApiError && query.failureReason.isNetworkError;
+  const offline = isOfflineQuery(query);
 
   const unfollow = useMutation({
     mutationFn: async (id: string) => {
