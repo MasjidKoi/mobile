@@ -1251,7 +1251,8 @@
       "prayers": "Prayer completion",
       "completeDays": "{{n}} complete days",
       "quran": "Qur'an read",
-      "percent": "{{percent}}%"
+      "percent": "{{percent}}%",
+      "chartTitle": "This week's prayers"
     },
     "insights": {
       "label": "What stood out this week?",

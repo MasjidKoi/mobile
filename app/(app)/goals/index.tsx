@@ -48,6 +48,7 @@ export default function GoalsListScreen() {
       ) : goals.length === 0 ? (
         <View className="flex-1 items-center justify-center px-lg">
           <EmptyState
+            variant="plain"
             icon={<Feather name="target" size={26} color={c.primary} />}
             title={t("goals.empty.title")}
             caption={t("goals.empty.subtitle")}

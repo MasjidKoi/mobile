@@ -1251,7 +1251,8 @@
       "prayers": "নামাজ সম্পন্নতা",
       "completeDays": "{{n}} পূর্ণ দিন",
       "quran": "কুরআন পঠিত",
-      "percent": "{{percent}}%"
+      "percent": "{{percent}}%",
+      "chartTitle": "এই সপ্তাহের নামাজ"
     },
     "insights": {
       "label": "এই সপ্তাহে কী মনে দাগ কাটল?",

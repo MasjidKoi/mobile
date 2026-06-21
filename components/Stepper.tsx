@@ -1,5 +1,7 @@
+import { Feather } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 
+import { useColors } from "@/lib/theme/useColors";
 import { Text } from "./Text";
 
 /**
@@ -26,6 +28,7 @@ export function Stepper({
   format,
   className,
 }: StepperProps) {
+  const c = useColors();
   const text = format ? format(value) : String(value);
   return (
     <View className={`flex-row items-center${className ? ` ${className}` : ""}`}>
@@ -34,9 +37,7 @@ export function Stepper({
         onPress={() => onChange?.(Math.max(min, value - step))}
         className="h-[34px] w-[34px] items-center justify-center rounded-l-sm bg-[#EDEFEC]"
       >
-        <Text className="text-content-secondary" style={{ fontSize: 18, lineHeight: 18 }}>
-          −
-        </Text>
+        <Feather name="minus" size={18} color={c["text-secondary"]} />
       </Pressable>
       <View className="h-[34px] w-14 items-center justify-center border-y border-[#EDEFEC] bg-surface">
         <Text className="text-body font-bold text-content-primary">{text}</Text>
@@ -46,9 +47,7 @@ export function Stepper({
         onPress={() => onChange?.(Math.min(max, value + step))}
         className="h-[34px] w-[34px] items-center justify-center rounded-r-sm bg-primary"
       >
-        <Text className="text-on-inverse" style={{ fontSize: 18, lineHeight: 18 }}>
-          +
-        </Text>
+        <Feather name="plus" size={18} color="#FFFFFF" />
       </Pressable>
     </View>
   );

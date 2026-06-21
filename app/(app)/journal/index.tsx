@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -260,11 +260,13 @@ export default function JournalTodayScreen() {
                   ? `${t("streak.longest")} · ${f.number(streak.data.longest)}`
                   : undefined
               }
-              flameIcon={<Feather name="zap" size={24} color={c.primary} />}
+              flameIcon={<MaterialCommunityIcons name="fire" size={26} color={c.primary} />}
               freezeLabel={
-                streak.data && streak.data.freezes_held > 0 ? f.number(streak.data.freezes_held) : undefined
+                streak.data && streak.data.freezes_held > 0
+                  ? `×${f.number(streak.data.freezes_held)}`
+                  : undefined
               }
-              freezeIcon={<Feather name="shield" size={14} color="#4A7FA5" />}
+              freezeIcon={<MaterialCommunityIcons name="snowflake" size={15} color="#4A7FA5" />}
             />
           </Pressable>
 
@@ -354,10 +356,16 @@ export default function JournalTodayScreen() {
         title={unlogTarget ? t("journal.unlog.title", { prayer: t(`prayers.${unlogTarget}`) }) : undefined}
         description={unlogTarget ? t("journal.unlog.body", { prayer: t(`prayers.${unlogTarget}`) }) : undefined}
       >
-        <View className="flex-row justify-end gap-2 pt-1">
-          <Button variant="text" label={t("common.cancel")} onPress={() => setUnlogTarget(null)} />
+        <View className="flex-row gap-2.5 pt-1">
           <Button
-            variant="text"
+            className="flex-1"
+            variant="secondary"
+            label={t("common.cancel")}
+            onPress={() => setUnlogTarget(null)}
+          />
+          <Button
+            className="flex-1"
+            variant="destructive"
             label={t("journal.unlog.confirm")}
             onPress={() => {
               if (unlogTarget) logPrayers.mutate({ [unlogTarget]: false });

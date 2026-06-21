@@ -14,10 +14,21 @@ import { useColors } from "@/lib/theme/useColors";
 /** 110 Weekly Reflection — auto stats from this week's journal + free-text saved
  * into the week-end entry's note (no backend reflections endpoint). */
 export default function WeeklyReflectionScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const c = useColors();
   const f = useFormat();
   const { week, stats, reflection, isLoading, save } = useWeeklyReflection();
+
+  // Narrow weekday label for the chart (UTC-anchored to match parseIso's date).
+  const dayLabel = (dateStr: string) => {
+    try {
+      return new Intl.DateTimeFormat(i18n.language, { weekday: "narrow", timeZone: "UTC" }).format(
+        parseIso(dateStr),
+      );
+    } catch {
+      return dateStr.slice(8);
+    }
+  };
 
   const [insights, setInsights] = useState(reflection.insights);
   const [gratitude, setGratitude] = useState(reflection.gratitude);
@@ -68,6 +79,31 @@ export default function WeeklyReflectionScreen() {
             stat={t("reflection.stats.percent", { percent: f.number(stats.prayerPercent) })}
             note={t("reflection.stats.completeDays", { n: f.number(stats.completeDays) })}
           />
+
+          {/* Per-day prayer chart: green = all 5 logged, gold = partial. */}
+          <View className="gap-3 rounded-md border border-border bg-surface px-4 py-4">
+            <Text variant="caption" className="font-semibold text-content-secondary">
+              {t("reflection.stats.chartTitle")}
+            </Text>
+            <View className="flex-row items-end justify-between">
+              {stats.byDay.map((d) => {
+                const filled = d.count > 0;
+                const barColor = !filled ? "#E4E9E5" : d.complete ? c.primary : "#B98E2F";
+                const barHeight = filled ? Math.max(10, Math.round((d.count / 5) * 64)) : 6;
+                return (
+                  <View key={d.date} className="items-center gap-1.5">
+                    <View className="justify-end" style={{ height: 64 }}>
+                      <View
+                        style={{ width: 22, height: barHeight, backgroundColor: barColor, borderRadius: 4 }}
+                      />
+                    </View>
+                    <Text variant="micro">{dayLabel(d.date)}</Text>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+
           {quranSummary ? (
             <View className="flex-row items-center justify-between rounded-md border border-border bg-surface px-4 py-3">
               <Text variant="body" className="text-content-secondary">

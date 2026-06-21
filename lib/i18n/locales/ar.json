@@ -1251,7 +1251,8 @@
       "prayers": "إكمال الصلوات",
       "completeDays": "{{n}} أيام كاملة",
       "quran": "القرآن المقروء",
-      "percent": "{{percent}}%"
+      "percent": "{{percent}}%",
+      "chartTitle": "صلوات هذا الأسبوع"
     },
     "insights": {
       "label": "ما الذي لفت انتباهك هذا الأسبوع؟",
