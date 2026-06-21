@@ -61,7 +61,8 @@
           "photosPermission": "MasjidKoi uses your photos so you can attach a picture when you submit a masjid."
         }
       ],
-      "expo-audio"
+      "expo-audio",
+      "expo-updates"
     ],
     "experiments": {
       "typedRoutes": true,

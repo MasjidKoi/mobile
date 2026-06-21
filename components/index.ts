@@ -19,6 +19,8 @@ export type { OtpInputProps } from "./OtpInput";
 export { AppBar } from "./AppBar";
 export type { AppBarProps } from "./AppBar";
 
+export { BackButton } from "./BackButton";
+
 export { SearchBar } from "./SearchBar";
 export type { SearchBarProps } from "./SearchBar";
 
@@ -73,6 +75,8 @@ export type { BannerProps, BannerVariant } from "./Banner";
 export { EmptyState } from "./EmptyState";
 export type { EmptyStateProps } from "./EmptyState";
 
+export { ExportDialogs } from "./ExportDialogs";
+
 export { StatusBadge } from "./StatusBadge";
 export type { StatusBadgeProps, StatusTone } from "./StatusBadge";
 
@@ -105,6 +109,9 @@ export type { DonateBarProps } from "./DonateBar";
 
 export { SectionHeader } from "./SectionHeader";
 export type { SectionHeaderProps } from "./SectionHeader";
+
+export { SettingsRow } from "./SettingsRow";
+export type { SettingsRowProps } from "./SettingsRow";
 
 export { SegmentedControl } from "./SegmentedControl";
 export type { SegmentedControlOption, SegmentedControlProps } from "./SegmentedControl";

@@ -12,7 +12,9 @@ import {
   PERSIST_MAX_AGE,
   shouldDehydrateQuery,
 } from "@/lib/query/persister";
+import { FontScaleProvider } from "@/lib/theme/FontScaleProvider";
 import { ThemeProvider } from "@/lib/theme/ThemeProvider";
+import { LocaleProvider } from "@/providers/LocaleProvider";
 
 /**
  * Single composition root for every cross-cutting provider. Order matters:
@@ -37,7 +39,11 @@ export function AppProviders({ children }: { children: ReactNode }) {
           }}
         >
           <I18nextProvider i18n={i18n}>
-            <ThemeProvider>{children}</ThemeProvider>
+            <LocaleProvider>
+              <FontScaleProvider>
+                <ThemeProvider>{children}</ThemeProvider>
+              </FontScaleProvider>
+            </LocaleProvider>
           </I18nextProvider>
         </PersistQueryClientProvider>
       </SafeAreaProvider>

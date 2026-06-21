@@ -15,6 +15,7 @@ import {
 import { useColorScheme, View } from "react-native";
 
 import { navThemeFor } from "./navTheme";
+import { resolveDarkScheme } from "./scheme";
 import { themeVars } from "./vars";
 
 export type ColorSchemePreference = "system" | "light" | "dark";
@@ -76,7 +77,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, [hydrated]);
 
-  const isDark = preference === "system" ? systemScheme === "dark" : preference === "dark";
+  const isDark = resolveDarkScheme(preference, systemScheme);
 
   // Keep NativeWind's own `dark:` variant in sync with our preference.
   useEffect(() => {

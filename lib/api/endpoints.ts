@@ -13,6 +13,9 @@ export const ENDPOINTS = {
   users: {
     me: "/users/me",
     devices: "/users/me/devices",
+    // Phase 7 — settings. `me` doubles as the DELETE target (202 soft-delete).
+    export: "/users/me/export",
+    notificationPreferences: "/users/me/notification-preferences",
   },
   masjids: {
     nearby: "/masjids/nearby",
