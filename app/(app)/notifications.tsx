@@ -288,6 +288,23 @@ export default function NotificationsScreen() {
                   />
                 }
               />
+              <Row
+                icon={
+                  <Feather
+                    name="camera"
+                    size={18}
+                    color={c["text-secondary"]}
+                  />
+                }
+                title={t("settings.notifications.photoUpdates")}
+                trailing={
+                  <Switch
+                    value={!np.mute_photo_outcome}
+                    disabled={denied}
+                    onValueChange={(v) => setPref({ mute_photo_outcome: !v })}
+                  />
+                }
+              />
             </Card>
           </View>
         ) : null}

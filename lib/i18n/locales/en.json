@@ -774,7 +774,8 @@
       "fontXLarge": "Extra large",
       "previewLabel": "Preview",
       "previewTitle": "Today's Fajr 5:12",
-      "previewBody": "Prayer times and all app text will appear at this size."
+      "previewBody": "Prayer times and all app text will appear at this size.",
+      "fontHint": "Scales with your phone's font setting, up to 1.6×."
     },
     "language": {
       "title": "Language & region",
@@ -820,6 +821,7 @@
     "storage": {
       "title": "Storage & offline",
       "totalUsed": "Total used",
+      "free": "{{size}} free",
       "offlineData": "Offline data",
       "cachePrayer": "Prayer times",
       "cacheMasjids": "Viewed masjids",

@@ -1,5 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
+import { getFreeDiskStorageAsync } from "expo-file-system/legacy";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,14 +19,12 @@ import {
 import { useFormat } from "@/lib/i18n/format";
 import {
   bytesToDisplay,
+  type CacheCategoryKey,
   clearCache,
   getCacheSummary,
   type CacheSummary,
 } from "@/lib/settings/cache";
 import { useColors } from "@/lib/theme/useColors";
-
-/** Visual reference ceiling for the usage bar (decorative). */
-const BAR_MAX_BYTES = 50 * 1024 * 1024;
 
 export default function StorageScreen() {
   const { t } = useTranslation();
@@ -33,10 +32,22 @@ export default function StorageScreen() {
   const f = useFormat();
   const queryClient = useQueryClient();
   const [summary, setSummary] = useState<CacheSummary | null>(null);
+  const [freeBytes, setFreeBytes] = useState<number | null>(null);
   const [confirm, setConfirm] = useState(false);
+
+  // Per-category accent (matches the Pencil design's color-coded tiles + bar).
+  const catColor: Record<CacheCategoryKey, string> = {
+    prayer: c.primary,
+    masjids: c["accent-gold"],
+    feed: c["text-secondary"],
+    tiles: c["text-muted"],
+  };
 
   const refresh = useCallback(() => {
     setSummary(getCacheSummary(queryClient));
+    void getFreeDiskStorageAsync()
+      .then(setFreeBytes)
+      .catch(() => setFreeBytes(null));
   }, [queryClient]);
 
   useFocusEffect(
@@ -50,8 +61,14 @@ export default function StorageScreen() {
     return `${f.number(value)} ${unit}`;
   };
 
+  // Free disk space runs to GB, beyond bytesToDisplay's KB/MB range.
+  const freeText = (bytes: number) => {
+    const gb = bytes / (1024 * 1024 * 1024);
+    if (gb >= 1) return `${f.number(Math.round(gb * 10) / 10)} GB`;
+    return `${f.number(Math.round(bytes / (1024 * 1024)))} MB`;
+  };
+
   const total = summary?.totalBytes ?? 0;
-  const fillPct = Math.min(100, Math.round((total / BAR_MAX_BYTES) * 100));
 
   const onClear = async () => {
     await clearCache(queryClient);
@@ -66,18 +83,35 @@ export default function StorageScreen() {
         {/* Summary */}
         <View className="gap-3 rounded-md border border-border bg-surface p-[18px]">
           <View className="flex-row items-end justify-between">
-            <Text className="text-caption font-medium text-content-secondary">
-              {t("settings.storage.totalUsed")}
-            </Text>
-            <Text variant="title" className="font-bold">
-              {sizeText(total)}
-            </Text>
+            <View className="gap-0.5">
+              <Text className="text-caption font-medium text-content-secondary">
+                {t("settings.storage.totalUsed")}
+              </Text>
+              <Text variant="title" className="font-bold">
+                {sizeText(total)}
+              </Text>
+            </View>
+            {freeBytes != null ? (
+              <Text className="text-caption font-regular text-content-muted">
+                {t("settings.storage.free", { size: freeText(freeBytes) })}
+              </Text>
+            ) : null}
           </View>
-          <View className="h-2.5 overflow-hidden rounded-full bg-border">
-            <View
-              className="h-full rounded-full bg-primary"
-              style={{ width: `${fillPct}%` }}
-            />
+          {/* Category breakdown bar — each segment ∝ its share of cached bytes. */}
+          <View className="h-2.5 flex-row overflow-hidden rounded-[5px] bg-border">
+            {total > 0
+              ? summary?.categories.map((cat) =>
+                  cat.bytes > 0 ? (
+                    <View
+                      key={cat.key}
+                      style={{
+                        width: `${(cat.bytes / total) * 100}%`,
+                        backgroundColor: catColor[cat.key],
+                      }}
+                    />
+                  ) : null,
+                )
+              : null}
           </View>
         </View>
 
@@ -87,11 +121,13 @@ export default function StorageScreen() {
             <Row
               key={cat.key}
               icon={
-                <Feather
-                  name={cat.icon as keyof typeof Feather.glyphMap}
-                  size={18}
-                  color={c["text-secondary"]}
-                />
+                <View className="h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-background">
+                  <Feather
+                    name={cat.icon as keyof typeof Feather.glyphMap}
+                    size={17}
+                    color={catColor[cat.key]}
+                  />
+                </View>
               }
               title={t(cat.labelKey)}
               subtitle={
@@ -140,6 +176,7 @@ export default function StorageScreen() {
         </View>
         <View className="gap-2.5 pt-2">
           <Button
+            variant="destructive"
             label={t("settings.storage.clearConfirm")}
             onPress={() => void onClear()}
           />
