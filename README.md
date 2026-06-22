@@ -1,50 +1,104 @@
-# Welcome to your Expo app 👋
+# MasjidKoi — Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+MasjidKoi connects Muslims with their local masjids. It brings prayer times, masjid
+discovery, donations, community, and gamified worship tracking together in one app —
+built with Expo and React Native for iOS and Android.
 
-## Get started
+## What it does
 
-1. Install dependencies
+**Prayer & home**
+- Daily prayer times computed on-device with [adhan](https://github.com/batoulapps/adhan-js), with a live next-prayer countdown
+- Home dashboard, Qibla direction, Hijri calendar, and selectable azan sounds
 
-   ```bash
-   npm install
-   ```
+**Discover**
+- Explore nearby masjids on an interactive map, search and filter, and open directions in the native maps app
+- City picker and location-based ranking
 
-2. Start the app
+**Masjids**
+- Rich masjid profiles with photos, facilities, and contribution flows
+- Community-driven "add a masjid" submissions and photo contributions
+- Ask-the-masjid Q&A and geofenced check-ins
 
-   ```bash
-   npx expo start
-   ```
+**Community**
+- Activity feed, follow masjids, events with RSVP, and masjid reviews & ratings
 
-In the output, you'll find options to open the app in a
+**Donations**
+- One-time and recurring donations, campaigns, secure checkout, and downloadable receipts
+- Personal donations dashboard and annual statements
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+**Gamification**
+- Prayer journal, streaks, badges, goals, milestones, reflections, and gentle nudges
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+**Personal & accessibility**
+- Passwordless email-OTP sign-in
+- Appearance/theme controls, multi-language (English, Bengali, Arabic) with full RTL support
+- Push notifications, exempt mode, and full account data export / deletion
 
-## Get a fresh project
+## Tech stack
 
-When you're ready, run:
+- **Expo** SDK 54 · **React Native** 0.81 · **React** 19
+- **expo-router** — file-based navigation
+- **NativeWind v4** (Tailwind CSS) for styling
+- **TanStack React Query** with AsyncStorage persistence for server state
+- **react-hook-form** + **zod** for forms and validation
+- **i18next / react-i18next** + **expo-localization** (en / bn / ar, RTL-aware)
+- **react-native-maps** + **expo-location** for discovery
+- **expo-notifications**, **expo-audio**, **expo-image**, **expo-secure-store**
+- Hind Siliguri font for Bengali typography
+
+The app talks to the **MasjidKoi backend** (FastAPI) over a REST API.
+
+## Getting started
+
+Prerequisites: Node.js 18+, npm, and the [Expo](https://docs.expo.dev) toolchain. For
+native builds you'll also need Xcode (iOS) and/or Android Studio.
 
 ```bash
-npm run reset-project
+# 1. Install dependencies
+npm install
+
+# 2. Point the app at your backend API
+#    (configure the API base URL in the Expo app config / environment)
+
+# 3. Start the dev server
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+From the Expo dev server you can launch the app in:
 
-## Learn more
+- an iOS simulator — `npm run ios`
+- an Android emulator — `npm run android`
+- a physical device via [Expo Go](https://expo.dev/go)
 
-To learn more about developing your project with Expo, look at the following resources:
+## Project structure
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+app/                 # screens & routes (expo-router, file-based)
+  (app)/(tabs)/      # main tabs: home, explore, feed, profile
+  (app)/             # feature screens: donations, campaigns, events,
+                     # badges, journal, goals, check-in, masjid, …
+components/          # shared UI components
+hooks/               # data + behavior hooks (React Query)
+lib/                 # api client, i18n, forms, theme, config
+assets/              # fonts, images, azan audio
+```
 
-## Join the community
+## Scripts
 
-Join our community of developers creating universal apps.
+| Command | Description |
+|---|---|
+| `npm start` | Start the Expo dev server |
+| `npm run ios` | Run on the iOS simulator |
+| `npm run android` | Run on the Android emulator |
+| `npm run web` | Run in the browser |
+| `npm run lint` | Lint the project |
+| `npm test` | Run the Jest test suite |
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Localization
+
+UI strings live in `lib/i18n/locales/{en,bn,ar}.json`. Arabic enables right-to-left
+layout automatically. Bengali numerals and Hijri dates are supported throughout.
+
+---
+
+Built as part of the Internet Programming lab project.
