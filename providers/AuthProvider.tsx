@@ -99,6 +99,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Migration is best-effort — never block sign-in on it.
       }
       setStatus("authenticated");
+      // Drop any user-scoped community caches a prior session may have left
+      // (incl. a persisted feed that hydrated this launch) so this account never
+      // reads the previous one's data, regardless of logout-time persist timing.
+      queryClient.removeQueries({ queryKey: ["feed"] });
+      queryClient.removeQueries({ queryKey: qk.checkins.mine() });
+      queryClient.removeQueries({ queryKey: qk.notificationPrefs() });
       // Register the push token (best-effort; no-op until push is provisioned).
       void registerDevice();
       await queryClient.invalidateQueries({ queryKey: qk.user.me() });
@@ -118,6 +124,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await resetGuestMigration();
     setStatus("guest");
     queryClient.removeQueries({ queryKey: qk.user.me() });
+    // Drop user-scoped community caches on sign-out; `login` repeats this so a
+    // persisted feed can't bleed across accounts even if the app is killed before
+    // the throttled persister re-writes the cleared cache.
+    queryClient.removeQueries({ queryKey: ["feed"] });
+    queryClient.removeQueries({ queryKey: qk.checkins.mine() });
+    queryClient.removeQueries({ queryKey: qk.notificationPrefs() });
   }, [queryClient]);
 
   // A soft-deleted account (410) can't be used — drop to guest.
@@ -133,6 +145,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUnauthorizedHandler(() => {
       setStatus("guest");
       queryClient.removeQueries({ queryKey: qk.user.me() });
+      queryClient.removeQueries({ queryKey: ["feed"] });
+      queryClient.removeQueries({ queryKey: qk.checkins.mine() });
+      queryClient.removeQueries({ queryKey: qk.notificationPrefs() });
       setReloginPrompt(true);
     });
     return () => setUnauthorizedHandler(null);

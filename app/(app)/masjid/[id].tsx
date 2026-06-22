@@ -9,6 +9,7 @@ import { Banner, Button, DonateBar, EmptyState, MasjidTimesSection, SectionHeade
 import {
   CampaignsSection,
   ContactSection,
+  EventsSection,
   FacilitiesSection,
   ImamCard,
   NextPrayerCard,
@@ -22,7 +23,9 @@ import {
 } from "@/components/profile";
 import { useAnsweredQuestions } from "@/hooks/useAnsweredQuestions";
 import { useCampaigns } from "@/hooks/useCampaigns";
+import { useCheckIn, CheckInPermissionError } from "@/hooks/useCheckIn";
 import { useCommunityPhotos } from "@/hooks/useCommunityPhotos";
+import { useEvents } from "@/hooks/useEvents";
 import { useFollow } from "@/hooks/useFollow";
 import { useHijriDate } from "@/hooks/useHijriDate";
 import { useJumah } from "@/hooks/useJumah";
@@ -32,6 +35,7 @@ import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import { useRecentMasjids } from "@/hooks/useRecentMasjids";
 import { useReviewsSummary } from "@/hooks/useReviewsSummary";
 import { ApiError } from "@/lib/api/errors";
+import { listEventToDetailParam } from "@/lib/events/types";
 import { useFormat } from "@/lib/i18n/format";
 import { haversineMeters } from "@/lib/location/geo";
 import { openDirections } from "@/lib/masjids/directions";
@@ -72,12 +76,14 @@ export default function MasjidProfileScreen() {
   const clock = usePrayerClock(today);
 
   const campaigns = useCampaigns(masjidId).data?.items ?? [];
+  const events = useEvents(masjidId).data?.items ?? [];
   const answered = useAnsweredQuestions(masjidId).data?.items ?? [];
   const reviews = useReviewsSummary(masjidId).data;
   const photosQuery = useCommunityPhotos(masjidId);
   const communityPhotos = photosQuery.data?.pages.flatMap((p) => p.items) ?? [];
 
-  const follow = useFollow(masjidId);
+  const follow = useFollow(masjidId, masjid?.name);
+  const checkin = useCheckIn(masjidId);
 
   // `recordView` is a fresh closure each render — call it through a ref so this
   // records once per masjid, not on every re-render.
@@ -139,6 +145,38 @@ export default function MasjidProfileScreen() {
       "donate",
     );
 
+  // Check-in is gated; the hook acquires a fresh GPS fix (the server enforces the
+  // 100m radius). Route to the result screen on success / too-far; permission
+  // denial diverts to the location explainer.
+  const goCheckIn = () =>
+    requireAuth(() => {
+      if (checkin.isPending) return;
+      checkin.mutate(undefined, {
+        onSuccess: (res) =>
+          router.push({
+            pathname: "/checkin/[id]",
+            params: {
+              id: masjidId,
+              status: "success",
+              checkedInAt: res.checked_in_at,
+              masjidName: masjid.name,
+              badges: JSON.stringify(res.new_badges ?? []),
+            },
+          }),
+        onError: (e) => {
+          if (e instanceof CheckInPermissionError) {
+            router.push("/location-explainer");
+            return;
+          }
+          const status = e instanceof ApiError && e.status === 400 ? "too_far" : "error";
+          router.push({
+            pathname: "/checkin/[id]",
+            params: { id: masjidId, status, masjidName: masjid.name },
+          });
+        },
+      });
+    }, "community");
+
   return (
     <View className="flex-1 bg-background">
       <ScrollView
@@ -190,6 +228,14 @@ export default function MasjidProfileScreen() {
             isFollowing={follow.isFollowing}
             onToggleFollow={() => requireAuth(() => follow.toggle(), "community")}
             followPending={follow.isPending}
+          />
+
+          <Button
+            variant="secondary"
+            label={checkin.isPending ? t("community.checkin.checking") : t("community.checkin.cta")}
+            disabled={checkin.isPending}
+            leftIcon={<Feather name="map-pin" size={16} color={c.primary} />}
+            onPress={goCheckIn}
           />
 
           {stale ? (
@@ -246,6 +292,22 @@ export default function MasjidProfileScreen() {
             onDonate={(campaignId) => goDonate(campaignId)}
           />
 
+          <EventsSection
+            events={events}
+            onOpen={(ev) =>
+              router.push({
+                pathname: "/event/[id]",
+                params: {
+                  id: ev.event_id,
+                  masjidId,
+                  // The public list lacks the caller's own RSVP — the builder
+                  // defaults it to "not going"; the toggle's response is authoritative.
+                  e: JSON.stringify(listEventToDetailParam(ev, masjid.name)),
+                },
+              })
+            }
+          />
+
           <VisitorPhotoStrip
             photos={communityPhotos}
             onAddPhoto={() => goGated("/add-photo")}
@@ -264,7 +326,18 @@ export default function MasjidProfileScreen() {
 
           <QnASection questions={answered} onAsk={() => goGated("/ask-question")} />
 
-          <ReviewsSlot averageRating={reviews?.average_rating ?? null} total={reviews?.total ?? 0} />
+          <ReviewsSlot
+            averageRating={reviews?.average_rating ?? null}
+            total={reviews?.total ?? 0}
+            preview={reviews?.items ?? []}
+            onSeeAll={() => router.push({ pathname: "/reviews/[id]", params: { id: masjidId } })}
+            onWrite={() =>
+              requireAuth(
+                () => router.push({ pathname: "/review/[id]", params: { id: masjidId } }),
+                "community",
+              )
+            }
+          />
 
           <SuggestEditRow
             onPress={() => router.push({ pathname: "/suggest-edit", params: { masjidId } })}

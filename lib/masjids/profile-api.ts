@@ -147,10 +147,14 @@ export interface ReviewListResponse {
   average_rating: number | null;
 }
 
-/** Phase 5 surfaces only the aggregate, so pull the smallest possible page. */
+/**
+ * The profile reviews slot needs the aggregate (`average_rating`, `total`) plus a
+ * few items to preview, so pull a small first page. The full paginated list lives
+ * behind the "see all" screen (`useReviews`).
+ */
 export function fetchReviewsSummary(id: string): Promise<ReviewListResponse> {
   return api.get<ReviewListResponse>(
-    withQuery(ENDPOINTS.masjids.reviews(id), { page: 1, page_size: 1 }),
+    withQuery(ENDPOINTS.masjids.reviews(id), { page: 1, page_size: 3 }),
     { auth: false },
   );
 }

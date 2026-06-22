@@ -41,13 +41,19 @@ export interface CacheSummary {
  * mirror of the recents list whose AsyncStorage key is also dropped below. */
 export function isClearableQuery(queryKey: QueryKey): boolean {
   const root = queryKey[0];
-  return root === "masjids" || root === "app-config" || root === "recents";
+  return (
+    root === "masjids" ||
+    root === "app-config" ||
+    root === "recents" ||
+    root === "feed"
+  );
 }
 
 /** Which display category a persisted query belongs to (null = not inspected). */
 function categoryFor(queryKey: QueryKey): CacheCategoryKey | null {
   const [root, sub] = queryKey as [unknown, unknown];
   if (root === "app-config") return "masjids";
+  if (root === "feed") return "feed";
   if (root !== "masjids") return null;
   if (sub === "prayer-times" || sub === "jumah") return "prayer";
   return "masjids";

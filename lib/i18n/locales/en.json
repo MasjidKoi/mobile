@@ -157,7 +157,8 @@
       "about": "About",
       "donations": "Donation history",
       "journal": "Ibadah Journal",
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "following": "Masjids I follow"
     },
     "signOutConfirmTitle": "Sign out?",
     "signOutConfirmBody": "You can sign in again anytime."
@@ -849,6 +850,105 @@
       "save": "Save",
       "saveError": "Couldn't save — please try again.",
       "photoError": "Couldn't select photo."
+    }
+  },
+  "feed": {
+    "title": "Feed",
+    "tabs": {
+      "announcements": "Announcements",
+      "events": "Events"
+    },
+    "offline": "You're offline — showing your last saved feed.",
+    "guest": {
+      "title": "Sign in to see your feed",
+      "caption": "Follow masjids to get their announcements and events here.",
+      "cta": "Sign in"
+    },
+    "empty": {
+      "announcementsTitle": "No announcements yet",
+      "eventsTitle": "No events yet",
+      "caption": "Follow masjids and their updates will show up here.",
+      "cta": "Find masjids"
+    }
+  },
+  "community": {
+    "announcement": {
+      "title": "Announcement",
+      "errorTitle": "Couldn't load announcement",
+      "offlineTitle": "You're offline",
+      "errorCaption": "Please try again."
+    },
+    "events": {
+      "attendees": "{{formatted}} going",
+      "title": "Event",
+      "sectionTitle": "Upcoming events",
+      "errorTitle": "Event not found",
+      "errorCaption": "This event is no longer available.",
+      "rsvp": "RSVP",
+      "going": "Going",
+      "full": "Full",
+      "rsvpClosed": "RSVP isn't open for this event.",
+      "disabled": "RSVP isn't enabled for this event.",
+      "rsvpError": "Couldn't update RSVP — try again.",
+      "countWithCap": "{{going}} / {{cap}} going"
+    },
+    "follow": {
+      "title": "Masjids you follow",
+      "unfollow": "Unfollow",
+      "offline": "You're offline — showing your last saved list.",
+      "emptyTitle": "You're not following any masjids yet",
+      "emptyCaption": "Masjids you follow show up here, and their updates appear in your feed.",
+      "guestTitle": "Sign in to see followed masjids",
+      "guestCaption": "The masjids you follow are saved to your account.",
+      "mode": {
+        "digest": "Daily digest",
+        "instant": "Instant",
+        "mute": "Muted"
+      }
+    },
+    "reviews": {
+      "yours": "Your review",
+      "anonymous": "Anonymous",
+      "edit": "Edit",
+      "delete": "Delete",
+      "writeCta": "Write a review",
+      "writeFirstCta": "Be the first to review",
+      "seeAll": "See all",
+      "offline": "You're offline — showing your last saved reviews.",
+      "emptyTitle": "No reviews yet",
+      "emptyCaption": "Be the first to share your experience.",
+      "writeTitle": "Write a review",
+      "editTitle": "Edit your review",
+      "ratingPrompt": "How would you rate this masjid?",
+      "bodyLabel": "Your review (optional)",
+      "bodyPlaceholder": "Share what others should know…",
+      "lowStarHint": "A 1–2 star review needs at least {{min}} characters explaining why.",
+      "submit": "Submit review",
+      "update": "Update review",
+      "saveError": "Couldn't save your review — try again.",
+      "deleteConfirmTitle": "Delete your review?",
+      "deleteConfirmBody": "This permanently removes your review and rating.",
+      "deleteError": "Couldn't delete your review — try again.",
+      "starLabel": "{{n}} stars"
+    },
+    "checkin": {
+      "cta": "Check in",
+      "checking": "Checking in…",
+      "successTitle": "Checked in!",
+      "successAt": "You're checked in at {{masjid}}.",
+      "successCaption": "You're checked in.",
+      "tooFarTitle": "You're too far away",
+      "tooFarCaption": "You need to be within {{meters}} m of the masjid to check in.",
+      "errorTitle": "Check-in failed",
+      "errorCaption": "Something went wrong — try again.",
+      "newBadges": "New badges earned",
+      "review": "Leave a review",
+      "retry": "Try again",
+      "badge": {
+        "FajrWarrior": "Fajr Warrior",
+        "GenerousGiver": "Generous Giver",
+        "CommunityPillar": "Community Pillar"
+      }
     }
   }
 }

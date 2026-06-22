@@ -28,3 +28,6 @@ export { SuggestEditRow } from "./SuggestEditRow";
 
 export { CampaignsSection } from "./CampaignsSection";
 export type { CampaignsSectionProps } from "./CampaignsSection";
+
+export { EventsSection } from "./EventsSection";
+export type { EventsSectionProps } from "./EventsSection";

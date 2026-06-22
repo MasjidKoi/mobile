@@ -95,6 +95,9 @@ export type { AnnouncementCardProps } from "./AnnouncementCard";
 export { EventCard } from "./EventCard";
 export type { EventCardProps } from "./EventCard";
 
+export { CommunityEventCard } from "./CommunityEventCard";
+export type { CommunityEventCardProps } from "./CommunityEventCard";
+
 export { FacilityChip } from "./FacilityChip";
 export type { FacilityChipProps } from "./FacilityChip";
 
