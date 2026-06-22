@@ -400,7 +400,12 @@
     "name_too_long": "هذا الاسم طويل جدًا",
     "masjid_name_required": "أدخل اسم المسجد",
     "masjid_name_too_long": "هذا الاسم طويل جدًا",
-    "address_too_long": "هذا العنوان طويل جدًا"
+    "address_too_long": "هذا العنوان طويل جدًا",
+    "amount_required": "أدخل مبلغًا",
+    "amount_too_low": "الحد الأدنى ৳10",
+    "amount_too_high": "الحد الأقصى ৳500,000",
+    "donor_name_required": "أدخل اسمك",
+    "donor_name_too_long": "هذا الاسم طويل جدًا"
   },
   "masjid": {
     "profile": {
@@ -556,6 +561,144 @@
         "emptyTitle": "لا توجد أسئلة بعد",
         "emptyCaption": "تظهر الأسئلة التي تطرحها هنا مع حالتها."
       }
+    }
+  },
+  "donation": {
+    "title": "تبرّع",
+    "amount": {
+      "title": "المبلغ",
+      "customPlaceholder": "أدخل مبلغًا",
+      "categoryLabel": "الفئة",
+      "categoryOptional": "الفئة (اختياري)",
+      "fee": "يصل المسجد ~{{net}} · بعد رسوم المنصة",
+      "anonymityLabel": "تبرّع دون اسم",
+      "anonymityHint": "لن يظهر اسمك للمسجد",
+      "cta": "تبرّع بـ {{amount}}",
+      "toMasjid": "إلى {{masjid}}"
+    },
+    "category": {
+      "general": "عام",
+      "building": "بناء",
+      "zakat": "زكاة",
+      "sadaqah": "صدقة",
+      "lillah": "لله",
+      "campaign": "حملة"
+    },
+    "name": {
+      "title": "أدخل اسمك",
+      "subtitle": "سيظهر على إيصالك. يمكنك أيضًا البقاء دون اسم.",
+      "label": "الاسم الكامل",
+      "placeholder": "اسمك",
+      "note": "تتم مشاركة اسمك مع المسجد لهذا التبرّع فقط.",
+      "cta": "متابعة"
+    },
+    "checkout": {
+      "opening": "جارٍ فتح الدفع الآمن…",
+      "error": "تعذّر بدء الدفع — حاول مرة أخرى."
+    },
+    "confirming": {
+      "title": "جارٍ تأكيد الدفع",
+      "caption": "نتحقق من بوابة الدفع — يستغرق ذلك بضع ثوانٍ.",
+      "cancel": "إلغاء"
+    },
+    "success": {
+      "title": "جزاك الله خيرًا",
+      "subtitle": "تمّ تبرّعك بنجاح.",
+      "receipt": "الإيصال",
+      "done": "تم",
+      "txn": "المعاملة {{id}}",
+      "recurringNudge": "اجعله تبرّعًا منتظمًا"
+    },
+    "failed": {
+      "title": "فشل الدفع",
+      "caption": "لم يتمّ الدفع ولم يُخصم منك أي مبلغ.",
+      "notCharged": "لم يُخصم أي مبلغ.",
+      "retry": "حاول مرة أخرى",
+      "dismiss": "ليس الآن"
+    },
+    "recovery": {
+      "title": "إكمال التبرّع؟",
+      "caption": "لم نتلقَّ تأكيدًا. يمكنك المحاولة مجددًا أو التحقق من الحالة.",
+      "retry": "حاول مرة أخرى",
+      "checkStatus": "تحقق من الحالة"
+    },
+    "campaign": {
+      "label": "حملة",
+      "raised": "{{raised}} من {{target}}",
+      "percentRaised": "{{pct}}% تم جمعه",
+      "daysLeft": "{{days}} يومًا متبقية",
+      "donateCta": "تبرّع لهذه الحملة",
+      "fundedBadge": "تم بلوغ الهدف",
+      "completedNote": "انتهت هذه الحملة — جزى الله خيرًا كل من تبرّع.",
+      "notFoundTitle": "الحملة غير موجودة",
+      "notFoundCaption": "ربما انتهت الحملة أو تمت إزالتها."
+    },
+    "recurring": {
+      "setupTitle": "تبرّع منتظم",
+      "last10Title": "العشر الأواخر",
+      "last10Caption": "تذكير ليلي لليالي العشر الأواخر من رمضان.",
+      "last10Cta": "تفعيل التذكير الليلي",
+      "frequencyLabel": "كم مرة",
+      "weekly": "أسبوعي",
+      "monthly": "شهري",
+      "nightly": "ليلي",
+      "amountLabel": "المبلغ في كل مرة",
+      "reminderNote": "هذا تذكير وليس خصمًا تلقائيًا — سنذكّرك وتكمل كل تبرّع بنفسك.",
+      "cta": "تفعيل تذكير {{frequency}}",
+      "creating": "جارٍ الإعداد…",
+      "managerTitle": "التبرّع المنتظم",
+      "estMonthly": "~{{amount}} / شهر (تقديري)",
+      "pause": "إيقاف مؤقت",
+      "resume": "استئناف",
+      "newCta": "تبرّع منتظم جديد",
+      "emptyTitle": "لا توجد تذكيرات منتظمة بعد",
+      "emptyCaption": "بعد التبرّع، أنشئ تذكيرًا للتبرّع بانتظام."
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "completed": "مكتمل",
+      "failed": "فشل",
+      "refunded": "مُسترد"
+    },
+    "dashboard": {
+      "title": "تبرّعاتي",
+      "lifetime": "إجمالي التبرّعات",
+      "thisYear": "هذا العام",
+      "masjids": "المساجد",
+      "filterAll": "الكل",
+      "recurringRow": "التبرّع المنتظم",
+      "annualReport": "تنزيل التقرير السنوي",
+      "emptyTitle": "لا توجد تبرّعات بعد",
+      "emptyCaption": "عند التبرّع، يظهر سجلّك وإيصالاتك هنا.",
+      "emptyCta": "ابحث عن مسجد",
+      "offline": "أنت غير متصل — اتصل لعرض تبرّعاتك."
+    },
+    "detail": {
+      "title": "تفاصيل التبرّع",
+      "amount": "المبلغ",
+      "fee": "رسوم المنصة",
+      "net": "يصل المسجد",
+      "category": "الفئة",
+      "receiptNumber": "رقم الإيصال",
+      "method": "الطريقة",
+      "date": "التاريخ",
+      "downloadReceipt": "تنزيل الإيصال",
+      "giveAgain": "تبرّع لهذا المسجد مجددًا"
+    },
+    "filters": {
+      "title": "تصفية التبرّعات",
+      "category": "الفئة",
+      "all": "الكل",
+      "apply": "تطبيق",
+      "clear": "مسح"
+    },
+    "receipt": {
+      "title": "الإيصال",
+      "heading": "إيصال تبرّع",
+      "open": "فتح / مشاركة PDF",
+      "loading": "جارٍ التحضير…",
+      "taxNote": "احتفظ بهذا الإيصال لسجلّاتك.",
+      "error": "تعذّر فتح الإيصال — حاول مرة أخرى."
     }
   }
 }

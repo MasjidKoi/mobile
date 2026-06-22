@@ -85,7 +85,12 @@ export default function ProfileTab() {
             <Card>
               <ListItem title={t("profileTab.rows.settings")} leading={tile("settings", c["text-secondary"])} trailing={chevron} disabled />
               <ListItem title={t("profileTab.rows.help")} leading={tile("life-buoy", c["accent-gold"])} trailing={chevron} disabled />
-              <ListItem title={t("profileTab.rows.donations")} leading={tile("heart", c.primary)} trailing={chevron} disabled />
+              <ListItem
+                title={t("profileTab.rows.donations")}
+                leading={tile("heart", c.primary)}
+                trailing={chevron}
+                onPress={() => router.push("/donations")}
+              />
               <ListItem title={t("profileTab.rows.journal")} leading={tile("moon", c["text-muted"])} trailing={soonBadge} disabled />
             </Card>
 

@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { Button, CampaignCard, SectionHeader } from "@/components";
 import { useFormat } from "@/lib/i18n/format";
@@ -9,7 +9,9 @@ import { useColors } from "@/lib/theme/useColors";
 
 export type CampaignsSectionProps = {
   campaigns: CampaignResponse[];
-  /** Navigate to the (Phase 6) donate flow for this campaign. */
+  /** Open the campaign detail screen. */
+  onOpen: (campaignId: string) => void;
+  /** Jump straight into the donate flow for this campaign. */
   onDonate: (campaignId: string) => void;
 };
 
@@ -18,7 +20,7 @@ export type CampaignsSectionProps = {
  * card's CTA routes to the donate flow (a stub until Phase 6 fills it in).
  * Renders nothing when there are no active campaigns.
  */
-export function CampaignsSection({ campaigns, onDonate }: CampaignsSectionProps) {
+export function CampaignsSection({ campaigns, onOpen, onDonate }: CampaignsSectionProps) {
   const { t } = useTranslation();
   const f = useFormat();
   const c = useColors();
@@ -34,8 +36,12 @@ export function CampaignsSection({ campaigns, onDonate }: CampaignsSectionProps)
           const raised = Number(cam.raised_amount) || 0;
           const target = Number(cam.target_amount) || 0;
           return (
-            <CampaignCard
+            <Pressable
               key={cam.campaign_id}
+              accessibilityRole="button"
+              onPress={() => onOpen(cam.campaign_id)}
+            >
+            <CampaignCard
               name={cam.title}
               daysLabel={t("masjid.campaign.daysLeft", {
                 formatted: f.number(Math.max(0, cam.days_remaining)),
@@ -54,7 +60,8 @@ export function CampaignsSection({ campaigns, onDonate }: CampaignsSectionProps)
                   onPress={() => onDonate(cam.campaign_id)}
                 />
               }
-            />
+              />
+            </Pressable>
           );
         })}
       </View>

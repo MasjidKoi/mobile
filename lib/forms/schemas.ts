@@ -54,3 +54,29 @@ export const masjidSubmissionSchema = z.object({
   address: z.string().trim().max(500, "validation.address_too_long").optional(),
 });
 export type MasjidSubmissionFormValues = z.infer<typeof masjidSubmissionSchema>;
+
+/**
+ * Donation amount (35/36). The backend enforces 10–500,000 BDT; we mirror it for
+ * inline validation before the SSLCommerz hand-off.
+ */
+export const DONATION_MIN = 10;
+export const DONATION_MAX = 500_000;
+
+export const donationAmountSchema = z.object({
+  amount: z
+    .number({ message: "validation.amount_required" })
+    .int("validation.amount_required")
+    .min(DONATION_MIN, "validation.amount_too_low")
+    .max(DONATION_MAX, "validation.amount_too_high"),
+});
+export type DonationAmountValues = z.infer<typeof donationAmountSchema>;
+
+/** Name collection (37) — only required when the gift is NOT anonymous. */
+export const donorNameSchema = z.object({
+  donor_name: z
+    .string()
+    .trim()
+    .min(1, "validation.donor_name_required")
+    .max(255, "validation.donor_name_too_long"),
+});
+export type DonorNameValues = z.infer<typeof donorNameSchema>;

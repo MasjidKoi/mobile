@@ -30,10 +30,26 @@ export const ENDPOINTS = {
     report: (id: string) => `/masjids/${id}/report`,
     follow: (id: string) => `/masjids/${id}/follow`,
     followersCount: (id: string) => `/masjids/${id}/followers/count`,
+    // Phase 6 — start a donation against a masjid (Bearer; SSLCommerz checkout).
+    donations: (id: string) => `/masjids/${id}/donations`,
+  },
+  // Phase 6 — campaign-scoped donations + single-donation reads.
+  campaigns: {
+    donations: (id: string) => `/campaigns/${id}/donations`,
+  },
+  donations: {
+    byId: (id: string) => `/donations/${id}`,
+    receipt: (id: string) => `/donations/${id}/receipt`,
   },
   me: {
     submissions: "/me/submissions",
     photoSubmissions: "/me/photo-submissions",
     questions: "/me/questions",
+    // Phase 6 — donation history, summary, annual report, recurring reminders.
+    donations: "/me/donations",
+    donationsSummary: "/me/donations/summary",
+    annualReport: "/me/donations/annual-report",
+    recurring: "/me/recurring-schedules",
+    recurringById: (id: string) => `/me/recurring-schedules/${id}`,
   },
 } as const;
