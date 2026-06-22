@@ -56,7 +56,13 @@ export function ExportDialogs({
           </Text>
         </View>
         <View className="gap-2.5 pt-2">
-          <Button label={t("settings.privacy.exportRetry")} onPress={onRetry} />
+          <Button
+            label={t("settings.privacy.exportRetry")}
+            leftIcon={
+              <Feather name="rotate-cw" size={16} color={c["on-inverse"]} />
+            }
+            onPress={onRetry}
+          />
           <Button variant="text" label={t("common.cancel")} onPress={onCancel} />
         </View>
       </Dialog>

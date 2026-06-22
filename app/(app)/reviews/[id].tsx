@@ -12,8 +12,8 @@ import {
   Button,
   Dialog,
   EmptyState,
-  RatingSummary,
   ReviewCard,
+  Stars,
   Text,
 } from "@/components";
 import { useReviewDelete, useReviews } from "@/hooks/useReviews";
@@ -52,7 +52,9 @@ export default function ReviewsListScreen() {
           pathname: "/review/[id]",
           params: {
             id: masjidId,
-            ...(review ? { rating: String(review.rating), body: review.body ?? "" } : {}),
+            ...(review
+              ? { rating: String(review.rating), body: review.body ?? "", reviewId: review.review_id }
+              : {}),
           },
         }),
       "community",
@@ -61,9 +63,10 @@ export default function ReviewsListScreen() {
   const header = (
     <View className="gap-3 pb-2">
       {firstPage && firstPage.average_rating != null && firstPage.total > 0 ? (
-        <RatingSummary
+        <RatingSummaryCard
           rating={firstPage.average_rating}
-          countLabel={t("masjid.reviews.count", { formatted: f.number(firstPage.total) })}
+          total={firstPage.total}
+          distribution={firstPage.rating_distribution ?? null}
         />
       ) : null}
 
@@ -189,5 +192,52 @@ export default function ReviewsListScreen() {
         </View>
       </Dialog>
     </SafeAreaView>
+  );
+}
+
+/** Expanded rating summary (design 85): the average + stars beside a 5-row
+ * star-distribution bar chart. Bars scale to the busiest star level. */
+function RatingSummaryCard({
+  rating,
+  total,
+  distribution,
+}: {
+  rating: number;
+  total: number;
+  distribution: Record<string, number> | null;
+}) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const dist = distribution ?? {};
+  const stars = [5, 4, 3, 2, 1];
+  const max = Math.max(1, ...stars.map((s) => dist[String(s)] ?? 0));
+  return (
+    <View className="flex-row gap-4 rounded-md border border-border bg-surface p-4">
+      <View className="items-center gap-1">
+        <Text variant="display" style={{ fontSize: 34, lineHeight: 42 }}>
+          {rating.toFixed(1)}
+        </Text>
+        <Stars rating={rating} size={14} />
+        <Text variant="caption" className="text-content-muted">
+          {t("masjid.reviews.count", { formatted: f.number(total) })}
+        </Text>
+      </View>
+      <View className="flex-1 justify-center gap-1.5">
+        {stars.map((s) => {
+          const count = dist[String(s)] ?? 0;
+          return (
+            <View key={s} className="flex-row items-center gap-2">
+              <Text className="w-3 text-[11px] text-content-muted">{f.number(s)}</Text>
+              <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-control-light">
+                <View
+                  className="h-1.5 rounded-full bg-accent-gold"
+                  style={{ width: `${(count / max) * 100}%` }}
+                />
+              </View>
+            </View>
+          );
+        })}
+      </View>
+    </View>
   );
 }

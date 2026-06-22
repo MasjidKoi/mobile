@@ -31,7 +31,7 @@ export default function SetHomeMasjidScreen() {
 
   const close = (
     <Pressable accessibilityRole="button" onPress={() => router.back()} className="h-9 w-9 items-center justify-center">
-      <Feather name="x" size={22} color={c["text-primary"]} />
+      <Feather name="chevron-left" size={24} color={c["text-primary"]} />
     </Pressable>
   );
 

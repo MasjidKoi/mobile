@@ -88,7 +88,14 @@ function invalidateDerived(queryClient: ReturnType<typeof useQueryClient>, date:
 export function useLogPrayers(date: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (prayers: Partial<Prayers>) => upsertJournal({ entry_date: date, prayers }),
+    mutationFn: (prayers: Partial<Prayers>) => {
+      // The backend writes `prayers` as a complete group — any of the five
+      // omitted from the request is stored as `false`. Merge the toggle into
+      // the current entry so logging one prayer never clears the others.
+      const current = queryClient.getQueryData<JournalEntry>(qk.journal.entry(date));
+      const full: Prayers = { ...EMPTY_PRAYERS, ...current?.prayers, ...prayers };
+      return upsertJournal({ entry_date: date, prayers: full });
+    },
     onMutate: async (prayers) => {
       await queryClient.cancelQueries({ queryKey: qk.journal.entry(date) });
       const prev = queryClient.getQueryData<JournalEntry>(qk.journal.entry(date));

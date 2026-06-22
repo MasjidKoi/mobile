@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Pressable, View } from "react-native";
 
+import { useColors } from "@/lib/theme/useColors";
 import { Text } from "../Text";
 
 /**
@@ -17,6 +18,7 @@ export type RatingInputProps = {
 
 export function RatingInput({ value, onChange, size = 36, className }: RatingInputProps) {
   const { t } = useTranslation();
+  const c = useColors();
   return (
     <View className={`flex-row gap-2${className ? ` ${className}` : ""}`}>
       {[1, 2, 3, 4, 5].map((n) => (
@@ -29,8 +31,11 @@ export function RatingInput({ value, onChange, size = 36, className }: RatingInp
           onPress={() => onChange(n)}
         >
           <Text
-            style={{ fontSize: size, lineHeight: size * 1.1 }}
-            className={n <= value ? "text-accent-gold" : "text-border"}
+            style={{
+              fontSize: size,
+              lineHeight: size * 1.1,
+              color: n <= value ? c["accent-gold"] : c.border,
+            }}
           >
             ★
           </Text>

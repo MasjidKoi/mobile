@@ -123,6 +123,11 @@ export default function AppearanceScreen() {
               {t("settings.appearance.previewBody")}
             </Text>
           </View>
+          <View className="px-0.5">
+            <Text className="text-caption font-regular text-content-muted">
+              {t("settings.appearance.fontHint")}
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

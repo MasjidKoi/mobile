@@ -8,6 +8,7 @@
 import { toGregorian, toHijri } from "hijri-converter";
 
 import { toBengaliDigits } from "@/lib/i18n/format";
+import { getBengaliNumerals } from "@/lib/i18n/numerals";
 
 export const HIJRI_MONTHS_EN = [
   "Muharram",
@@ -25,7 +26,7 @@ export const HIJRI_MONTHS_EN = [
 ] as const;
 
 export const HIJRI_MONTHS_BN = [
-  "মহরম",
+  "মুহাররম",
   "সফর",
   "রবিউল আউয়াল",
   "রবিউস সানি",
@@ -140,8 +141,17 @@ export function isLast10Nights(gregorian: Date, offsetDays = 0): boolean {
   return h.month === 9 && h.day >= 21;
 }
 
-/** Localized "14 জিলহজ 1447" style label (Bengali digits for `bn`). */
-export function formatHijri(h: HijriDate, language: string): string {
+/**
+ * Localized "14 জিলহজ 1447" style label. Digits follow the app-wide Bengali-
+ * numerals toggle (default OFF → Western, matching every other number in the
+ * UI), so the home header reads consistently — Hijri, Gregorian date, and
+ * prayer times all share one numeral system instead of mixing scripts.
+ */
+export function formatHijri(
+  h: HijriDate,
+  language: string,
+  bengaliNumerals = getBengaliNumerals(),
+): string {
   const raw = `${h.day} ${hijriMonthName(h.month, language)} ${h.year}`;
-  return language === "bn" ? toBengaliDigits(raw) : raw;
+  return language === "bn" && bengaliNumerals ? toBengaliDigits(raw) : raw;
 }

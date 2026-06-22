@@ -19,6 +19,8 @@ export type AmountFieldProps = {
   presets?: readonly number[];
   /** Center the preset row (donate screen) vs left-align (recurring setup). */
   centerPresets?: boolean;
+  /** Hide the free-entry input and offer preset chips only (recurring setup 46). */
+  hideInput?: boolean;
   className?: string;
 };
 
@@ -27,6 +29,7 @@ export function AmountField({
   onChange,
   presets = AMOUNT_PRESETS,
   centerPresets = false,
+  hideInput = false,
   className,
 }: AmountFieldProps) {
   const { t } = useTranslation();
@@ -46,13 +49,15 @@ export function AmountField({
           />
         ))}
       </View>
-      <Input
-        leftIcon={<Feather name="edit-2" size={16} color={c["text-muted"]} />}
-        placeholder={t("donation.amount.customPlaceholder")}
-        keyboardType="number-pad"
-        value={value}
-        onChangeText={(v) => onChange(v.replace(/[^0-9]/g, ""))}
-      />
+      {hideInput ? null : (
+        <Input
+          leftIcon={<Feather name="edit-2" size={16} color={c["text-muted"]} />}
+          placeholder={t("donation.amount.customPlaceholder")}
+          keyboardType="number-pad"
+          value={value}
+          onChangeText={(v) => onChange(v.replace(/[^0-9]/g, ""))}
+        />
+      )}
     </View>
   );
 }

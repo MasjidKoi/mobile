@@ -13,14 +13,15 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppBar, Button, Card, EmptyState, Text } from "@/components";
+import { AppBar, Button, Card, Text } from "@/components";
 import { useAnsweredQuestions } from "@/hooks/useAnsweredQuestions";
 import { useAskQuestion } from "@/hooks/useAskQuestion";
+import { useMasjid } from "@/hooks/useMasjid";
 import { ApiError } from "@/lib/api/errors";
 import { useColors } from "@/lib/theme/useColors";
 
 const MIN = 10;
-const MAX = 1000;
+const MAX = 200;
 
 /** 28–29 Ask a Question — answered-questions-first deflection → input → sent. 🔒 gated. */
 export default function AskQuestionScreen() {
@@ -33,6 +34,7 @@ export default function AskQuestionScreen() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const answered = useAnsweredQuestions(masjidId).data?.items ?? [];
+  const masjid = useMasjid(masjidId);
   const ask = useAskQuestion(masjidId ?? "");
 
   const trimmed = text.trim();
@@ -56,21 +58,53 @@ export default function AskQuestionScreen() {
   if (sent) {
     return (
       <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
-        <View className="flex-1 items-center justify-center px-lg">
-          <EmptyState
-            icon={<Feather name="send" size={26} color={c.primary} />}
-            title={t("masjid.contribute.question.sentTitle")}
-            caption={t("masjid.contribute.question.sentCaption")}
-            action={
-              <View className="w-full gap-2 pt-1">
-                <Button
-                  variant="secondary"
-                  label={t("masjid.contribute.myQuestions.cta")}
-                  onPress={() => router.replace("/my-questions")}
-                />
-                <Button variant="text" label={t("common.done")} onPress={() => router.back()} />
+        <AppBar
+          title={t("masjid.contribute.question.title")}
+          left={
+            <Pressable accessibilityRole="button" onPress={() => router.back()} hitSlop={12}>
+              <Feather name="arrow-left" size={24} color={c["text-primary"]} />
+            </Pressable>
+          }
+        />
+        <View className="flex-1 items-center justify-center gap-4 px-7">
+          <View className="h-[84px] w-[84px] items-center justify-center rounded-full bg-primary-soft">
+            <Feather name="send" size={36} color={c.primary} />
+          </View>
+          <Text className="text-center text-[22px] font-bold text-content-primary">
+            {t("masjid.contribute.question.sentTitle")}
+          </Text>
+          <Text className="max-w-[300px] text-center text-body font-regular text-content-secondary">
+            {t("masjid.contribute.question.sentCaption")}
+          </Text>
+          {text.trim() ? (
+            <View className="w-full gap-2 rounded-md border border-border bg-surface p-3.5">
+              <View className="flex-row items-start gap-2">
+                <Feather name="message-circle" size={16} color={c["text-muted"]} style={{ marginTop: 2 }} />
+                <Text variant="caption" numberOfLines={3} className="flex-1 text-content-primary">
+                  {text.trim()}
+                </Text>
               </View>
-            }
+              <View className="flex-row items-center gap-1.5 self-start rounded-full bg-[#F5EEDC] px-2.5 py-1">
+                <Feather name="clock" size={12} color="#8A6A1F" />
+                <Text className="text-micro font-semibold text-[#8A6A1F]">
+                  {t("masjid.contribute.question.status.pending")}
+                </Text>
+              </View>
+            </View>
+          ) : null}
+          <View className="flex-row items-center gap-1.5">
+            <Feather name="bell" size={15} color={c["text-muted"]} />
+            <Text className="text-caption text-content-muted">
+              {t("masjid.contribute.question.pushNote")}
+            </Text>
+          </View>
+        </View>
+        <View className="gap-2 border-t border-border bg-surface px-4 pb-2 pt-3">
+          <Button label={t("masjid.contribute.backToProfile")} onPress={() => router.back()} />
+          <Button
+            variant="text"
+            label={t("masjid.contribute.myQuestions.cta")}
+            onPress={() => router.replace("/my-questions")}
           />
         </View>
       </SafeAreaView>
@@ -89,6 +123,24 @@ export default function AskQuestionScreen() {
       />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView contentContainerClassName="gap-md px-4 py-3 pb-8" keyboardShouldPersistTaps="handled">
+          {masjid.data?.name ? (
+            <View className="flex-row items-center gap-2.5 rounded-md border border-border bg-surface px-3.5 py-3">
+              <View className="h-9 w-9 items-center justify-center rounded-full bg-primary-soft">
+                <Feather name="home" size={16} color={c.primary} />
+              </View>
+              <View className="flex-1">
+                <Text variant="body" numberOfLines={1} className="font-semibold">
+                  {masjid.data.name}
+                </Text>
+                {masjid.data.admin_region ? (
+                  <Text variant="caption" className="text-content-secondary">
+                    {masjid.data.admin_region}
+                  </Text>
+                ) : null}
+              </View>
+            </View>
+          ) : null}
+
           {answered.length > 0 ? (
             <View className="gap-2">
               <Text className="text-caption font-medium text-content-secondary">
@@ -141,7 +193,13 @@ export default function AskQuestionScreen() {
           <Button
             label={ask.isPending ? t("masjid.contribute.question.sending") : t("masjid.contribute.question.send")}
             disabled={!canSend}
-            leftIcon={ask.isPending ? <ActivityIndicator color={c["on-inverse"]} size="small" /> : undefined}
+            leftIcon={
+              ask.isPending ? (
+                <ActivityIndicator color={c["on-inverse"]} size="small" />
+              ) : (
+                <Feather name="send" size={16} color={c["on-inverse"]} />
+              )
+            }
             onPress={() => void submit()}
           />
         </View>

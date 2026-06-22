@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { I18nManager } from "react-native";
+import * as Updates from "expo-updates";
 
-import i18n from "@/lib/i18n";
+import i18n, { isRTLLanguage } from "@/lib/i18n";
 import { loadStoredLanguage } from "@/lib/i18n/language";
 import {
   loadBengaliNumerals,
@@ -25,6 +27,22 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       const stored = await loadStoredLanguage();
       if (stored && stored !== i18n.language) {
         await i18n.changeLanguage(stored);
+      }
+      // Keep the native RTL flag in sync with the active language. Switching
+      // away from Arabic via the in-place (bn⇄en) path leaves `isRTL` stuck
+      // true, which mirrors the whole UI; reconcile so an LTR language never
+      // renders right-to-left.
+      const wantRTL = isRTLLanguage(stored ?? i18n.language);
+      if (wantRTL !== I18nManager.isRTL) {
+        try {
+          I18nManager.allowRTL(true);
+          I18nManager.forceRTL(wantRTL);
+          await Updates.reloadAsync();
+          return; // reloading to apply the new layout direction
+        } catch {
+          // Dev client may not support reloadAsync — the flag is set, so the
+          // next launch starts in the correct direction.
+        }
       }
       const num = await loadBengaliNumerals();
       if (active) {

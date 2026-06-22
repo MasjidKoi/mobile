@@ -19,7 +19,10 @@ export function BackButton({ onPress }: { onPress?: () => void }) {
       accessibilityLabel={t("common.back")}
       onPress={onPress ?? (() => router.back())}
       hitSlop={8}
-      className="h-9 w-9 items-center justify-center"
+      // Icon left-aligned (not centered) so the chevron sits on the screen's
+      // content margin, in line with the title/content below it (the touch
+      // target still extends to the right). Centering pushed it ~6px inward.
+      className="h-9 w-9 items-start justify-center"
     >
       <Feather name="chevron-left" size={24} color={c["text-primary"]} />
     </Pressable>

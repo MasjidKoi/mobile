@@ -221,22 +221,6 @@ export default function NotificationsScreen() {
                     }
                   />
                 ))}
-                <Card>
-                  <Row
-                    accessibilityRole="button"
-                    icon={
-                      <Feather
-                        name="clock"
-                        size={18}
-                        color={c["text-secondary"]}
-                      />
-                    }
-                    title={t("settings.notifications.digestHour")}
-                    value={digestHourLabel}
-                    trailing={chevron}
-                    onPress={() => setHourSheet(true)}
-                  />
-                </Card>
               </View>
             ) : (
               <View className="items-center gap-1 rounded-md border border-border bg-surface px-4 py-6">
@@ -248,6 +232,28 @@ export default function NotificationsScreen() {
                 </Text>
               </View>
             )}
+          </View>
+        ) : null}
+
+        {/* Digest — the daily roll-up hour for digest-mode follows (design 84). */}
+        {authed && np && np.masjids.length > 0 ? (
+          <View className={`gap-2 ${denied ? "opacity-45" : ""}`}>
+            <SectionLabel title={t("settings.notifications.digestSection")} />
+            <Card>
+              <Row
+                accessibilityRole="button"
+                icon={<Feather name="clock" size={18} color={c["text-secondary"]} />}
+                title={t("settings.notifications.digestHour")}
+                value={digestHourLabel}
+                trailing={chevron}
+                onPress={() => setHourSheet(true)}
+              />
+            </Card>
+            <View className="px-0.5">
+              <Text className="text-caption font-regular leading-5 text-content-muted">
+                {t("settings.notifications.digestNote")}
+              </Text>
+            </View>
           </View>
         ) : null}
 
@@ -285,6 +291,23 @@ export default function NotificationsScreen() {
                     onValueChange={(v) =>
                       setPref({ mute_moderation_outcome: !v })
                     }
+                  />
+                }
+              />
+              <Row
+                icon={
+                  <Feather
+                    name="camera"
+                    size={18}
+                    color={c["text-secondary"]}
+                  />
+                }
+                title={t("settings.notifications.photoUpdates")}
+                trailing={
+                  <Switch
+                    value={!np.mute_photo_outcome}
+                    disabled={denied}
+                    onValueChange={(v) => setPref({ mute_photo_outcome: !v })}
                   />
                 }
               />

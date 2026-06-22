@@ -1,27 +1,37 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useMemo } from "react";
+import { type ComponentProps, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Banner, Button, EmptyState, Last10NightsCard, PrayerTable, Text } from "@/components";
+import { Banner, Button, EmptyState, Last10NightsCard, NearestMasjidCard, PrayerTable, Text } from "@/components";
 import { useHijriDate } from "@/hooks/useHijriDate";
 import { districtLabel, useHomeTimes } from "@/hooks/useHomeTimes";
-import { useNearestMasjid } from "@/hooks/useNearestMasjid";
 import { useNow } from "@/hooks/useNow";
 import { usePrayerClock, usePrayerTableRows } from "@/hooks/usePrayerClock";
 import { useRamadan } from "@/hooks/useRamadan";
 import { useFormat } from "@/lib/i18n/format";
 import { getCityById, nearestDistrict } from "@/lib/location/cities";
 import { azanTime, iqamahTime, parseHHMM } from "@/lib/prayer/clock";
-import { splitCountdown } from "@/lib/prayer/format";
+import { formatBareClock, formatCountdownClock } from "@/lib/prayer/format";
 import type { PrayerName, PrayerTimeResponse } from "@/lib/prayer/types";
+import { useTheme } from "@/lib/theme/ThemeProvider";
 import { useColors } from "@/lib/theme/useColors";
 import { useLocation } from "@/providers/LocationProvider";
 
 const JAMAAH_IN_PROGRESS_MS = 15 * 60_000;
+
+/** Force a 1s re-render while `enabled` — drives the Ramadan H:MM:SS iftar countdown. */
+function useSecondsTick(enabled: boolean): void {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (!enabled) return;
+    const id = setInterval(() => setTick((n) => n + 1), 1000);
+    return () => clearInterval(id);
+  }, [enabled]);
+}
 
 /** Congregation status pill copy for the masjid variant (PRD 03 state machine). */
 function congregationStatus(
@@ -49,6 +59,7 @@ export default function HomeTab() {
   const { t, i18n } = useTranslation();
   const language = i18n.language;
   const c = useColors();
+  const { isDark } = useTheme();
   const f = useFormat();
   const insets = useSafeAreaInsets();
   const now = useNow();
@@ -59,7 +70,7 @@ export default function HomeTab() {
   const ramadan = useRamadan(home.times);
   const rows = usePrayerTableRows(home.times);
   const { coords, cityId, permission, requestLocation } = useLocation();
-  const nearest = useNearestMasjid();
+  useSecondsTick(ramadan.isRamadan);
 
   const isFriday = now.getDay() === 5;
   const isCalculated = home.variant === "calculated" || home.variant === "travel";
@@ -105,28 +116,62 @@ export default function HomeTab() {
     );
   }
 
-  // ----- Hero content by variant -----
-  const heroTitle = home.variant === "masjid" ? home.masjidName ?? t("home.calculatedTitle") : t("home.calculatedTitle");
-  const kicker = ramadan.isRamadan ? t("ramadan.untilIftar") : clock.nextPrayerKicker;
+  // ----- Hero content by variant (design 01–06) -----
+  const loc = f.localizeDigits;
+  const bare = (hhmm: string | null | undefined) => (hhmm ? loc(formatBareClock(hhmm)) : "");
+  const methodLabel = t(`methods.${home.method}`, { defaultValue: home.method });
+  const shortMasjid = home.masjidName ? home.masjidName.split(/\s+/).slice(0, 2).join(" ") : "";
 
-  let primaryCountdown = clock.countdownLabel;
-  let nextLine = clock.nextPrayerLabel;
-  let statusLabel: string | null = null;
+  const nextPrayerName = clock.nextPrayerLabel;
+  const nextAzan = clock.nextPrayer ? azanTime(home.times, clock.nextPrayer) : null;
+  const nextIqamah = clock.nextPrayer ? iqamahTime(home.times, clock.nextPrayer) : null;
+  const nextPillLabel = t("home.nextPrayerPill", {
+    label: `${nextPrayerName}${nextAzan ? ` ${bare(nextAzan)}` : ""}`,
+  });
+
+  let kicker: string;
+  let heroTitle: string;
+  let heroSubtitle: string;
+  let primaryCountdown: string;
+  let statusLabel: string;
+  let pillIcon: ComponentProps<typeof Feather>["name"] = "clock";
 
   if (ramadan.isRamadan && ramadan.iftarAt) {
-    const { hours, minutes } = splitCountdown(ramadan.iftarCountdownMs ?? 0);
-    const raw = hours > 0 ? t("prayerClock.countdownHM", { hours, minutes }) : t("prayerClock.countdownM", { minutes });
-    primaryCountdown = language === "bn" ? f.toBengaliDigits(raw) : raw;
-    nextLine = t("ramadan.iftarAt", { time: f.time(ramadan.iftarAt) });
-    statusLabel = t("ramadan.sehriEndsAt", { time: ramadan.sehriEndsAt ? f.time(ramadan.sehriEndsAt) : "" });
+    const source = home.masjidId ? t("home.homeMasjid") : t("home.calculatedSource");
+    const iftarMs = Math.max(0, ramadan.iftarAt.getTime() - Date.now());
+    kicker = t("ramadan.kicker", { source });
+    heroTitle = t("ramadan.untilIftar");
+    heroSubtitle = t("ramadan.heroSubtitle", {
+      sehri: bare(home.times.fajr_azan),
+      iftar: bare(home.times.maghrib_azan),
+    });
+    primaryCountdown = loc(formatCountdownClock(iftarMs, true));
+    statusLabel = t("ramadan.iftarAt", { time: f.time(ramadan.iftarAt) });
+    pillIcon = "sunset";
+  } else if (home.variant === "masjid") {
+    const congregation = congregationStatus(home.times, clock.currentPrayer, now, t);
+    const jamaahLikely = t("prayerClock.jamaahLikely");
+    kicker = shortMasjid ? t("home.homeMasjidWith", { name: shortMasjid }) : t("home.homeMasjid");
+    heroTitle = home.masjidName ?? t("home.calculatedTitle");
+    heroSubtitle = nextIqamah
+      ? t("home.heroSubtitleMasjid", { prayer: nextPrayerName, azan: bare(nextAzan), jamaat: bare(nextIqamah) })
+      : t("home.heroSubtitleMasjidNoJamaat", { prayer: nextPrayerName, azan: bare(nextAzan) });
+    primaryCountdown =
+      congregation === jamaahLikely ? t("prayerClock.now") : loc(formatCountdownClock(clock.countdownMs ?? 0));
+    statusLabel = congregation ?? nextPillLabel;
+    if (congregation || isFriday) pillIcon = "users";
+  } else if (home.variant === "travel") {
+    kicker = t("home.travelKicker", { area: headerArea });
+    heroTitle = t("home.travelTitle");
+    heroSubtitle = t("home.heroSubtitleTravel", { prayer: nextPrayerName, method: methodLabel });
+    primaryCountdown = loc(formatCountdownClock(clock.countdownMs ?? 0));
+    statusLabel = nextPillLabel;
   } else {
-    statusLabel =
-      home.variant === "masjid"
-        ? congregationStatus(home.times, clock.currentPrayer, now, t)
-        : null;
-    if (!statusLabel && clock.nextPrayerAt) {
-      statusLabel = `${clock.nextPrayerLabel} · ${f.time(clock.nextPrayerAt)}`;
-    }
+    kicker = t("home.calculatedKicker", { method: methodLabel });
+    heroTitle = t("home.calculatedTitle");
+    heroSubtitle = t("home.heroSubtitleCalculated", { prayer: nextPrayerName });
+    primaryCountdown = loc(formatCountdownClock(clock.countdownMs ?? 0));
+    statusLabel = nextPillLabel;
   }
 
   const tableTitle = isFriday
@@ -137,44 +182,53 @@ export default function HomeTab() {
 
   return (
     <View className="flex-1 bg-background">
-      <StatusBar style="light" />
-      <ScrollView contentContainerClassName="pb-8">
-        {/* Green header */}
-        <View className="rounded-b-[28px] bg-primary px-4 pb-5" style={{ paddingTop: insets.top + 12 }}>
+      <StatusBar style={isDark ? "light" : "dark"} />
+      <ScrollView contentContainerClassName="pb-8" style={{ paddingTop: insets.top }}>
+        {/* Light header: greeting + Qibla pill, then date row */}
+        <View className="gap-2.5 px-4 pb-1 pt-2">
           <View className="flex-row items-center justify-between">
-            <Pressable className="flex-1 pr-2" onPress={() => router.push("/hijri-calendar")}>
-              <Text className="text-[15px] font-semibold text-on-inverse" numberOfLines={1}>
+            <View className="flex-1 pr-2">
+              <Text className="text-[14px] font-semibold" style={{ color: c["text-secondary"] }}>
+                {t("home.greeting")}
+              </Text>
+              <Text className="text-[13px]" style={{ color: c["text-muted"] }} numberOfLines={1}>
                 {headerArea}
+                {home.variant === "calculated" && permission === "granted"
+                  ? ` · ${t("home.gpsLocation")}`
+                  : ""}
               </Text>
-              <Text className="text-caption text-on-inverse-muted">
-                {hijri.label} {t("hijri.suffix")}
-              </Text>
-            </Pressable>
-            <View className="flex-row items-center gap-2">
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={t("home.qibla")}
-                onPress={() => router.push("/qibla")}
-                className="h-9 w-9 items-center justify-center rounded-full bg-overlay"
-              >
-                <Feather name="compass" size={18} color={c["on-inverse"]} />
-              </Pressable>
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => router.push("/prayer-reminders")}
-                className="flex-row items-center gap-1.5 rounded-full bg-overlay px-3 py-1.5"
-              >
-                <Feather name="bell" size={14} color={c["accent-gold-soft"]} />
-                <Text className="text-caption font-semibold text-accent-gold-soft">{t("home.reminders")}</Text>
-              </Pressable>
             </View>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t("home.qibla")}
+              onPress={() => router.push("/qibla")}
+              className="flex-row items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-2"
+            >
+              <Feather name="compass" size={16} color={c.primary} />
+              <Text className="text-[13px] font-semibold text-primary">{t("home.qibla")}</Text>
+            </Pressable>
           </View>
 
+          <Pressable
+            className="flex-row items-center gap-2"
+            onPress={() => router.push("/hijri-calendar")}
+          >
+            <Text className="text-[13px] font-semibold" style={{ color: c["accent-gold"] }}>
+              {hijri.label}
+            </Text>
+            <View className="h-[3px] w-[3px] rounded-full" style={{ backgroundColor: c["text-muted"] }} />
+            <Text className="text-[13px]" style={{ color: c["text-muted"] }}>
+              {f.date(now)}, {f.weekday(now)}
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* Content */}
+        <View className="gap-3.5 px-4 pt-3">
           {/* Banners */}
           {home.variant === "travel" ? (
             <Banner
               variant="info"
-              className="mt-3"
               icon={<Feather name="navigation" size={15} color={c.primary} />}
               message={t("home.travelBanner", {
                 km: f.number(Math.round(home.distanceKm ?? 0)),
@@ -185,68 +239,56 @@ export default function HomeTab() {
           {home.isOffline ? (
             <Banner
               variant="warning"
-              className="mt-3"
               icon={<Feather name="wifi-off" size={15} color="#8A6A1F" />}
               message={t("home.offlineBanner")}
             />
           ) : null}
 
-          {/* Add-your-masjid prompt (no home masjid) */}
+          {/* Set-home-masjid CTA (no home masjid) */}
           {!home.masjidId ? (
             <Pressable
               onPress={() => router.push("/set-home-masjid")}
-              className="mt-3 flex-row items-center gap-2.5 rounded-md bg-overlay px-3.5 py-2.5"
+              className="flex-row items-center gap-3 rounded-md bg-primary-soft px-3.5 py-3"
             >
-              <Feather name="plus-circle" size={16} color={c["on-inverse"]} />
-              <Text className="flex-1 text-caption font-semibold text-on-inverse">{t("home.addMasjid")}</Text>
-              <Feather name="chevron-right" size={16} color={c["on-inverse"]} />
-            </Pressable>
-          ) : null}
-
-          {/* Hero countdown card */}
-          <View className="mt-4 gap-3 rounded-2xl bg-primary-pressed p-[18px]">
-            <Text className="text-caption font-semibold text-on-inverse-muted">{kicker}</Text>
-            <Text className="text-[19px] font-bold text-on-inverse" numberOfLines={1}>
-              {heroTitle}
-            </Text>
-            <View className="flex-row items-end justify-between">
-              <View className="flex-1 gap-0.5 pr-2">
-                <Text className="text-caption font-regular text-on-inverse-muted">{nextLine}</Text>
-                <Text className="text-display font-bold text-on-inverse">{primaryCountdown}</Text>
+              <Feather name="home" size={20} color={c.primary} />
+              <View className="flex-1 gap-0.5">
+                <Text className="text-body font-semibold text-content-primary">{t("home.addMasjid")}</Text>
+                <Text className="text-caption text-content-secondary">{t("home.addMasjidCaption")}</Text>
               </View>
-              {statusLabel ? (
-                <View className="rounded-full bg-overlay px-3 py-1.5">
-                  <Text className="text-caption font-semibold text-accent-gold-soft">{statusLabel}</Text>
-                </View>
-              ) : null}
-            </View>
-          </View>
-        </View>
-
-        {/* Content */}
-        <View className="gap-3 px-4 pt-4">
-          {/* Nearby-masjid hint (calculated / no home masjid) */}
-          {!home.masjidId && nearest.masjid ? (
-            <Pressable
-              onPress={() =>
-                router.push({ pathname: "/masjid/[id]", params: { id: nearest.masjid!.masjid_id } })
-              }
-              className="flex-row items-center gap-2.5 rounded-md border border-border bg-surface px-3.5 py-3"
-            >
-              <Feather name="map-pin" size={16} color={c.primary} />
-              <Text className="flex-1 text-caption font-medium text-content-secondary" numberOfLines={1}>
-                {nearest.masjid.name}
-              </Text>
-              <Text className="text-caption font-semibold text-primary">
-                {f.distance(nearest.masjid.distance_m)}
-              </Text>
+              <View className="rounded-sm bg-primary px-3.5 py-2">
+                <Text className="text-caption font-semibold text-on-inverse">{t("home.addMasjidCta")}</Text>
+              </View>
             </Pressable>
           ) : null}
+
+          {/* Hero: brand masjid / prayer card */}
+          <NearestMasjidCard
+            kicker={kicker}
+            name={heroTitle}
+            prayerLabel={heroSubtitle}
+            countdown={primaryCountdown}
+            statusLabel={statusLabel}
+            statusIcon={
+              <Feather name={pillIcon} size={13} color={c["accent-gold-soft"]} />
+            }
+            arrow={
+              <Feather
+                name={home.masjidId ? "arrow-up-right" : "map-pin"}
+                size={18}
+                color={c["on-inverse-muted"]}
+              />
+            }
+            onPress={() =>
+              home.masjidId
+                ? router.push({ pathname: "/masjid/[id]", params: { id: home.masjidId } })
+                : router.push("/set-home-masjid")
+            }
+          />
 
           {/* Last 10 nights nudge */}
           {ramadan.isLast10Nights ? (
             <Last10NightsCard
-              icon={<Feather name="moon" size={20} color={c["on-inverse"]} />}
+              icon={<Feather name="moon" size={20} color={c["accent-gold-soft"]} />}
               title={t("ramadan.last10Title")}
               subtitle={t("ramadan.last10Subtitle")}
               action={
@@ -256,9 +298,10 @@ export default function HomeTab() {
                       ? router.push({ pathname: "/masjid/[id]", params: { id: home.masjidId } })
                       : router.push("/set-home-masjid")
                   }
-                  className="rounded-full bg-overlay px-3.5 py-1.5"
+                  className="rounded-sm px-4 py-2"
+                  style={{ backgroundColor: "#FFFFFF" }}
                 >
-                  <Text className="text-caption font-semibold text-on-inverse">{t("ramadan.donate")}</Text>
+                  <Text className="text-caption font-bold text-primary">{t("ramadan.last10Cta")}</Text>
                 </Pressable>
               }
             />
@@ -266,8 +309,12 @@ export default function HomeTab() {
 
           <View className="flex-row items-center justify-between">
             <Text variant="heading">{tableTitle}</Text>
-            <Pressable onPress={() => router.push("/hijri-calendar")}>
+            <Pressable
+              className="flex-row items-center gap-1"
+              onPress={() => router.push("/hijri-calendar")}
+            >
               <Text className="text-caption font-semibold text-primary">{t("home.fullSchedule")}</Text>
+              <Feather name="chevron-right" size={16} color={c.primary} />
             </Pressable>
           </View>
 

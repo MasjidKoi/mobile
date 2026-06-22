@@ -66,20 +66,34 @@ export default function RecurringSetupScreen() {
       <Feather name="arrow-left" size={24} color={c["text-primary"]} />
     </Pressable>
   );
+  const closeButton = (
+    <Pressable accessibilityRole="button" onPress={() => router.back()} hitSlop={12}>
+      <Feather name="x" size={24} color={c["text-primary"]} />
+    </Pressable>
+  );
 
   return (
     <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
-      <AppBar title={nightly ? t("donation.recurring.last10Title") : t("donation.recurring.setupTitle")} left={backButton} />
+      <AppBar
+        title={nightly ? t("donation.recurring.last10Title") : t("donation.recurring.setupTitle")}
+        left={backButton}
+        right={closeButton}
+      />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView contentContainerClassName="gap-lg px-5 py-3 pb-6" keyboardShouldPersistTaps="handled">
-          {/* Masjid header */}
+          {/* Masjid header (46) — "Giving to" label + recipient name */}
           <View className="flex-row items-center gap-3 rounded-md border border-border bg-surface p-3.5">
             <View className="h-11 w-11 items-center justify-center rounded-lg bg-primary-soft">
               <Feather name="home" size={20} color={c.primary} />
             </View>
-            <Text variant="body" numberOfLines={1} className="flex-1 font-semibold">
-              {masjid.data?.name ?? t("common.brand")}
-            </Text>
+            <View className="flex-1 gap-px">
+              <Text variant="caption" className="text-content-muted">
+                {t("donation.recurring.givingTo")}
+              </Text>
+              <Text variant="body" numberOfLines={1} className="font-semibold">
+                {masjid.data?.name ?? t("common.brand")}
+              </Text>
+            </View>
           </View>
 
           {nightly ? (
@@ -104,12 +118,14 @@ export default function RecurringSetupScreen() {
             </View>
           )}
 
-          {/* Amount */}
+          {/* Amount (46) — fixed preset chips, no free entry */}
           <View className="gap-2.5">
             <Text variant="caption" className="text-content-secondary">
               {t("donation.recurring.amountLabel")}
             </Text>
             <AmountField
+              presets={[100, 200, 500, 1000]}
+              hideInput
               value={amountText}
               onChange={(v) => {
                 setAmountText(v);
@@ -117,6 +133,26 @@ export default function RecurringSetupScreen() {
               }}
             />
           </View>
+
+          {/* Reminder day (46) — informational; the app sets a fixed cadence */}
+          {!nightly ? (
+            <View className="flex-row items-center gap-2.5 rounded-md border border-border bg-surface p-3.5">
+              <Feather name="calendar" size={18} color={c["text-secondary"]} />
+              <View className="flex-1 gap-px">
+                <Text variant="caption" className="text-content-muted">
+                  {t("donation.recurring.reminderDayLabel")}
+                </Text>
+                <Text variant="body" className="font-semibold">
+                  {t(
+                    frequency === "monthly"
+                      ? "donation.recurring.reminderDayMonthly"
+                      : "donation.recurring.reminderDayWeekly",
+                  )}
+                </Text>
+              </View>
+              <Feather name="chevron-right" size={18} color={c["text-muted"]} />
+            </View>
+          ) : null}
 
           {/* Reminder-only disclosure — the core mental model for recurring */}
           <Banner

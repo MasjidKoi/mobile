@@ -95,6 +95,7 @@ export interface QuestionPublicListResponse {
 export interface MyQuestion {
   question_id: string;
   masjid_id: string;
+  masjid_name: string | null;
   question: string;
   status: QuestionStatus;
   answer: string | null;
@@ -145,6 +146,8 @@ export interface ReviewListResponse {
   page: number;
   page_size: number;
   average_rating: number | null;
+  /** Count of reviews per star, keyed "1"–"5". Drives the distribution bars. */
+  rating_distribution?: Record<string, number> | null;
 }
 
 /**
@@ -182,6 +185,7 @@ export interface CommunityPhotoPublicListResponse {
 export interface CommunityPhotoSubmission {
   photo_id: string;
   masjid_id: string;
+  masjid_name: string | null;
   url: string;
   status: PhotoStatus;
   created_at: string;

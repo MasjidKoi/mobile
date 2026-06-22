@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import Constants from "expo-constants";
 import { router } from "expo-router";
 import { useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
@@ -96,6 +97,7 @@ export default function SettingsScreen() {
             icon="info"
             tileColor={c["text-muted"]}
             label={t("settings.hub.about")}
+            value={`v${Constants.expoConfig?.version ?? "1.0.0"}`}
             onPress={() => router.push("/about")}
           />
         </Section>

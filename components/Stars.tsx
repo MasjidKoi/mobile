@@ -1,5 +1,6 @@
 import { View } from "react-native";
 
+import { useColors } from "@/lib/theme/useColors";
 import { Text } from "./Text";
 
 /**
@@ -15,14 +16,14 @@ export type StarsProps = {
 };
 
 export function Stars({ rating, max = 5, size = 16, className }: StarsProps) {
+  const c = useColors();
   const filled = Math.round(rating);
   return (
     <View className={`flex-row items-center gap-0.5${className ? ` ${className}` : ""}`}>
       {Array.from({ length: max }, (_, i) => (
         <Text
           key={i}
-          style={{ fontSize: size, lineHeight: size }}
-          className={i < filled ? "text-accent-gold" : "text-border"}
+          style={{ fontSize: size, lineHeight: size, color: i < filled ? c["accent-gold"] : c.border }}
         >
           ★
         </Text>

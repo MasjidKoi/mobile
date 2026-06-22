@@ -66,8 +66,11 @@ export function LoginGateProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const completeAuthFlow = useCallback(() => {
-    // Dismiss the whole auth modal back to the underlying tab, then resume.
-    router.dismissAll();
+    // The flow pushes a single screen (email) and then replaces it in place
+    // (email → otp → profile-setup), so exactly one back() returns to the screen
+    // that opened the gate. dismissAll() used to pop the whole stack down to the
+    // first tab — discarding the masjid/donation screen the user gated from.
+    router.back();
     const action = pendingAction.current;
     pendingAction.current = null;
     action?.();

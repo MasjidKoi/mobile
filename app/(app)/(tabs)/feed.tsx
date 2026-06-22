@@ -11,13 +11,12 @@ import {
   Button,
   CommunityEventCard,
   EmptyState,
+  EventRsvpPill,
   SegmentedControl,
-  Text,
   type SegmentedControlOption,
 } from "@/components";
 import { useFeed } from "@/hooks/useFeed";
 import { isOfflineQuery } from "@/lib/api/errors";
-import { initials } from "@/lib/community/format";
 import { feedEventToDetailParam } from "@/lib/events/types";
 import type { FeedAnnouncementItem, FeedEventItem, FeedItem, FeedType } from "@/lib/feed/types";
 import { useFormat } from "@/lib/i18n/format";
@@ -43,22 +42,27 @@ export default function FeedTab() {
   const items = q.data?.pages.flatMap((p) => p.items) ?? [];
   const offline = isOfflineQuery(q);
 
-  const title = (
-    <View className="py-1">
-      <Text variant="display" className="text-[24px]">
-        {t("feed.title")}
-      </Text>
-    </View>
+  const segments: SegmentedControlOption[] = [
+    { key: "announcements", label: t("feed.tabs.announcements") },
+    { key: "events", label: t("feed.tabs.events") },
+  ];
+
+  // The design (75–79) leads straight with the segmented control under the
+  // status bar — no page title.
+  const segmentedHeader = (
+    <SegmentedControl options={segments} value={type} onChange={(k) => setType(k as FeedType)} />
   );
 
-  // 78 Feed Guest — read-only surface still asks for login to populate a feed.
+  // 78 Feed Guest — the segmented control still shows (design 78), with a
+  // centered sign-in prompt beneath it.
   if (!isAuthenticated) {
     return (
       <SafeAreaView edges={["top"]} className="flex-1 bg-background">
-        <View className="px-4 pt-2">{title}</View>
+        <View className="px-4 pb-1 pt-2">{segmentedHeader}</View>
         <View className="flex-1 items-center justify-center px-lg">
           <EmptyState
-            icon={<Feather name="rss" size={28} color={c.primary} />}
+            variant="plain"
+            icon={<Feather name="user" size={28} color={c.primary} />}
             title={t("feed.guest.title")}
             caption={t("feed.guest.caption")}
             action={
@@ -74,11 +78,6 @@ export default function FeedTab() {
     );
   }
 
-  const segments: SegmentedControlOption[] = [
-    { key: "announcements", label: t("feed.tabs.announcements") },
-    { key: "events", label: t("feed.tabs.events") },
-  ];
-
   const renderAnnouncement = (item: FeedAnnouncementItem) => (
     <Pressable
       accessibilityRole="button"
@@ -91,10 +90,10 @@ export default function FeedTab() {
     >
       <AnnouncementCard
         masjid={item.masjid_name}
-        time={f.date(new Date(item.published_at))}
+        time={f.fromNow(new Date(item.published_at))}
         title={item.title}
         body={item.body.length > 160 ? `${item.body.slice(0, 160).trimEnd()}…` : item.body}
-        avatar={<Text className="text-caption font-bold text-primary">{initials(item.masjid_name, 1)}</Text>}
+        avatar={<Feather name="home" size={14} color={c.primary} />}
       />
     </Pressable>
   );
@@ -107,6 +106,9 @@ export default function FeedTab() {
       location={item.location}
       attendees={item.attendee_count}
       masjidName={item.masjid_name}
+      rsvp={
+        <EventRsvpPill masjidId={item.masjid_id} eventId={item.event_id} isRsvped={item.is_rsvped} />
+      }
       onPress={() =>
         router.push({
           pathname: "/event/[id]",
@@ -125,8 +127,7 @@ export default function FeedTab() {
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-background">
       <View className="gap-3 px-4 pb-1 pt-2">
-        {title}
-        <SegmentedControl options={segments} value={type} onChange={(k) => setType(k as FeedType)} />
+        {segmentedHeader}
         {offline ? (
           <Banner
             variant="warning"
@@ -138,7 +139,8 @@ export default function FeedTab() {
       <FlatList
         data={items}
         keyExtractor={feedKey}
-        contentContainerClassName="gap-2.5 px-4 py-3 pb-8"
+        className="flex-1"
+        contentContainerClassName="grow gap-2.5 px-4 py-3 pb-8"
         renderItem={({ item }) =>
           item.kind === "announcement" ? renderAnnouncement(item) : renderEvent(item)
         }
@@ -151,20 +153,21 @@ export default function FeedTab() {
         }
         ListEmptyComponent={
           q.isLoading ? (
-            <View className="items-center py-16">
+            <View className="flex-1 items-center justify-center py-16">
               <ActivityIndicator color={c.primary} />
             </View>
           ) : offline ? null : (
-            <View className="items-center px-6 py-12">
+            <View className="flex-1 items-center justify-center px-6">
               <EmptyState
+                variant="plain"
                 icon={<Feather name="rss" size={26} color={c.primary} />}
                 title={t(type === "events" ? "feed.empty.eventsTitle" : "feed.empty.announcementsTitle")}
                 caption={t("feed.empty.caption")}
                 action={
                   <Button
-                    variant="text"
                     label={t("feed.empty.cta")}
-                    onPress={() => router.push("/explore")}
+                    className="mt-1"
+                    onPress={() => router.navigate("/explore")}
                   />
                 }
               />

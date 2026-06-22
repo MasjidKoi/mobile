@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -107,13 +107,17 @@ function CheckinPrefillSheet({
   onPick: (k: PrayerKey) => void;
 }) {
   const { t } = useTranslation();
+  const c = useColors();
   return (
     <BottomSheet visible={visible} onClose={onClose}>
       <View className="gap-3">
         <Text variant="heading">{t("journal.checkinPrefill.title")}</Text>
-        <Text variant="body" className="text-content-secondary">
-          {masjidName ?? t("common.brand")}
-        </Text>
+        <View className="flex-row items-center gap-1.5 self-start rounded-full bg-primary-soft px-3 py-1.5">
+          <Feather name="map-pin" size={13} color={c.primary} />
+          <Text className="text-caption font-semibold text-primary">
+            {masjidName ?? t("common.brand")}
+          </Text>
+        </View>
         <View className="flex-row flex-wrap gap-2 pt-1">
           {unlogged.map((k) => (
             <Chip key={k} label={t(`prayers.${k}`)} onPress={() => onPick(k)} />
@@ -256,11 +260,13 @@ export default function JournalTodayScreen() {
                   ? `${t("streak.longest")} · ${f.number(streak.data.longest)}`
                   : undefined
               }
-              flameIcon={<Feather name="zap" size={24} color={c.primary} />}
+              flameIcon={<MaterialCommunityIcons name="fire" size={26} color={c.primary} />}
               freezeLabel={
-                streak.data && streak.data.freezes_held > 0 ? f.number(streak.data.freezes_held) : undefined
+                streak.data && streak.data.freezes_held > 0
+                  ? `×${f.number(streak.data.freezes_held)}`
+                  : undefined
               }
-              freezeIcon={<Feather name="shield" size={14} color="#4A7FA5" />}
+              freezeIcon={<MaterialCommunityIcons name="snowflake" size={15} color="#4A7FA5" />}
             />
           </Pressable>
 
@@ -350,10 +356,16 @@ export default function JournalTodayScreen() {
         title={unlogTarget ? t("journal.unlog.title", { prayer: t(`prayers.${unlogTarget}`) }) : undefined}
         description={unlogTarget ? t("journal.unlog.body", { prayer: t(`prayers.${unlogTarget}`) }) : undefined}
       >
-        <View className="flex-row justify-end gap-2 pt-1">
-          <Button variant="text" label={t("common.cancel")} onPress={() => setUnlogTarget(null)} />
+        <View className="flex-row gap-2.5 pt-1">
           <Button
-            variant="text"
+            className="flex-1"
+            variant="secondary"
+            label={t("common.cancel")}
+            onPress={() => setUnlogTarget(null)}
+          />
+          <Button
+            className="flex-1"
+            variant="destructive"
             label={t("journal.unlog.confirm")}
             onPress={() => {
               if (unlogTarget) logPrayers.mutate({ [unlogTarget]: false });

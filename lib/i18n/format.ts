@@ -114,6 +114,13 @@ export function formatDate(
   );
 }
 
+/** Localized weekday name (e.g. "Monday" / "সোমবার") for the home date row. */
+export function formatWeekday(date: Date, language: string): string {
+  return safeFormat(language, false, date.toDateString().split(" ")[0]!, () =>
+    new Intl.DateTimeFormat(intlLocale(language), { weekday: "long" }).format(date),
+  );
+}
+
 /**
  * Distance for list/map/peek rows: metres under 1 km (rounded to 10 m),
  * kilometres with one decimal above. The unit label is localized; the number
@@ -149,8 +156,36 @@ export function useFormat() {
     currency: (amount: number) => formatCurrency(amount, language, enabled),
     time: (date: Date) => formatTime(date, language, enabled),
     date: (date: Date) => formatDate(date, language, enabled),
+    weekday: (date: Date) => formatWeekday(date, language),
+    /**
+     * Relative "time ago" for feed/announcement timestamps (e.g. "3 hr ago",
+     * "Yesterday", "2 days ago"). Falls back to an absolute date past ~a week.
+     * The whole rendered string runs through the Bengali-numeral pass so digits
+     * stay consistent with the rest of the UI.
+     */
+    fromNow: (date: Date) => {
+      const ms = Date.now() - date.getTime();
+      if (Number.isNaN(ms)) return formatDate(date, language, enabled);
+      const min = Math.floor(ms / 60000);
+      const hr = Math.floor(min / 60);
+      const day = Math.floor(hr / 24);
+      let out: string;
+      if (min < 1) out = t("time.relative.justNow");
+      else if (min < 60) out = t("time.relative.minutesAgo", { count: min });
+      else if (hr < 24) out = t("time.relative.hoursAgo", { count: hr });
+      else if (day < 2) out = t("time.relative.yesterday");
+      else if (day < 7) out = t("time.relative.daysAgo", { count: day });
+      else return formatDate(date, language, enabled);
+      return language === "bn" && enabled ? toBengaliDigits(out) : out;
+    },
     distance: (meters: number) =>
       formatDistance(meters, language, t("units.m"), t("units.km"), enabled),
     toBengaliDigits,
+    /**
+     * Localize the digits in an already-formatted string per the numerals
+     * toggle (Bengali ০–৯ when on, Western otherwise; no-op for en/ar). Used for
+     * pre-built strings like the hero countdown "4:08" / "৪:০৮".
+     */
+    localizeDigits: (value: string) => applyNumerals(language, enabled, value),
   };
 }

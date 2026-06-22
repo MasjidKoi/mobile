@@ -6,9 +6,10 @@ import { ReminderScheduler } from "@/providers/ReminderScheduler";
 
 /**
  * The signed-in/guest app shell. The 4-tab bar lives in `(tabs)`. The auth flow
- * and permission explainers are modal screens presented OVER the tabs; on
- * completion `router.dismissAll()` returns to the underlying tab. `masjid/[id]`
- * is a stub route (Discovery/Profile fill it in Phases 3/5).
+ * and permission explainers are modal screens presented OVER the current screen;
+ * the flow pushes one screen and replaces in place, so completion `router.back()`s
+ * to the screen that opened the gate (see LoginGateProvider). `masjid/[id]` is a
+ * stub route (Discovery/Profile fill it in Phases 3/5).
  *
  * `LocationProvider` scopes the location authority to the app group (tabs +
  * masjid + future Qibla share one permission/coords state and one GPS watcher);
@@ -27,7 +28,7 @@ export default function AppLayout() {
         <Stack.Screen name="submit-masjid" />
         <Stack.Screen name="my-submissions" />
         {/* Phase 5 — masjid profile contributions */}
-        <Stack.Screen name="gallery" options={{ presentation: "modal", animation: "fade" }} />
+        <Stack.Screen name="gallery" options={{ presentation: "fullScreenModal", animation: "fade" }} />
         <Stack.Screen name="add-photo" />
         <Stack.Screen name="ask-question" />
         <Stack.Screen name="suggest-edit" />
@@ -62,9 +63,20 @@ export default function AppLayout() {
         <Stack.Screen name="event/[id]" />
         <Stack.Screen name="reviews/[id]" />
         <Stack.Screen name="review/[id]" />
-        <Stack.Screen name="checkin/[id]" />
+        {/* Check-in outcome + post-check-in review prompt are sheets over the
+            dimmed profile (design 88/89/90). */}
+        <Stack.Screen
+          name="checkin/[id]"
+          options={{ presentation: "transparentModal", animation: "fade" }}
+        />
+        <Stack.Screen
+          name="review-prompt/[id]"
+          options={{ presentation: "transparentModal", animation: "fade" }}
+        />
         <Stack.Screen name="following" />
-        <Stack.Screen name="set-home-masjid" options={{ presentation: "modal" }} />
+        {/* A card, not a modal: its location-denied state opens the city-picker
+            modal, and modal-over-modal stacks awkwardly on iOS. */}
+        <Stack.Screen name="set-home-masjid" />
         <Stack.Screen name="email" options={{ presentation: "modal" }} />
         <Stack.Screen name="otp" options={{ presentation: "modal" }} />
         <Stack.Screen name="profile-setup" options={{ presentation: "modal" }} />

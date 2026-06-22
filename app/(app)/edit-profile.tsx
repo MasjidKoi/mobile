@@ -144,7 +144,11 @@ export default function EditProfileScreen() {
                     }`}
                   >
                     {selected ? (
-                      <View className="h-1.5 w-1.5 rounded-full bg-surface" />
+                      <Feather
+                        name="check"
+                        size={13}
+                        color={c["on-inverse"]}
+                      />
                     ) : null}
                   </View>
                 </Pressable>

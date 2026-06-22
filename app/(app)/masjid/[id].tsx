@@ -2,7 +2,7 @@ import { Feather } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, Share, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Banner, Button, DonateBar, EmptyState, MasjidTimesSection, SectionHeader, Stars, Text } from "@/components";
@@ -42,7 +42,7 @@ import { openDirections } from "@/lib/masjids/directions";
 import { buildContactLinks } from "@/lib/masjids/profile/contactLinks";
 import { presentMasjidFacilities } from "@/lib/masjids/profile/facilityPresenter";
 import { azanTime } from "@/lib/prayer/clock";
-import { formatClockString } from "@/lib/prayer/format";
+import { formatBareClock } from "@/lib/prayer/format";
 import { useColors } from "@/lib/theme/useColors";
 import { useLocation } from "@/providers/LocationProvider";
 import { useLoginGate } from "@/providers/LoginGateProvider";
@@ -55,7 +55,7 @@ import { useLoginGate } from "@/providers/LoginGateProvider";
  * collapses sparse sections, and gates the contribution actions.
  */
 export default function MasjidProfileScreen() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const c = useColors();
   const f = useFormat();
   const insets = useSafeAreaInsets();
@@ -132,7 +132,14 @@ export default function MasjidProfileScreen() {
   const unclaimed = !masjid.verified;
 
   const goGated = (pathname: "/add-photo" | "/ask-question") =>
-    requireAuth(() => router.push({ pathname, params: { masjidId } }), "community");
+    requireAuth(() => router.push({ pathname, params: { masjidId } }), "contribute");
+
+  // Share is open to everyone (no gate): hand the OS share sheet the masjid name
+  // and a deep link back to this profile.
+  const goShare = () =>
+    void Share.share({
+      message: `${masjid.name} — ${masjid.admin_region}\nmasjidkoi://masjid/${masjidId}`,
+    }).catch(() => undefined);
 
   // Donating is a gated action — request login first, then open the flow.
   const goDonate = (campaignId?: string) =>
@@ -188,6 +195,8 @@ export default function MasjidProfileScreen() {
           photos={masjid.photos}
           onBack={() => router.back()}
           onAddPhoto={() => goGated("/add-photo")}
+          onShare={goShare}
+          onMore={() => router.push({ pathname: "/suggest-edit", params: { masjidId } })}
           onOpenGallery={(index) =>
             router.push({ pathname: "/gallery", params: { masjidId, index: String(index), source: "admin" } })
           }
@@ -227,6 +236,7 @@ export default function MasjidProfileScreen() {
             onDirections={() => void openDirections(masjid.latitude, masjid.longitude)}
             isFollowing={follow.isFollowing}
             onToggleFollow={() => requireAuth(() => follow.toggle(), "community")}
+            onShare={goShare}
             followPending={follow.isPending}
           />
 
@@ -259,7 +269,7 @@ export default function MasjidProfileScreen() {
             <NextPrayerCard
               kicker={clock.nextPrayerKicker}
               prayerName={clock.nextPrayerLabel}
-              prayerTime={formatClockString(azanTime(today, clock.nextPrayer), i18n.language)}
+              prayerTime={f.localizeDigits(formatBareClock(azanTime(today, clock.nextPrayer)))}
               countdownLabel={clock.countdownLabel}
             />
           ) : null}
@@ -276,7 +286,13 @@ export default function MasjidProfileScreen() {
                   </Pressable>
                 }
               />
-              <MasjidTimesSection times={today} jumah={jumah} dateLabel={hijri.label} />
+              <MasjidTimesSection
+                times={today}
+                jumah={jumah}
+                dateLabel={`${hijri.label} ${t("hijri.suffix")}`}
+                regionLabel={masjid.admin_region}
+                distanceLabel={distanceM != null ? f.distance(distanceM) : null}
+              />
             </View>
           ) : null}
 
@@ -348,7 +364,7 @@ export default function MasjidProfileScreen() {
       {masjid.donations_enabled ? (
         <View style={{ paddingBottom: insets.bottom }} className="bg-surface">
           <DonateBar
-            label={t("masjid.donate.label")}
+            label={masjid.name}
             hint={t("masjid.donate.methods")}
             action={
               <Button

@@ -1,4 +1,5 @@
 import { Feather } from "@expo/vector-icons";
+import { type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable } from "react-native";
 
@@ -21,6 +22,8 @@ export type CommunityEventCardProps = {
   location: string;
   attendees: number;
   masjidName?: string;
+  /** Inline RSVP control (feed cards). Omitted on the profile section. */
+  rsvp?: ReactNode;
   onPress: () => void;
 };
 
@@ -31,6 +34,7 @@ export function CommunityEventCard({
   location,
   attendees,
   masjidName,
+  rsvp,
   onPress,
 }: CommunityEventCardProps) {
   const { t, i18n } = useTranslation();
@@ -39,7 +43,9 @@ export function CommunityEventCard({
   const date = parseLocalDate(eventDate);
   const at = parseLocalDateTime(eventDate, eventTime);
   const time = f.time(at);
-  const meta = masjidName ? `${masjidName} · ${time} · ${location}` : `${time} · ${location}`;
+  // Feed cards lead with the masjid name (matching the design's "masjid · time");
+  // the single-masjid profile section drops it and shows the venue instead.
+  const meta = masjidName ? `${masjidName} · ${time}` : `${time} · ${location}`;
   return (
     <Pressable accessibilityRole="button" onPress={onPress}>
       <EventCard
@@ -49,6 +55,7 @@ export function CommunityEventCard({
         meta={meta}
         attendees={t("community.events.attendees", { formatted: f.number(attendees) })}
         attendeesIcon={<Feather name="users" size={13} color={c["text-muted"]} />}
+        rsvp={rsvp}
       />
     </Pressable>
   );

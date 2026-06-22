@@ -12,7 +12,9 @@
     "notNow": "Not now",
     "later": "Later",
     "close": "Close",
-    "back": "Back"
+    "back": "Back",
+    "share": "Share",
+    "more": "More"
   },
   "onboarding": {
     "skip": "Skip",
@@ -72,6 +74,11 @@
       "generic": {
         "title": "Sign in",
         "body": "Keep your donations, ibadah and saved masjids in one place. No password needed — just your email."
+      },
+      "contribute": {
+        "title": "Sign in to contribute",
+        "body": "An account lets us verify and track your contributions and keeps masjid info reliable. No password needed — just email.",
+        "note": "After signing in, you'll return right where you left off."
       }
     },
     "email": {
@@ -170,16 +177,31 @@
     "placeholder": "Onboarding complete — the app home will appear here.",
     "replayOnboarding": "Replay onboarding",
     "yourArea": "Your area",
+    "gpsLocation": "GPS location",
+    "greeting": "Assalamu Alaikum",
+    "homeMasjid": "Home masjid",
+    "calculatedSource": "Calculated times",
     "reminders": "Reminders",
     "qibla": "Qibla",
     "addMasjid": "Set your home masjid",
+    "addMasjidCaption": "Get exact azan & jamaat times",
+    "addMasjidCta": "Find",
     "todaysPrayers": "Today's prayers",
     "todaysPrayersCalculated": "Today's prayers (calculated)",
     "calculatedTitle": "Local prayer times",
-    "travelBanner": "You're {{km}} km away — showing {{area}} times",
-    "offlineBanner": "Offline — showing last saved times",
+    "travelTitle": "Local calculated times",
+    "calculatedKicker": "Calculated · {{method}} method",
+    "travelKicker": "Travelling · {{area}}",
+    "homeMasjidWith": "Home masjid · {{name}}",
+    "heroSubtitleMasjid": "{{prayer}} azan {{azan}} · jamaat {{jamaat}}",
+    "heroSubtitleMasjidNoJamaat": "{{prayer}} azan {{azan}}",
+    "heroSubtitleCalculated": "{{prayer}} azan",
+    "heroSubtitleTravel": "{{prayer}} azan · {{method}} method",
+    "nextPrayerPill": "Next: {{label}}",
+    "travelBanner": "You're away from your home masjid — showing local times",
+    "offlineBanner": "Offline — showing last saved info",
     "jumuahToday": "Today is Jumu'ah",
-    "fullSchedule": "Calendar",
+    "fullSchedule": "Monthly schedule",
     "needsLocationTitle": "Set your location",
     "needsLocationCaption": "Enable location or pick your district to see prayer times.",
     "enableLocation": "Enable location",
@@ -201,8 +223,21 @@
     "iqamah": "Jamaat",
     "countdownHM": "{{hours}}h {{minutes}}m",
     "countdownM": "{{minutes}}m",
+    "now": "Now",
     "jamaahIn": "Jama'ah in {{minutes}} min",
     "jamaahLikely": "Jama'ah likely in progress"
+  },
+  "methods": {
+    "KARACHI": "Karachi",
+    "MWL": "Muslim World League",
+    "ISNA": "ISNA",
+    "EGYPT": "Egypt",
+    "MAKKAH": "Umm al-Qura",
+    "DUBAI": "Dubai",
+    "KUWAIT": "Kuwait",
+    "QATAR": "Qatar",
+    "SINGAPORE": "Singapore",
+    "TEHRAN": "Tehran"
   },
   "units": {
     "m": "m",
@@ -305,10 +340,13 @@
   },
   "ramadan": {
     "untilIftar": "Until iftar",
+    "kicker": "Ramadan Kareem · {{source}}",
+    "heroSubtitle": "Suhoor ends {{sehri}} · Iftar {{iftar}}",
     "iftarAt": "Iftar {{time}}",
     "sehriEndsAt": "Suhoor ends {{time}}",
-    "last10Title": "Last 10 nights",
-    "last10Subtitle": "Set up a recurring gift",
+    "last10Title": "Last 10 nights — give nightly",
+    "last10Subtitle": "Don't miss Laylatul Qadr",
+    "last10Cta": "Turn on",
     "donate": "Donate",
     "notif": {
       "sehriTitle": "Suhoor reminder",
@@ -324,9 +362,13 @@
     "perPrayer": "Each prayer",
     "general": "General",
     "reminderBefore": "Remind {{minutes}} min before",
+    "offsetValue": "{{minutes}} min before",
+    "sourceAzan": "By azan",
+    "sourceJamaat": "By jamaat",
+    "perPrayerSub": "{{source}} · {{time}}",
     "offset": "Reminder time",
     "azanMoment": "Azan-time alert",
-    "azanMomentSub": "A notification at the exact azan",
+    "azanMomentSub": "A different sound right at azan time",
     "azanSound": "Azan sound",
     "permissionDenied": "Notifications are off",
     "enableInSettings": "Open settings",
@@ -338,26 +380,38 @@
   },
   "azanSound": {
     "title": "Azan sound",
-    "allPrayers": "For all prayers",
+    "allPrayers": "All prayers (except Fajr)",
     "fajrSection": "Fajr separately",
     "fajrSeparate": "Separate sound for Fajr",
-    "fajrSeparateSub": "Use a different sound at Fajr",
+    "fajrSeparateSub": "Make the 5 o'clock alarm different from the 8 o'clock one",
+    "fajrSoftName": "Fajr azan · soft tune",
     "preview": "Preview",
-    "disclaimer": "The bundled azan plays for up to 30 seconds.",
+    "stop": "Stop",
+    "disclaimer": "The full azan plays only in-app; notifications play a ~28-second clip.",
     "options": {
-      "mecca": "Makkah azan",
-      "classic": "Classic azan",
+      "mecca": "Dawn azan · Makkah",
+      "classic": "Madinah azan",
+      "default": "Default tone",
+      "silent": "Silent"
+    },
+    "optionsShort": {
+      "mecca": "Dawn azan",
+      "classic": "Madinah azan",
       "default": "Default tone",
       "silent": "Silent"
     }
   },
   "qibla": {
     "title": "Qibla compass",
-    "calibrated": "Compass OK",
-    "unreliable": "Unreliable",
-    "calibrateHint": "Move your phone in a figure-8 to calibrate",
+    "calibrated": "Accuracy: High",
+    "unreliable": "Accuracy: Low",
+    "calibrateHint": "Hold the phone and move it through a figure-8 (∞) in the air a few times",
     "rotateHint": "Turn until the needle points to the Kaaba",
     "kaaba": "Kaaba",
+    "kaabaSharif": "Kaaba Sharif",
+    "calibrateTitle": "Calibrate compass",
+    "directionUncertain": "Direction uncertain",
+    "worksOffline": "Works offline",
     "needLocationTitle": "Location needed",
     "needLocationCaption": "We need your location to point to the Qibla.",
     "compass": {
@@ -369,23 +423,37 @@
       "sw": "SW",
       "w": "W",
       "nw": "NW"
+    },
+    "directions": {
+      "n": "North",
+      "ne": "North-East",
+      "e": "East",
+      "se": "South-East",
+      "s": "South",
+      "sw": "South-West",
+      "w": "West",
+      "nw": "North-West"
     }
   },
   "hijri": {
     "title": "Hijri calendar",
     "suffix": "AH",
-    "myDates": "My Islamic dates"
+    "myDates": "My Islamic dates",
+    "upcoming": "Upcoming Islamic days",
+    "approx": "(approx.)"
   },
   "ramadanReminders": {
     "title": "Ramadan reminders",
     "autoTitle": "Ramadan mode is automatic",
-    "autoSubtitle": "These turn on during Ramadan, based on the Hijri date.",
+    "autoSubtitle": "Turns on automatically based on the Hijri date",
+    "subWithTime": "{{text}} · {{time}}",
     "sehri": "Suhoor reminder",
-    "sehriSub": "30 min before Fajr",
+    "sehriSub": "30 min before suhoor ends",
     "sehriEnd": "Suhoor-ending alert",
-    "sehriEndSub": "10 min before Fajr",
+    "sehriEndSub": "Right at suhoor end",
     "iftar": "Iftar reminder",
-    "iftarSub": "At Maghrib"
+    "iftarSub": "10 min before iftar",
+    "note": "Taraweeh & iftar arrangements appear in your followed masjids' announcements."
   },
   "setHome": {
     "title": "Set home masjid",
@@ -398,7 +466,10 @@
     "azan1": "1st azan",
     "azan2": "2nd azan",
     "khutbahStart": "Khutbah starts",
-    "start2": "2nd start"
+    "start2": "2nd start",
+    "scheduleTitle": "Jumu'ah schedule",
+    "jamaat1": "1st jamaat",
+    "jamaat2": "2nd jamaat"
   },
   "validation": {
     "email_required": "Enter your email",
@@ -431,6 +502,9 @@
       "follow": "Follow",
       "following": "Following",
       "todaysPrayers": "Today's prayers",
+      "scheduleTitle": "Prayer schedule",
+      "madhhabCalc": "{{madhab}} calculation",
+      "publishedTimesNote": "This masjid's published times are shown as-is — not recalculated for your madhhab.",
       "facilities": "Facilities",
       "imam": "Imam",
       "languages": "Languages",
@@ -462,7 +536,9 @@
     "verified": {
       "label": "Verified",
       "title": "Verified masjid",
-      "body": "Our team has confirmed this masjid's location and details on the ground."
+      "body": "Our team has confirmed this masjid's location and details on the ground.",
+      "unverified": "Not verified",
+      "gotIt": "Got it"
     },
     "contact": {
       "call": "Call",
@@ -504,7 +580,7 @@
       "emailLabel": "Your email (optional)",
       "emailPlaceholder": "So we can follow up",
       "note": "Your suggestion goes to the masjid / our team for review.",
-      "submit": "Submit",
+      "submit": "Send report",
       "submitting": "Submitting…",
       "sentTitle": "Thanks for the suggestion",
       "sentCaption": "We'll review it and update the masjid if it checks out.",
@@ -520,7 +596,12 @@
         "contact": "Contact details",
         "photos": "Photos",
         "other": "Something else"
-      }
+      },
+      "guestNote": "You can suggest edits as a guest — add an email if you'd like us to follow up.",
+      "fieldSelected": "Selected field",
+      "changeField": "Change",
+      "introSub": "Pick the detail you want to correct",
+      "currentValueLabel": "Currently in the app"
     },
     "contribute": {
       "photo": {
@@ -537,21 +618,27 @@
         "sentTitle": "Photo submitted",
         "sentCaption": "Thanks! We'll review it and add it if it checks out.",
         "addAnother": "Add another",
-        "limitTitle": "Daily limit reached",
+        "limitTitle": "Today's upload limit reached",
         "limitCaption": "You've added a lot today — please try again tomorrow.",
         "limitRetry": "You've hit the limit — try again in {{minutes}} min.",
         "status": {
           "pending": "Under review",
           "approved": "Published",
           "rejected": "Not added"
-        }
+        },
+        "limitReassure": "Your earlier submissions are safely in the queue.",
+        "visibleInProfile": "Visible in profile →",
+        "pushNote": "We'll notify you once it's approved",
+        "guidelines": "Clear, respectful photos only · max 5 MB each",
+        "limitPerMasjid": "Today at this masjid",
+        "limitPerDay": "Your total today"
       },
       "question": {
         "title": "Ask a question",
         "deflect": "Already answered:",
         "label": "Your question",
         "placeholder": "e.g. Is there women's parking?",
-        "note": "Questions go to the masjid. Only answered questions are shown publicly.",
+        "note": "Only the masjid authority answers — so every answer is verified. You'll be notified when it arrives.",
         "send": "Send",
         "sending": "Sending…",
         "rateLimited": "Too many questions — please try again later.",
@@ -563,7 +650,8 @@
           "pending": "Awaiting answer",
           "answered": "Answered",
           "rejected": "Not posted"
-        }
+        },
+        "pushNote": "We'll take you straight to the answer when it arrives"
       },
       "myPhotos": {
         "cta": "My photo submissions",
@@ -576,7 +664,14 @@
         "title": "My questions",
         "emptyTitle": "No questions yet",
         "emptyCaption": "Questions you ask show up here with their status."
-      }
+      },
+      "backToProfile": "Back to profile",
+      "tabs": {
+        "photos": "Photos",
+        "questions": "Questions"
+      },
+      "myContributions": "My contributions",
+      "submittedAt": "Submitted · {{time}}"
     }
   },
   "donation": {
@@ -623,7 +718,10 @@
       "receipt": "Receipt",
       "done": "Done",
       "txn": "Transaction {{id}}",
-      "recurringNudge": "Make this a regular gift"
+      "recurringNudge": "Make this a regular gift",
+      "emailNote": "Receipt sent to {{email}}",
+      "emailNoteGeneric": "Receipt sent to your email",
+      "campaignPill": "{{title}} · {{pct}}% funded"
     },
     "failed": {
       "title": "Payment failed",
@@ -668,7 +766,11 @@
       "resume": "Resume",
       "newCta": "New recurring gift",
       "emptyTitle": "No recurring reminders yet",
-      "emptyCaption": "After a donation, set one up to give regularly."
+      "emptyCaption": "After a donation, set one up to give regularly.",
+      "givingTo": "Giving to",
+      "reminderDayLabel": "Reminder day",
+      "reminderDayWeekly": "Every Friday",
+      "reminderDayMonthly": "1st of each month"
     },
     "status": {
       "pending": "Pending",
@@ -706,7 +808,8 @@
       "category": "Category",
       "all": "All",
       "apply": "Apply",
-      "clear": "Clear"
+      "clear": "Clear",
+      "status": "Status"
     },
     "receipt": {
       "title": "Receipt",
@@ -714,8 +817,17 @@
       "open": "Open / Share PDF",
       "loading": "Preparing…",
       "taxNote": "Keep this receipt for your records.",
-      "error": "Couldn't open the receipt — please try again."
-    }
+      "error": "Couldn't open the receipt — please try again.",
+      "ngoName": "MasjidKoi Foundation",
+      "ngoReg": "Reg. No: NGO-12345 · Dhaka, Bangladesh",
+      "documentTitle": "Donation Acknowledgment Receipt",
+      "receivedFrom": "Received from {{name}}",
+      "masjidLabel": "Masjid",
+      "txnLabel": "Transaction ID",
+      "taxDeductible": "Tax-deductible under the Income Tax Ordinance · NBR approved",
+      "computerGenerated": "Computer-generated · no signature required"
+    },
+    "campaignTitle": "Campaign donation"
   },
   "settings": {
     "hub": {
@@ -742,7 +854,8 @@
       "fontXLarge": "Extra large",
       "previewLabel": "Preview",
       "previewTitle": "Today's Fajr 5:12",
-      "previewBody": "Prayer times and all app text will appear at this size."
+      "previewBody": "Prayer times and all app text will appear at this size.",
+      "fontHint": "Scales with your phone's font setting, up to 1.6×."
     },
     "language": {
       "title": "Language & region",
@@ -783,11 +896,14 @@
       "photoUpdates": "Photo approval updates",
       "modeDigest": "Digest",
       "modeInstant": "Instant",
-      "modeMute": "Mute"
+      "modeMute": "Mute",
+      "digestSection": "Digest",
+      "digestNote": "Announcements from your digest-mode masjids arrive together in one push at this time. If there's nothing new, no push is sent."
     },
     "storage": {
       "title": "Storage & offline",
       "totalUsed": "Total used",
+      "free": "{{size}} free",
       "offlineData": "Offline data",
       "cachePrayer": "Prayer times",
       "cacheMasjids": "Viewed masjids",
@@ -888,7 +1004,8 @@
       "title": "Announcement",
       "errorTitle": "Couldn't load announcement",
       "offlineTitle": "You're offline",
-      "errorCaption": "Please try again."
+      "errorCaption": "Please try again.",
+      "viewMasjid": "View masjid profile"
     },
     "events": {
       "attendees": "{{formatted}} going",
@@ -902,7 +1019,15 @@
       "rsvpClosed": "RSVP isn't open for this event.",
       "disabled": "RSVP isn't enabled for this event.",
       "rsvpError": "Couldn't update RSVP — try again.",
-      "countWithCap": "{{going}} / {{cap}} going"
+      "countWithCap": "{{going}} / {{cap}} going",
+      "join": "Join",
+      "cancelGoing": "Cancel going",
+      "description": "Description",
+      "goingBanner": "You're going to this event",
+      "addToCalendar": "Add to calendar",
+      "reminder": "Remind me 1 hour before",
+      "reminderSet": "Reminder set for 1 hour before",
+      "calendarAdded": "Added to your calendar"
     },
     "follow": {
       "title": "Masjids you follow",
@@ -916,7 +1041,10 @@
         "digest": "Daily digest",
         "instant": "Instant",
         "mute": "Muted"
-      }
+      },
+      "following": "Following",
+      "count_one": "Following {{count}} masjid",
+      "count_other": "Following {{count}} masjids"
     },
     "reviews": {
       "yours": "Your review",
@@ -941,7 +1069,18 @@
       "deleteConfirmTitle": "Delete your review?",
       "deleteConfirmBody": "This permanently removes your review and rating.",
       "deleteError": "Couldn't delete your review — try again.",
-      "starLabel": "{{n}} stars"
+      "starLabel": "{{n}} stars",
+      "bodyLabelRequired": "What went wrong? (required)",
+      "ratingWord": {
+        "1": "Terrible",
+        "2": "Poor",
+        "3": "Okay",
+        "4": "Good",
+        "5": "Excellent"
+      },
+      "promptTitle": "How was the masjid?",
+      "promptBody": "You just checked in at {{masjid}}. Leave a quick review?",
+      "notNow": "Not now"
     },
     "checkin": {
       "cta": "Check in",
@@ -1059,7 +1198,8 @@
     "freezeApplied": {
       "title": "Freeze applied",
       "body": "A freeze covered a missed day — your streak continues.",
-      "ok": "Got it"
+      "ok": "Got it",
+      "chip": "{{n}} freezes used"
     },
     "exempt": {
       "title": "Exempt mode",
@@ -1076,12 +1216,15 @@
         "travel": "Travel",
         "illness": "Illness",
         "other": "Other"
-      }
+      },
+      "introTitle": "What is exempt mode?",
+      "introBody": "Mark days when prayer doesn't apply — menstruation, postpartum, travel or illness — so your streak stays intact."
     },
     "milestone": {
       "title": "{{days}}-day streak!",
       "body": "MashaAllah — your consistency is paying off. Keep going.",
-      "cta": "Continue"
+      "cta": "Continue",
+      "kicker": "MashaAllah!"
     }
   },
   "badges": {
@@ -1214,7 +1357,8 @@
       "prayers": "Prayer completion",
       "completeDays": "{{n}} complete days",
       "quran": "Qur'an read",
-      "percent": "{{percent}}%"
+      "percent": "{{percent}}%",
+      "chartTitle": "This week's prayers"
     },
     "insights": {
       "label": "What stood out this week?",
@@ -1231,5 +1375,14 @@
     "save": "Save reflection",
     "saved": "Reflection saved",
     "empty": "Log a few prayers this week to see your reflection."
+  },
+  "time": {
+    "relative": {
+      "justNow": "Just now",
+      "minutesAgo": "{{count}} min ago",
+      "hoursAgo": "{{count}} hr ago",
+      "yesterday": "Yesterday",
+      "daysAgo": "{{count}} days ago"
+    }
   }
 }

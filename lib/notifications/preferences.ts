@@ -7,6 +7,9 @@ export type NotificationMode = "digest" | "instant" | "mute";
 export interface FollowedMasjidPreference {
   masjid_id: string;
   name: string;
+  admin_region: string;
+  latitude: number | null;
+  longitude: number | null;
   notification_mode: NotificationMode;
 }
 
@@ -17,6 +20,7 @@ export interface NotificationPreferences {
   mute_donation_nudge: boolean;
   mute_campaign_milestone: boolean;
   mute_moderation_outcome: boolean;
+  mute_photo_outcome: boolean;
   mute_promotions: boolean;
   masjids: FollowedMasjidPreference[];
 }
@@ -30,6 +34,7 @@ export type NotificationPreferencesUpdate = Partial<
     | "mute_donation_nudge"
     | "mute_campaign_milestone"
     | "mute_moderation_outcome"
+    | "mute_photo_outcome"
     | "mute_promotions"
   >
 >;

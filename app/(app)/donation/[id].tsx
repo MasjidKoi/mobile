@@ -7,11 +7,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppBar, Button, StatusBadge, SuccessCard, Text } from "@/components";
 import { ConfirmingState } from "@/components/donation";
+import { useCampaign } from "@/hooks/useCampaign";
 import { useDonation } from "@/hooks/useDonation";
 import { useMasjid } from "@/hooks/useMasjid";
 import { donationStatusTone } from "@/lib/donations/presets";
 import { useFormat } from "@/lib/i18n/format";
 import { useColors } from "@/lib/theme/useColors";
+import { useAuth } from "@/providers/AuthProvider";
 
 /** How long we keep polling a `pending` gift before offering recovery. */
 const CONFIRM_TIMEOUT_MS = 30_000;
@@ -46,6 +48,16 @@ export default function DonationStatusScreen() {
   const d = q.data;
   const masjid = useMasjid(d?.masjid_id);
   const masjidName = masjid.data?.name ?? t("common.brand");
+  const { campaign } = useCampaign(d?.masjid_id, d?.campaign_id ?? "");
+  const { user } = useAuth();
+  // Campaign-impact pill on the success card (41) — name + funded percent.
+  const campaignPill =
+    d?.campaign_id && campaign
+      ? t("donation.success.campaignPill", {
+          title: campaign.title,
+          pct: f.number(Math.round(campaign.progress_pct)),
+        })
+      : undefined;
 
   const [timedOut, setTimedOut] = useState(false);
   useEffect(() => {
@@ -122,6 +134,8 @@ export default function DonationStatusScreen() {
             amount={f.currency(Number(d?.gross_amount ?? 0))}
             to={t("donation.amount.toMasjid", { masjid: masjidName })}
             icon={<Feather name="check" size={30} color={c.primary} />}
+            campaign={campaignPill}
+            campaignIcon={<Feather name="flag" size={12} color="#8A6A1F" />}
             actions={
               <>
                 {d?.receipt_number ? (
@@ -138,6 +152,15 @@ export default function DonationStatusScreen() {
               </>
             }
           />
+          {/* Receipt-emailed note (41) */}
+          <View className="flex-row items-center gap-1.5">
+            <Feather name="mail" size={13} color={c["text-muted"]} />
+            <Text variant="caption" className="text-content-muted">
+              {user?.email
+                ? t("donation.success.emailNote", { email: user.email })
+                : t("donation.success.emailNoteGeneric")}
+            </Text>
+          </View>
           {/* Recurring nudge (48) — offer to make this a regular gift */}
           {d ? (
             <Button

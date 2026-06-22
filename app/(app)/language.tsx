@@ -131,7 +131,7 @@ export default function LanguageScreen() {
       <Dialog visible={pending !== null} onClose={() => setPending(null)}>
         <View className="items-center gap-2">
           <View className="h-[52px] w-[52px] items-center justify-center rounded-full bg-primary-soft">
-            <Feather name="repeat" size={22} color={c.primary} />
+            <Feather name="rotate-cw" size={24} color={c.primary} />
           </View>
           <Text className="text-[18px] font-bold text-content-primary">
             {t("settings.language.restartTitle")}

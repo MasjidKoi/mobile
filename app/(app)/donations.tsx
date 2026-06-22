@@ -15,6 +15,8 @@ import { useFormat } from "@/lib/i18n/format";
 import { useColors } from "@/lib/theme/useColors";
 
 const STATUS_CHIPS: (DonationStatus | undefined)[] = [undefined, "completed", "pending"];
+/** Full status set for the filter sheet (the inline quick-chips show a subset). */
+const SHEET_STATUSES: DonationStatus[] = ["completed", "pending", "failed", "refunded"];
 type CategoryFilter = DonationCategory | "campaign";
 
 /** 49 Donations Dashboard (+ 50 filters sheet, 54 empty, 55 offline). */
@@ -27,6 +29,7 @@ export default function DonationsDashboardScreen() {
   const [category, setCategory] = useState<CategoryFilter | undefined>(undefined);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [draftCategory, setDraftCategory] = useState<CategoryFilter | undefined>(undefined);
+  const [draftStatus, setDraftStatus] = useState<DonationStatus | undefined>(undefined);
   const [downloading, setDownloading] = useState(false);
 
   const summary = useDonationSummary();
@@ -52,8 +55,9 @@ export default function DonationsDashboardScreen() {
 
   const header = (
     <View className="gap-4 pb-2">
-      {/* Summary */}
-      <View className="gap-3 rounded-lg border border-border bg-surface p-4">
+      {/* Summary — flat on the screen background so the two StatCards below read
+          as distinct cards instead of white-on-white inside an outer card. */}
+      <View className="gap-3">
         <View className="gap-0.5">
           <Text variant="caption" className="text-content-secondary">
             {t("donation.dashboard.lifetime")}
@@ -105,11 +109,12 @@ export default function DonationsDashboardScreen() {
           accessibilityLabel={t("donation.filters.title")}
           onPress={() => {
             setDraftCategory(category);
+            setDraftStatus(status);
             setSheetOpen(true);
           }}
           className="h-10 w-10 items-center justify-center rounded-full border border-border bg-surface"
         >
-          <Feather name="sliders" size={16} color={category ? c.primary : c["text-secondary"]} />
+          <Feather name="sliders" size={16} color={category || status ? c.primary : c["text-secondary"]} />
         </Pressable>
       </View>
 
@@ -172,6 +177,7 @@ export default function DonationsDashboardScreen() {
           ) : offline ? null : (
             <View className="items-center px-6 py-12">
               <EmptyState
+                variant="plain"
                 icon={<Feather name="heart" size={26} color={c.primary} />}
                 title={t("donation.dashboard.emptyTitle")}
                 caption={t("donation.dashboard.emptyCaption")}
@@ -179,7 +185,7 @@ export default function DonationsDashboardScreen() {
                   <Button
                     variant="text"
                     label={t("donation.dashboard.emptyCta")}
-                    onPress={() => router.push("/explore")}
+                    onPress={() => router.navigate("/explore")}
                   />
                 }
               />
@@ -220,6 +226,24 @@ export default function DonationsDashboardScreen() {
             />
           ))}
         </View>
+        <Text variant="caption" className="text-content-secondary">
+          {t("donation.filters.status")}
+        </Text>
+        <View className="flex-row flex-wrap gap-2">
+          <Chip
+            label={t("donation.filters.all")}
+            selected={!draftStatus}
+            onPress={() => setDraftStatus(undefined)}
+          />
+          {SHEET_STATUSES.map((s) => (
+            <Chip
+              key={s}
+              label={statusLabel(s)}
+              selected={draftStatus === s}
+              onPress={() => setDraftStatus(s)}
+            />
+          ))}
+        </View>
         <View className="flex-row gap-2.5 pt-1">
           <Button
             variant="secondary"
@@ -227,7 +251,9 @@ export default function DonationsDashboardScreen() {
             className="flex-1"
             onPress={() => {
               setDraftCategory(undefined);
+              setDraftStatus(undefined);
               setCategory(undefined);
+              setStatus(undefined);
               setSheetOpen(false);
             }}
           />
@@ -236,6 +262,7 @@ export default function DonationsDashboardScreen() {
             className="flex-1"
             onPress={() => {
               setCategory(draftCategory);
+              setStatus(draftStatus);
               setSheetOpen(false);
             }}
           />

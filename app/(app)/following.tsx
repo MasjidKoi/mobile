@@ -8,10 +8,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AppBar, BackButton, Banner, Button, EmptyState, Text } from "@/components";
 import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
 import { ApiError, isOfflineQuery } from "@/lib/api/errors";
+import { useFormat } from "@/lib/i18n/format";
+import { haversineMeters } from "@/lib/location/geo";
 import { unfollowMasjid } from "@/lib/masjids/profile-api";
 import type { FollowedMasjidPreference, NotificationPreferences } from "@/lib/notifications/preferences";
 import { qk } from "@/lib/query/keys";
 import { useColors } from "@/lib/theme/useColors";
+import { useLocation } from "@/providers/LocationProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { useLoginGate } from "@/providers/LoginGateProvider";
 
@@ -87,15 +90,20 @@ export default function FollowingScreen() {
         keyExtractor={(m) => m.masjid_id}
         contentContainerClassName="gap-2.5 px-4 py-3 pb-8"
         ListHeaderComponent={
-          offline ? (
-            <View className="pb-2">
+          <View className="gap-2 pb-1">
+            {masjids.length > 0 ? (
+              <Text variant="caption" className="px-0.5 text-content-muted">
+                {t("community.follow.count", { count: masjids.length })}
+              </Text>
+            ) : null}
+            {offline ? (
               <Banner
                 variant="warning"
                 icon={<Feather name="wifi-off" size={15} color="#8A6A1F" />}
                 message={t("community.follow.offline")}
               />
-            </View>
-          ) : null
+            ) : null}
+          </View>
         }
         renderItem={({ item }) => (
           <FollowRow item={item} onUnfollow={() => unfollow.mutate(item.masjid_id)} />
@@ -115,7 +123,7 @@ export default function FollowingScreen() {
                   <Button
                     variant="text"
                     label={t("feed.empty.cta")}
-                    onPress={() => router.push("/explore")}
+                    onPress={() => router.navigate("/explore")}
                   />
                 }
               />
@@ -143,6 +151,15 @@ function FollowRow({
 }) {
   const { t } = useTranslation();
   const c = useColors();
+  const f = useFormat();
+  const { coords } = useLocation();
+  // Design 83 subtitle: "region · distance". Distance is computed client-side
+  // from the user's location (falls back to region-only when either is missing).
+  const distance =
+    coords && item.latitude != null && item.longitude != null
+      ? f.distance(haversineMeters(coords, { lat: item.latitude, lng: item.longitude }))
+      : null;
+  const subtitle = [item.admin_region, distance].filter(Boolean).join(" · ");
   return (
     <View className="flex-row items-center gap-3 rounded-md border border-border bg-surface p-4">
       <View className="h-10 w-10 items-center justify-center rounded-full bg-primary-soft">
@@ -156,19 +173,22 @@ function FollowRow({
         <Text variant="body" className="font-semibold" numberOfLines={1}>
           {item.name || t("common.brand")}
         </Text>
-        <Text variant="caption" className="text-content-muted">
-          {t(`community.follow.mode.${item.notification_mode}`)}
-        </Text>
+        {subtitle ? (
+          <Text variant="caption" className="text-content-muted">
+            {subtitle}
+          </Text>
+        ) : null}
       </Pressable>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={t("community.follow.unfollow")}
         onPress={onUnfollow}
         hitSlop={6}
-        className="rounded-full border border-border bg-background px-3.5 py-1.5 active:bg-primary-soft"
+        className="flex-row items-center gap-1.5 rounded-full border border-primary bg-primary-soft px-3 py-1.5 active:opacity-80"
       >
-        <Text variant="caption" className="font-semibold text-content-secondary">
-          {t("community.follow.unfollow")}
+        <Feather name="check" size={13} color={c.primary} />
+        <Text variant="caption" className="font-semibold text-primary">
+          {t("community.follow.following")}
         </Text>
       </Pressable>
     </View>
