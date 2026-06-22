@@ -1,0 +1,114 @@
+import { Feather } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Pressable, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { Button, Text } from "@/components";
+import { useFormat } from "@/lib/i18n/format";
+import { orderAdminPhotos } from "@/lib/masjids/photos";
+import type { PhotoResponse } from "@/lib/masjids/types";
+import { useColors } from "@/lib/theme/useColors";
+
+const COVER_HEIGHT = 230;
+const OVERLAY = "rgba(0,0,0,0.35)";
+
+/** A circular, semi-transparent control that floats over the cover photo. */
+function OverlayButton({
+  icon,
+  label,
+  onPress,
+}: {
+  icon: keyof typeof Feather.glyphMap;
+  label: string;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      hitSlop={8}
+      style={{ backgroundColor: OVERLAY }}
+      className="h-[38px] w-[38px] items-center justify-center rounded-full"
+    >
+      <Feather name={icon} size={20} color="#FFFFFF" />
+    </Pressable>
+  );
+}
+
+export type ProfileCoverProps = {
+  photos: PhotoResponse[];
+  onBack: () => void;
+  onOpenGallery: (index: number) => void;
+  onAddPhoto: () => void;
+};
+
+/**
+ * Profile header media: the admin cover photo with a gallery counter that opens
+ * the full-screen viewer (design 20). When a masjid has no photos it shows the
+ * sparse empty cover with an "Add photo" CTA (design 21).
+ */
+export function ProfileCover({ photos, onBack, onOpenGallery, onAddPhoto }: ProfileCoverProps) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const c = useColors();
+  const insets = useSafeAreaInsets();
+  const backTop = insets.top + 8;
+
+  // Cover first (is_cover wins), then by display order — same order the gallery uses.
+  const ordered = useMemo(() => orderAdminPhotos(photos), [photos]);
+  const cover = ordered[0];
+
+  if (!cover) {
+    return (
+      <View
+        style={{ height: 180, backgroundColor: c.border }}
+        className="items-center justify-center gap-2 px-6"
+      >
+        <View className="absolute left-4" style={{ top: backTop }}>
+          <OverlayButton icon="arrow-left" label={t("common.close")} onPress={onBack} />
+        </View>
+        <Feather name="image" size={26} color={c["text-muted"]} />
+        <Text className="text-caption font-medium text-content-secondary">
+          {t("masjid.profile.noPhotos")}
+        </Text>
+        <Button variant="secondary" label={t("masjid.profile.addPhoto")} onPress={onAddPhoto} />
+      </View>
+    );
+  }
+
+  return (
+    <Pressable onPress={() => onOpenGallery(0)} style={{ height: COVER_HEIGHT }}>
+      <Image
+        source={{ uri: cover.url }}
+        style={{ width: "100%", height: COVER_HEIGHT }}
+        contentFit="cover"
+        transition={150}
+      />
+      <LinearGradient
+        colors={["rgba(0,0,0,0.45)", "transparent"]}
+        style={{ position: "absolute", left: 0, right: 0, top: 0, height: 88 }}
+        pointerEvents="none"
+      />
+      <View className="absolute left-4" style={{ top: backTop }}>
+        <OverlayButton icon="arrow-left" label={t("common.close")} onPress={onBack} />
+      </View>
+      {ordered.length > 1 ? (
+        <View
+          style={{ backgroundColor: OVERLAY }}
+          className="absolute bottom-3 right-3 flex-row items-center gap-1.5 rounded-full px-2.5 py-1"
+        >
+          <Feather name="camera" size={13} color="#FFFFFF" />
+          <Text className="text-[12px] font-semibold text-white">
+            {`${f.number(1)}/${f.number(ordered.length)}`}
+          </Text>
+        </View>
+      ) : null}
+    </Pressable>
+  );
+}
+
+export default ProfileCover;
