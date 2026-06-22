@@ -9,6 +9,7 @@
  */
 import {
   colors,
+  colorsDark,
   spacing,
   radius,
   fontFamily,
@@ -18,6 +19,7 @@ import {
 } from "./tokens";
 
 export const Colors = colors;
+export const ColorsDark = colorsDark;
 export const Spacing = spacing;
 export const Radius = radius;
 export const Fonts = fontFamily;
@@ -30,7 +32,7 @@ export type SpacingToken = keyof typeof spacing;
 export type RadiusToken = keyof typeof radius;
 export type TypographyToken = keyof typeof typography;
 
-/** Drop-in palette for `@react-navigation` ThemeProvider. */
+/** Drop-in palette for `@react-navigation` ThemeProvider (light). */
 export const NavigationColors = {
   primary: colors.primary,
   background: colors.background,
@@ -38,6 +40,16 @@ export const NavigationColors = {
   text: colors["text-primary"],
   border: colors.border,
   notification: colors.error,
+} as const;
+
+/** Drop-in palette for `@react-navigation` ThemeProvider (dark). */
+export const NavigationColorsDark = {
+  primary: colorsDark.primary,
+  background: colorsDark.background,
+  card: colorsDark.surface,
+  text: colorsDark["text-primary"],
+  border: colorsDark.border,
+  notification: colorsDark.error,
 } as const;
 
 export const theme = {

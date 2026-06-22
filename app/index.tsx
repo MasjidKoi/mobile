@@ -1,11 +1,19 @@
-import { Text, View } from "react-native";
+import { Redirect } from "expo-router";
+import { View } from "react-native";
 
+import { useOnboardingStatus } from "@/hooks/useOnboardingStatus";
+
+/**
+ * Entry gate. Reads the persisted first-run flag and sends the user to the
+ * intro carousel (first launch) or straight into the app (returning user).
+ * Holds a neutral background while the flag loads to avoid flashing a route.
+ */
 export default function Index() {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-500">
-        NativeWind is working!
-      </Text>
-    </View>
-  );
+  const status = useOnboardingStatus();
+
+  if (status === "loading") {
+    return <View className="flex-1 bg-background" />;
+  }
+
+  return <Redirect href={status === "complete" ? "/home" : "/onboarding"} />;
 }

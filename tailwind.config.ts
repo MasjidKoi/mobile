@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss";
 import {
-  colors,
   spacing,
   radius,
   fontFamily,
@@ -32,38 +31,42 @@ export default {
     // disabled to keep `font-semibold`/`font-bold` as family selectors.
     fontWeight: {},
     extend: {
+      // Colors resolve to CSS variables so the ThemeProvider can flip the whole
+      // palette light↔dark at runtime (lib/theme/vars.ts) without touching any
+      // component's className. `:root` defaults live in global.css; the var name
+      // is always `--color-<token-key>` from constants/tokens.ts.
       colors: {
         primary: {
-          DEFAULT: colors.primary,
-          pressed: colors["primary-pressed"],
-          soft: colors["primary-soft"],
+          DEFAULT: "var(--color-primary)",
+          pressed: "var(--color-primary-pressed)",
+          soft: "var(--color-primary-soft)",
         },
         accent: {
-          gold: colors["accent-gold"],
-          "gold-soft": colors["accent-gold-soft"],
+          gold: "var(--color-accent-gold)",
+          "gold-soft": "var(--color-accent-gold-soft)",
         },
         error: {
-          DEFAULT: colors.error,
-          soft: colors["error-soft"],
+          DEFAULT: "var(--color-error)",
+          soft: "var(--color-error-soft)",
         },
-        background: colors.background,
+        background: "var(--color-background)",
         surface: {
-          DEFAULT: colors.surface,
-          inverse: colors["surface-inverse"],
-          "inverse-raised": colors["surface-inverse-raised"],
+          DEFAULT: "var(--color-surface)",
+          inverse: "var(--color-surface-inverse)",
+          "inverse-raised": "var(--color-surface-inverse-raised)",
         },
-        border: colors.border,
+        border: "var(--color-border)",
         content: {
-          primary: colors["text-primary"],
-          secondary: colors["text-secondary"],
-          muted: colors["text-muted"],
+          primary: "var(--color-text-primary)",
+          secondary: "var(--color-text-secondary)",
+          muted: "var(--color-text-muted)",
         },
-        scrim: colors.scrim,
-        control: { light: colors["control-light"] },
-        overlay: colors["overlay-fill"],
+        scrim: "var(--color-scrim)",
+        control: { light: "var(--color-control-light)" },
+        overlay: "var(--color-overlay-fill)",
         "on-inverse": {
-          DEFAULT: colors["on-inverse"],
-          muted: colors["on-inverse-muted"],
+          DEFAULT: "var(--color-on-inverse)",
+          muted: "var(--color-on-inverse-muted)",
         },
       },
       spacing: px(spacing),
