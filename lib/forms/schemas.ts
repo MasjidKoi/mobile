@@ -80,3 +80,61 @@ export const donorNameSchema = z.object({
     .max(255, "validation.donor_name_too_long"),
 });
 export type DonorNameValues = z.infer<typeof donorNameSchema>;
+
+/**
+ * Create Custom Goal (109). A flat schema with conditional refinement so a
+ * single controlled form can switch between a Qur'an-quantity goal (target +
+ * unit + date range) and a recurring goal (daily/weekly). Mirrors the backend's
+ * per-kind validation. Error strings are i18n keys.
+ */
+export const GOAL_TARGET_MIN = 1;
+export const GOAL_TARGET_MAX = 10_000;
+
+export const customGoalSchema = z
+  .object({
+    title: z
+      .string()
+      .trim()
+      .min(1, "validation.goal_title_required")
+      .max(120, "validation.goal_title_too_long"),
+    goal_kind: z.enum(["quran_quantity", "recurring"]),
+    target_amount: z
+      .number()
+      .int("validation.goal_target_required")
+      .min(GOAL_TARGET_MIN, "validation.goal_target_required")
+      .max(GOAL_TARGET_MAX, "validation.goal_target_too_high")
+      .optional(),
+    unit: z.enum(["pages", "juz", "minutes"]).optional(),
+    start_date: z.string().optional(),
+    end_date: z.string().optional(),
+    recurrence: z.enum(["daily", "weekly"]).optional(),
+  })
+  .superRefine((v, ctx) => {
+    if (v.goal_kind === "quran_quantity") {
+      if (v.target_amount == null)
+        ctx.addIssue({ code: "custom", path: ["target_amount"], message: "validation.goal_target_required" });
+      if (!v.unit)
+        ctx.addIssue({ code: "custom", path: ["unit"], message: "validation.goal_unit_required" });
+      if (!v.start_date)
+        ctx.addIssue({ code: "custom", path: ["start_date"], message: "validation.start_date_required" });
+      if (!v.end_date)
+        ctx.addIssue({ code: "custom", path: ["end_date"], message: "validation.end_date_required" });
+      if (v.start_date && v.end_date && v.end_date < v.start_date)
+        ctx.addIssue({ code: "custom", path: ["end_date"], message: "validation.goal_end_before_start" });
+    } else if (!v.recurrence) {
+      ctx.addIssue({ code: "custom", path: ["recurrence"], message: "validation.goal_recurrence_required" });
+    }
+  });
+export type CustomGoalValues = z.infer<typeof customGoalSchema>;
+
+/** Date range for a date-bound template (e.g. Khatm in Ramadan, screen 107). */
+export const goalDateRangeSchema = z
+  .object({
+    start_date: z.string().min(1, "validation.start_date_required"),
+    end_date: z.string().min(1, "validation.end_date_required"),
+  })
+  .refine((v) => v.end_date >= v.start_date, {
+    path: ["end_date"],
+    message: "validation.goal_end_before_start",
+  });
+export type GoalDateRangeValues = z.infer<typeof goalDateRangeSchema>;

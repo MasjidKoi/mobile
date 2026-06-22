@@ -14,6 +14,7 @@ import * as Notifications from "expo-notifications";
 import { azanTime, iqamahTime, PRAYER_ORDER, parseHHMM } from "@/lib/prayer/clock";
 import type { PrayerName, PrayerTimeResponse } from "@/lib/prayer/types";
 
+import { cancelScheduledByPrefix, PRAYER_NOTIF_PREFIXES } from "./cancel";
 import { channelForAzan, channelForReminder, RAMADAN_CHANNEL } from "./channels";
 import type { ReminderPrefs } from "./settingsStore";
 
@@ -185,7 +186,9 @@ export async function applyReminderPlan(
   formatTime: (hhmm: string) => string,
 ): Promise<void> {
   try {
-    await Notifications.cancelAllScheduledNotificationsAsync();
+    // Cancel only prayer-owned identifiers so gamification nudges (scheduled
+    // separately under the `nudge-` prefix) survive a reminder reschedule.
+    await cancelScheduledByPrefix(PRAYER_NOTIF_PREFIXES);
     for (const n of plan) {
       const content = buildContent(n, t, formatTime);
       await Notifications.scheduleNotificationAsync({

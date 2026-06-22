@@ -58,14 +58,6 @@ export default function ProfileTab() {
     ? t(`auth.madhab.${user.madhab}`)
     : (user?.email ?? "");
 
-  const soonBadge = (
-    <View className="rounded-full bg-accent-gold-soft px-2.5 py-1">
-      <Text variant="micro" className="font-semibold text-accent-gold">
-        {t("profileTab.soon")}
-      </Text>
-    </View>
-  );
-
   const openSupport = () => {
     Linking.openURL(SUPPORT_URL).catch(() => {});
   };
@@ -135,7 +127,7 @@ export default function ProfileTab() {
               />
             </Card>
 
-            {/* Reserved feature rows (Donation history live; Journal pending PRD 08) */}
+            {/* Feature rows (Donation history + Phase 9 gamification: journal/goals/badges) */}
             <Card>
               <SettingsRow
                 icon="heart"
@@ -151,12 +143,22 @@ export default function ProfileTab() {
                 onPress={() => router.push("/following")}
               />
               <SettingsRow
-                icon="moon"
-                tileColor={c["text-muted"]}
+                icon="book-open"
+                tileColor={c.primary}
                 label={t("profileTab.rows.journal")}
-                valueNode={soonBadge}
-                showChevron={false}
-                disabled
+                onPress={() => router.push("/journal")}
+              />
+              <SettingsRow
+                icon="target"
+                tileColor={c["accent-gold"]}
+                label={t("profileTab.rows.goals")}
+                onPress={() => router.push("/goals")}
+              />
+              <SettingsRow
+                icon="award"
+                tileColor={c["text-secondary"]}
+                label={t("profileTab.rows.badges")}
+                onPress={() => router.push("/badges")}
               />
             </Card>
 

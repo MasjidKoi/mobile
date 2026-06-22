@@ -158,7 +158,10 @@
       "donations": "Donation history",
       "journal": "Ibadah Journal",
       "signOut": "Sign out",
-      "following": "Masjids I follow"
+      "following": "Masjids I follow",
+      "goals": "Goals",
+      "badges": "Badges",
+      "streak": "Streak"
     },
     "signOutConfirmTitle": "Sign out?",
     "signOutConfirmBody": "You can sign in again anytime."
@@ -409,7 +412,16 @@
     "amount_too_low": "Minimum is ৳10",
     "amount_too_high": "Maximum is ৳5,00,000",
     "donor_name_required": "Enter your name",
-    "donor_name_too_long": "That name is too long"
+    "donor_name_too_long": "That name is too long",
+    "goal_title_required": "Name your goal",
+    "goal_title_too_long": "That title is too long",
+    "goal_target_required": "Enter a target",
+    "goal_target_too_high": "That target is too high",
+    "goal_unit_required": "Choose a unit",
+    "start_date_required": "Choose a start date",
+    "end_date_required": "Choose an end date",
+    "goal_end_before_start": "End must be after start",
+    "goal_recurrence_required": "Choose how often"
   },
   "masjid": {
     "profile": {
@@ -950,5 +962,274 @@
         "CommunityPillar": "Community Pillar"
       }
     }
+  },
+  "journal": {
+    "title": "Journal",
+    "today": "Today",
+    "prayersTitle": "Prayers",
+    "quranTitle": "Qur'an",
+    "quranLog": "Log Qur'an",
+    "quranAmount": "{{amount}} {{unit}}",
+    "quranNone": "Not logged yet",
+    "notesTitle": "Today's note",
+    "notePlaceholder": "A line about your day…",
+    "streakLabel": "day streak",
+    "viewHistory": "View history",
+    "viewStreak": "View streak",
+    "save": "Save",
+    "saved": "Saved",
+    "locked": "This day is locked",
+    "units": {
+      "pages": "pages",
+      "juz": "juz",
+      "minutes": "minutes"
+    },
+    "empty": {
+      "title": "Start your journal",
+      "subtitle": "Log today's prayers to begin a streak."
+    },
+    "guest": {
+      "title": "Track your worship",
+      "subtitle": "Sign in to log prayers, build streaks, and earn badges.",
+      "cta": "Sign in"
+    },
+    "offline": {
+      "title": "You're offline",
+      "subtitle": "Your journal will sync when you're back online."
+    },
+    "unlog": {
+      "title": "Un-log {{prayer}}?",
+      "body": "This removes {{prayer}} from today's log.",
+      "confirm": "Un-log"
+    },
+    "checkinPrefill": {
+      "title": "You checked in",
+      "body": "Log {{prayer}} for today?",
+      "confirm": "Log {{prayer}}",
+      "dismiss": "Not now"
+    },
+    "history": {
+      "title": "Journal history",
+      "empty": "No entries yet."
+    },
+    "day": {
+      "prayers": "Prayers",
+      "quran": "Qur'an",
+      "notes": "Note",
+      "complete": "Complete day",
+      "locked": "Locked — can't edit prayers"
+    },
+    "setup": {
+      "title": "Journal setup",
+      "section": "Reminders",
+      "master": "Enable reminders",
+      "dailyLog": "Daily log reminder",
+      "dailyLogHint": "An evening nudge to log today's prayers.",
+      "streakAtRisk": "Streak-at-risk reminder",
+      "streakAtRiskHint": "A late reminder so you don't break your streak.",
+      "weeklyReflection": "Weekly reflection",
+      "weeklyReflectionHint": "A Friday nudge to reflect on your week.",
+      "permissionNeeded": "Allow notifications to receive reminders."
+    },
+    "nudges": {
+      "dailyLog": {
+        "title": "Log today's prayers",
+        "body": "Take a moment to record your salah in your journal."
+      },
+      "streakAtRisk": {
+        "title": "Keep your streak alive",
+        "body": "Log today's prayers before the day ends."
+      },
+      "weeklyReflection": {
+        "title": "Your weekly reflection",
+        "body": "Look back on your week and set intentions for the next."
+      }
+    }
+  },
+  "streak": {
+    "title": "Your streak",
+    "current": "Current streak",
+    "longest": "Personal best",
+    "dayUnit": "days",
+    "rule": "All 5 prayers logged counts as one day.",
+    "freezesHeld": "{{n}} freezes ready",
+    "freezesExplain": "A freeze automatically covers a missed day so your streak continues. You earn one every 30 days (up to 2).",
+    "freezesApplied": "{{n}} freezes used so far",
+    "exemptCta": "Set exempt days",
+    "freezeApplied": {
+      "title": "Freeze applied",
+      "body": "A freeze covered a missed day — your streak continues.",
+      "ok": "Got it"
+    },
+    "exempt": {
+      "title": "Exempt mode",
+      "subtitle": "Mark days you're not expected to pray so they don't break your streak.",
+      "reason": "Reason",
+      "from": "From",
+      "to": "To",
+      "apply": "Mark exempt",
+      "active": "Exemption active",
+      "privacy": "The reason stays on your device and is never shared.",
+      "reasons": {
+        "menstruation": "Menstruation",
+        "postpartum": "Postpartum",
+        "travel": "Travel",
+        "illness": "Illness",
+        "other": "Other"
+      }
+    },
+    "milestone": {
+      "title": "{{days}}-day streak!",
+      "body": "MashaAllah — your consistency is paying off. Keep going.",
+      "cta": "Continue"
+    }
+  },
+  "badges": {
+    "title": "Badges",
+    "earned": "Earned",
+    "locked": "Locked",
+    "inProgress": "In progress",
+    "progress": "{{current}} / {{target}}",
+    "tierLabel": "Tier {{tier}}",
+    "guest": {
+      "title": "Earn badges",
+      "subtitle": "Sign in to start earning badges for your worship.",
+      "cta": "Sign in"
+    },
+    "families": {
+      "fajrWarrior": {
+        "name": "Fajr Warrior",
+        "criteria": "Log all five prayers on consecutive days ending in Fajr."
+      },
+      "generousGiver": {
+        "name": "Generous Giver",
+        "criteria": "Give at least once each month, consistently."
+      },
+      "communityPillar": {
+        "name": "Community Pillar",
+        "criteria": "Check in, add photos, and report info to support masjids."
+      }
+    },
+    "detail": {
+      "criteria": "How to earn",
+      "earnedOn": "Earned {{date}}",
+      "nextTier": "Next tier at {{threshold}}",
+      "maxed": "All tiers earned"
+    },
+    "earnedModal": {
+      "title": "Badge earned!",
+      "body": "{{name}} · Tier {{tier}}",
+      "cta": "View badge",
+      "dismiss": "Done"
+    }
+  },
+  "goals": {
+    "title": "Goals",
+    "active": "Active",
+    "newGoal": "New goal",
+    "empty": {
+      "title": "No goals yet",
+      "subtitle": "Set a Qur'an or habit goal to stay consistent."
+    },
+    "guest": {
+      "title": "Set a goal",
+      "subtitle": "Sign in to create reading and habit goals.",
+      "cta": "Sign in"
+    },
+    "kind": {
+      "quran_quantity": "Reading goal",
+      "recurring": "Habit"
+    },
+    "recurrence": {
+      "daily": "Daily",
+      "weekly": "Weekly"
+    },
+    "units": {
+      "pages": "pages",
+      "juz": "juz",
+      "minutes": "minutes"
+    },
+    "status": {
+      "paused": "Paused",
+      "abandoned": "Abandoned"
+    },
+    "checkOff": "Mark done",
+    "checkOffUndo": "Done today",
+    "progress": {
+      "percent": "{{percent}}%",
+      "pace": "{{amount}} {{unit}}/day to finish",
+      "remaining": "{{amount}} {{unit}} left",
+      "daysLeft": "{{n}} days left",
+      "complete": "Completed",
+      "streak": "{{n}} in a row"
+    },
+    "templates": {
+      "title": "Goal templates",
+      "custom": "Create a custom goal",
+      "khatm_ramadan": {
+        "name": "Khatm in Ramadan",
+        "desc": "Complete the Qur'an (604 pages) over Ramadan."
+      },
+      "ayat_al_kursi": {
+        "name": "Daily Ayat al-Kursi",
+        "desc": "Recite Ayat al-Kursi every day."
+      },
+      "surah_al_kahf": {
+        "name": "Surah al-Kahf on Jumu'ah",
+        "desc": "Read Surah al-Kahf every Friday."
+      }
+    },
+    "dateRange": {
+      "title": "Choose dates",
+      "start": "Start date",
+      "end": "End date",
+      "confirm": "Create goal"
+    },
+    "detail": {
+      "plan": "Reading plan",
+      "estComplete": "Est. finish {{date}}",
+      "pause": "Pause",
+      "resume": "Resume",
+      "abandon": "Abandon",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this goal and its progress?"
+    },
+    "create": {
+      "title": "Create goal",
+      "name": "Goal name",
+      "namePlaceholder": "e.g. Finish Surah al-Baqarah",
+      "type": "Type",
+      "target": "Target",
+      "unit": "Unit",
+      "start": "Start",
+      "end": "End",
+      "frequency": "How often",
+      "submit": "Create goal"
+    }
+  },
+  "reflection": {
+    "title": "Weekly reflection",
+    "weekOf": "Week of {{date}}",
+    "stats": {
+      "prayers": "Prayer completion",
+      "completeDays": "{{n}} complete days",
+      "quran": "Qur'an read",
+      "percent": "{{percent}}%"
+    },
+    "insights": {
+      "label": "What stood out this week?",
+      "placeholder": "A moment, a lesson, a struggle…"
+    },
+    "gratitude": {
+      "label": "What are you grateful for?",
+      "placeholder": "Name a blessing or two…"
+    },
+    "nextWeek": {
+      "label": "Intentions for next week",
+      "placeholder": "One thing to focus on…"
+    },
+    "save": "Save reflection",
+    "saved": "Reflection saved",
+    "empty": "Log a few prayers this week to see your reflection."
   }
 }

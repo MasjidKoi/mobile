@@ -158,7 +158,10 @@
       "donations": "سجل التبرعات",
       "journal": "يوميات العبادة",
       "signOut": "تسجيل الخروج",
-      "following": "المساجد التي أتابعها"
+      "following": "المساجد التي أتابعها",
+      "goals": "الأهداف",
+      "badges": "الأوسمة",
+      "streak": "التتابع"
     },
     "signOutConfirmTitle": "تسجيل الخروج؟",
     "signOutConfirmBody": "يمكنك تسجيل الدخول مرة أخرى في أي وقت."
@@ -409,7 +412,16 @@
     "amount_too_low": "الحد الأدنى ৳10",
     "amount_too_high": "الحد الأقصى ৳500,000",
     "donor_name_required": "أدخل اسمك",
-    "donor_name_too_long": "هذا الاسم طويل جدًا"
+    "donor_name_too_long": "هذا الاسم طويل جدًا",
+    "goal_title_required": "اسم الهدف",
+    "goal_title_too_long": "العنوان طويل جدًا",
+    "goal_target_required": "أدخل هدفًا",
+    "goal_target_too_high": "الهدف مرتفع جدًا",
+    "goal_unit_required": "اختر وحدة",
+    "start_date_required": "اختر تاريخ البدء",
+    "end_date_required": "اختر تاريخ الانتهاء",
+    "goal_end_before_start": "يجب أن يكون الانتهاء بعد البدء",
+    "goal_recurrence_required": "اختر التكرار"
   },
   "masjid": {
     "profile": {
@@ -950,5 +962,274 @@
         "CommunityPillar": "ركيزة المجتمع"
       }
     }
+  },
+  "journal": {
+    "title": "اليوميات",
+    "today": "اليوم",
+    "prayersTitle": "الصلوات",
+    "quranTitle": "القرآن",
+    "quranLog": "تسجيل القرآن",
+    "quranAmount": "{{amount}} {{unit}}",
+    "quranNone": "لم يُسجَّل بعد",
+    "notesTitle": "ملاحظة اليوم",
+    "notePlaceholder": "سطر عن يومك…",
+    "streakLabel": "أيام متتالية",
+    "viewHistory": "عرض السجل",
+    "viewStreak": "عرض التتابع",
+    "save": "حفظ",
+    "saved": "تم الحفظ",
+    "locked": "هذا اليوم مقفل",
+    "units": {
+      "pages": "صفحات",
+      "juz": "أجزاء",
+      "minutes": "دقائق"
+    },
+    "empty": {
+      "title": "ابدأ يومياتك",
+      "subtitle": "سجّل صلوات اليوم لتبدأ سلسلة."
+    },
+    "guest": {
+      "title": "تتبّع عبادتك",
+      "subtitle": "سجّل الدخول لتدوين الصلوات وبناء التتابع وكسب الأوسمة.",
+      "cta": "تسجيل الدخول"
+    },
+    "offline": {
+      "title": "أنت غير متصل",
+      "subtitle": "ستتم مزامنة يومياتك عند عودة الاتصال."
+    },
+    "unlog": {
+      "title": "إلغاء تسجيل {{prayer}}؟",
+      "body": "سيؤدي هذا إلى إزالة {{prayer}} من سجل اليوم.",
+      "confirm": "إلغاء"
+    },
+    "checkinPrefill": {
+      "title": "لقد سجّلت حضورك",
+      "body": "تسجيل {{prayer}} لهذا اليوم؟",
+      "confirm": "تسجيل {{prayer}}",
+      "dismiss": "ليس الآن"
+    },
+    "history": {
+      "title": "سجل اليوميات",
+      "empty": "لا توجد إدخالات بعد."
+    },
+    "day": {
+      "prayers": "الصلوات",
+      "quran": "القرآن",
+      "notes": "ملاحظة",
+      "complete": "يوم كامل",
+      "locked": "مقفل — لا يمكن تعديل الصلوات"
+    },
+    "setup": {
+      "title": "إعداد اليوميات",
+      "section": "التذكيرات",
+      "master": "تفعيل التذكيرات",
+      "dailyLog": "تذكير التسجيل اليومي",
+      "dailyLogHint": "تنبيه مسائي لتسجيل صلوات اليوم.",
+      "streakAtRisk": "تذكير عند خطر انقطاع التتابع",
+      "streakAtRiskHint": "تذكير متأخر حتى لا تنقطع سلسلتك.",
+      "weeklyReflection": "تأمل أسبوعي",
+      "weeklyReflectionHint": "تنبيه يوم الجمعة للتأمل في أسبوعك.",
+      "permissionNeeded": "اسمح بالإشعارات لتلقي التذكيرات."
+    },
+    "nudges": {
+      "dailyLog": {
+        "title": "سجّل صلوات اليوم",
+        "body": "خذ لحظة لتدوين صلواتك في يومياتك."
+      },
+      "streakAtRisk": {
+        "title": "حافظ على سلسلتك",
+        "body": "سجّل صلوات اليوم قبل انتهائه."
+      },
+      "weeklyReflection": {
+        "title": "تأملك الأسبوعي",
+        "body": "راجع أسبوعك واعقد النية للأسبوع القادم."
+      }
+    }
+  },
+  "streak": {
+    "title": "سلسلتك",
+    "current": "السلسلة الحالية",
+    "longest": "أفضل رقم",
+    "dayUnit": "أيام",
+    "rule": "تسجيل الصلوات الخمس يُحتسب يومًا واحدًا.",
+    "freezesHeld": "{{n}} تجميد جاهز",
+    "freezesExplain": "يغطي التجميد يومًا فائتًا تلقائيًا لتستمر سلسلتك. تكسب واحدًا كل 30 يومًا (حتى 2).",
+    "freezesApplied": "استُخدم {{n}} تجميد حتى الآن",
+    "exemptCta": "تحديد أيام الإعفاء",
+    "freezeApplied": {
+      "title": "تم تطبيق التجميد",
+      "body": "غطّى تجميد يومًا فائتًا — سلسلتك مستمرة.",
+      "ok": "حسنًا"
+    },
+    "exempt": {
+      "title": "وضع الإعفاء",
+      "subtitle": "حدّد الأيام التي لا تُطالَب فيها بالصلاة حتى لا تنقطع سلسلتك.",
+      "reason": "السبب",
+      "from": "من",
+      "to": "إلى",
+      "apply": "تحديد كإعفاء",
+      "active": "الإعفاء مفعّل",
+      "privacy": "يبقى السبب على جهازك ولا يُشارَك أبدًا.",
+      "reasons": {
+        "menstruation": "الحيض",
+        "postpartum": "النفاس",
+        "travel": "السفر",
+        "illness": "المرض",
+        "other": "أخرى"
+      }
+    },
+    "milestone": {
+      "title": "سلسلة {{days}} يومًا!",
+      "body": "ما شاء الله — مواظبتك تؤتي ثمارها. واصل.",
+      "cta": "متابعة"
+    }
+  },
+  "badges": {
+    "title": "الأوسمة",
+    "earned": "محقّق",
+    "locked": "مقفل",
+    "inProgress": "قيد التقدم",
+    "progress": "{{current}} / {{target}}",
+    "tierLabel": "المستوى {{tier}}",
+    "guest": {
+      "title": "اكسب الأوسمة",
+      "subtitle": "سجّل الدخول لتبدأ كسب الأوسمة لعبادتك.",
+      "cta": "تسجيل الدخول"
+    },
+    "families": {
+      "fajrWarrior": {
+        "name": "محارب الفجر",
+        "criteria": "سجّل الصلوات الخمس في أيام متتالية تنتهي بالفجر."
+      },
+      "generousGiver": {
+        "name": "المعطاء",
+        "criteria": "تصدّق مرة واحدة على الأقل كل شهر بانتظام."
+      },
+      "communityPillar": {
+        "name": "ركيزة المجتمع",
+        "criteria": "سجّل الحضور وأضف الصور وأبلغ عن المعلومات لدعم المساجد."
+      }
+    },
+    "detail": {
+      "criteria": "كيفية التحقيق",
+      "earnedOn": "تحقّق {{date}}",
+      "nextTier": "المستوى التالي عند {{threshold}}",
+      "maxed": "تم تحقيق كل المستويات"
+    },
+    "earnedModal": {
+      "title": "وسام محقّق!",
+      "body": "{{name}} · المستوى {{tier}}",
+      "cta": "عرض الوسام",
+      "dismiss": "تم"
+    }
+  },
+  "goals": {
+    "title": "الأهداف",
+    "active": "نشط",
+    "newGoal": "هدف جديد",
+    "empty": {
+      "title": "لا أهداف بعد",
+      "subtitle": "حدّد هدف قراءة أو عادة للبقاء على المواظبة."
+    },
+    "guest": {
+      "title": "حدّد هدفًا",
+      "subtitle": "سجّل الدخول لإنشاء أهداف القراءة والعادات.",
+      "cta": "تسجيل الدخول"
+    },
+    "kind": {
+      "quran_quantity": "هدف قراءة",
+      "recurring": "عادة"
+    },
+    "recurrence": {
+      "daily": "يومي",
+      "weekly": "أسبوعي"
+    },
+    "units": {
+      "pages": "صفحات",
+      "juz": "أجزاء",
+      "minutes": "دقائق"
+    },
+    "status": {
+      "paused": "متوقف",
+      "abandoned": "متروك"
+    },
+    "checkOff": "وضع علامة تم",
+    "checkOffUndo": "تم اليوم",
+    "progress": {
+      "percent": "{{percent}}%",
+      "pace": "{{amount}} {{unit}}/يوم للإنهاء",
+      "remaining": "بقي {{amount}} {{unit}}",
+      "daysLeft": "بقي {{n}} يومًا",
+      "complete": "مكتمل",
+      "streak": "{{n}} متتالية"
+    },
+    "templates": {
+      "title": "قوالب الأهداف",
+      "custom": "إنشاء هدف مخصص",
+      "khatm_ramadan": {
+        "name": "ختمة في رمضان",
+        "desc": "أكمل القرآن (604 صفحة) خلال رمضان."
+      },
+      "ayat_al_kursi": {
+        "name": "آية الكرسي يوميًا",
+        "desc": "اقرأ آية الكرسي كل يوم."
+      },
+      "surah_al_kahf": {
+        "name": "سورة الكهف يوم الجمعة",
+        "desc": "اقرأ سورة الكهف كل جمعة."
+      }
+    },
+    "dateRange": {
+      "title": "اختر التواريخ",
+      "start": "تاريخ البدء",
+      "end": "تاريخ الانتهاء",
+      "confirm": "إنشاء الهدف"
+    },
+    "detail": {
+      "plan": "خطة القراءة",
+      "estComplete": "الإنهاء المتوقع {{date}}",
+      "pause": "إيقاف",
+      "resume": "استئناف",
+      "abandon": "ترك",
+      "delete": "حذف",
+      "deleteConfirm": "حذف هذا الهدف وتقدّمه؟"
+    },
+    "create": {
+      "title": "إنشاء هدف",
+      "name": "اسم الهدف",
+      "namePlaceholder": "مثال: إنهاء سورة البقرة",
+      "type": "النوع",
+      "target": "الهدف",
+      "unit": "الوحدة",
+      "start": "البدء",
+      "end": "الانتهاء",
+      "frequency": "التكرار",
+      "submit": "إنشاء الهدف"
+    }
+  },
+  "reflection": {
+    "title": "تأمل أسبوعي",
+    "weekOf": "أسبوع {{date}}",
+    "stats": {
+      "prayers": "إكمال الصلوات",
+      "completeDays": "{{n}} أيام كاملة",
+      "quran": "القرآن المقروء",
+      "percent": "{{percent}}%"
+    },
+    "insights": {
+      "label": "ما الذي لفت انتباهك هذا الأسبوع؟",
+      "placeholder": "لحظة أو درس أو تحدٍّ…"
+    },
+    "gratitude": {
+      "label": "علام أنت ممتن؟",
+      "placeholder": "اذكر نعمة أو اثنتين…"
+    },
+    "nextWeek": {
+      "label": "نيّات الأسبوع القادم",
+      "placeholder": "أمر واحد للتركيز عليه…"
+    },
+    "save": "حفظ التأمل",
+    "saved": "تم حفظ التأمل",
+    "empty": "سجّل بعض الصلوات هذا الأسبوع لرؤية تأملك."
   }
 }

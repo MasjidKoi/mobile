@@ -8,6 +8,7 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 
 import { configureNotificationHandler, ensureNotificationChannels } from "@/lib/notifications/channels";
+import { NUDGE_KINDS } from "@/lib/notifications/nudges";
 
 export function NotificationsBootstrap() {
   useEffect(() => {
@@ -18,12 +19,18 @@ export function NotificationsBootstrap() {
       const data = response?.notification.request.content.data as {
         masjidId?: string | null;
         prayer?: string;
+        kind?: string;
       } | null;
       if (data?.masjidId) {
         router.push({
           pathname: "/masjid/[id]",
           params: { id: data.masjidId, prayer: data.prayer ?? "" },
         });
+        return;
+      }
+      // Phase 9 — a gamification nudge opens the journal hub.
+      if (data?.kind && (NUDGE_KINDS as readonly string[]).includes(data.kind)) {
+        router.push("/journal");
       }
     };
 

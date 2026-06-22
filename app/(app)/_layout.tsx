@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 
 import { LocationProvider } from "@/providers/LocationProvider";
+import { NudgeScheduler } from "@/providers/NudgeScheduler";
 import { ReminderScheduler } from "@/providers/ReminderScheduler";
 
 /**
@@ -17,6 +18,7 @@ export default function AppLayout() {
   return (
     <LocationProvider>
       <ReminderScheduler />
+      <NudgeScheduler />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="masjid/[id]" />
@@ -68,6 +70,10 @@ export default function AppLayout() {
         <Stack.Screen name="profile-setup" options={{ presentation: "modal" }} />
         <Stack.Screen name="location-explainer" options={{ presentation: "modal" }} />
         <Stack.Screen name="notification-explainer" options={{ presentation: "modal" }} />
+        {/* Phase 9 — gamification. Most screens auto-register with the default
+            (headerShown:false) options; only the celebrations are modals. */}
+        <Stack.Screen name="milestone" options={{ presentation: "modal", animation: "fade" }} />
+        <Stack.Screen name="badge-earned" options={{ presentation: "modal", animation: "fade" }} />
       </Stack>
     </LocationProvider>
   );
