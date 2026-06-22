@@ -43,6 +43,18 @@ export default function AppLayout() {
         <Stack.Screen name="prayer-reminders" />
         <Stack.Screen name="azan-sound" />
         <Stack.Screen name="ramadan-reminders" />
+        {/* Phase 7 — settings hub + sub-screens */}
+        <Stack.Screen name="settings" />
+        <Stack.Screen name="edit-profile" />
+        <Stack.Screen name="appearance" />
+        <Stack.Screen name="language" />
+        <Stack.Screen name="notifications" />
+        <Stack.Screen name="storage" />
+        <Stack.Screen name="privacy" />
+        <Stack.Screen name="delete-account" />
+        <Stack.Screen name="delete-confirm" />
+        <Stack.Screen name="account-deleted" />
+        <Stack.Screen name="about" />
         <Stack.Screen name="set-home-masjid" options={{ presentation: "modal" }} />
         <Stack.Screen name="email" options={{ presentation: "modal" }} />
         <Stack.Screen name="otp" options={{ presentation: "modal" }} />

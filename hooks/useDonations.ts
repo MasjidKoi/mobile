@@ -15,9 +15,10 @@ export function useMyDonations(filters?: DonationHistoryFilters) {
 }
 
 /** `GET /me/donations/summary` — lifetime + this-year totals for the header. */
-export function useDonationSummary() {
+export function useDonationSummary(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: qk.donations.summary(),
     queryFn: () => fetchDonationSummary(),
+    enabled: options?.enabled ?? true,
   });
 }

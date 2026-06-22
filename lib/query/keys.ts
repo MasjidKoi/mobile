@@ -50,6 +50,9 @@ export const qk = {
   follows: {
     status: (id: string) => ["follows", id] as const,
   },
+  // Phase 7 — server notification preferences (digest hour, mute toggles,
+  // donate-anonymously default, and the followed-masjid list with per-masjid mode).
+  notificationPrefs: () => ["notification-preferences"] as const,
   // Phase 6 — donations + recurring. User-scoped private data, deliberately
   // OUTSIDE the "masjids"/"app-config" persistence root (never cached to disk).
   donations: {
