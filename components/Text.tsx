@@ -68,7 +68,9 @@ function effectiveSize(classes: string): [number, number] {
   for (const m of classes.matchAll(SIZE_RE)) {
     if (m[1]) {
       const n = Number(m[1]);
-      size = [n, Math.round(n * 1.35)];
+      // ≥1.45× so Hind Siliguri's tall Bengali clusters aren't clipped at the
+      // top once scaling is active (matches the ramp leading in tokens.ts).
+      size = [n, Math.round(n * 1.45)];
     } else if (m[2] && SIZE_PX[m[2]]) {
       size = SIZE_PX[m[2]];
     }

@@ -113,12 +113,17 @@ export const fontSize = {
 } as const;
 
 export const lineHeight = {
+  // Leading is sized for Hind Siliguri's tall Bengali clusters (matra bar +
+  // stacked vowel signs sit well above Latin cap height). Ratios below ~1.4×
+  // make iOS center the glyph in the line box and clip the ascent — visible as
+  // sheared tops on বাংলা headings while Latin text survives. Keep every entry
+  // ≥ ~1.45× fontSize; `display`/`title` were the tight ones that clipped.
   micro: 16,
   caption: 18,
   body: 22,
   heading: 24,
-  title: 28,
-  display: 34,
+  title: 32,
+  display: 40,
 } as const;
 
 /**
