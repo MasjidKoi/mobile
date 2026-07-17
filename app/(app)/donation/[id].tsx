@@ -226,9 +226,11 @@ export default function DonationStatusScreen() {
             </Text>
           </View>
           <View className="gap-2.5 rounded-lg border border-border bg-surface p-4">
-            {detailRow(t("donation.detail.amount"), f.currency(gross))}
-            {detailRow(t("donation.detail.fee"), f.currency(fee))}
-            {detailRow(t("donation.detail.net"), f.currency(net))}
+            {/* 2-decimal precision so Amount = Fee + Net reconciles (fee/net are
+                fractional ~2.5%); rounding each to whole taka made them disagree. */}
+            {detailRow(t("donation.detail.amount"), f.currencyPrecise(gross))}
+            {detailRow(t("donation.detail.fee"), f.currencyPrecise(fee))}
+            {detailRow(t("donation.detail.net"), f.currencyPrecise(net))}
             {detailRow(t("donation.detail.category"), t(`donation.category.${d.category}`))}
             {d.receipt_number ? detailRow(t("donation.detail.receiptNumber"), d.receipt_number) : null}
             {d.gateway_payment_method

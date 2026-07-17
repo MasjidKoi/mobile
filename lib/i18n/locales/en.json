@@ -147,7 +147,8 @@
       ],
       "enable": "Enable notifications",
       "notNow": "Not now"
-    }
+    },
+    "openSettings": "Open Settings"
   },
   "profileTab": {
     "title": "Profile",
@@ -336,6 +337,10 @@
         "title": "No submissions yet",
         "caption": "Masjids you add show up here with their review status."
       }
+    },
+    "error": {
+      "title": "Couldn't load masjids",
+      "caption": "Check your connection and try again."
     }
   },
   "ramadan": {
@@ -1264,6 +1269,10 @@
       "body": "{{name}} · Tier {{tier}}",
       "cta": "View badge",
       "dismiss": "Done"
+    },
+    "unknown": {
+      "title": "Badge not found",
+      "caption": "This badge isn't available. Please update the app."
     }
   },
   "goals": {

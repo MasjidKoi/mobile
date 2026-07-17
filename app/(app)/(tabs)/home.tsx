@@ -331,7 +331,7 @@ export default function HomeTab() {
               <Feather name="users" size={16} color={c.primary} />
               <Text className="flex-1 text-body font-medium text-content-primary">{t("prayers.jumuah")}</Text>
               <Text className="text-body font-semibold text-primary">
-                {f.toBengaliDigits(home.jumah.khutbah_1_start)}
+                {bare(home.jumah.khutbah_1_start)}
               </Text>
             </View>
           ) : null}

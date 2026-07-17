@@ -73,13 +73,20 @@ export function formatCurrency(
   amount: number,
   language: string,
   bengaliNumerals = getBengaliNumerals(),
+  /**
+   * Fixed fraction digits. Defaults to 0 (whole taka) for round donation
+   * amounts; pass 2 for fractional values like the platform fee / net so the
+   * Amount/Fee/Net breakdown reconciles instead of each rounding independently.
+   */
+  fractionDigits = 0,
 ): string {
-  return safeFormat(language, bengaliNumerals, `৳${amount}`, () =>
+  return safeFormat(language, bengaliNumerals, `৳${amount.toFixed(fractionDigits)}`, () =>
     new Intl.NumberFormat(intlLocale(language), {
       style: "currency",
       currency: "BDT",
       currencyDisplay: "narrowSymbol",
-      maximumFractionDigits: 0,
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
     }).format(amount),
   );
 }
@@ -104,12 +111,19 @@ export function formatDate(
   date: Date,
   language: string,
   bengaliNumerals = getBengaliNumerals(),
+  /**
+   * Force a timezone for the render. Pass `"UTC"` for date-only values anchored
+   * at UTC midnight (e.g. journal `entry_date`) so a device west of UTC doesn't
+   * format them as the previous calendar day. Omit for real instants.
+   */
+  timeZone?: string,
 ): string {
   return safeFormat(language, bengaliNumerals, date.toDateString(), () =>
     new Intl.DateTimeFormat(intlLocale(language), {
       year: "numeric",
       month: "short",
       day: "numeric",
+      ...(timeZone ? { timeZone } : {}),
     }).format(date),
   );
 }
@@ -154,8 +168,19 @@ export function useFormat() {
   return {
     number: (value: number) => formatNumber(value, language, enabled),
     currency: (amount: number) => formatCurrency(amount, language, enabled),
+    /**
+     * Currency with 2 decimals — for fractional values (fee / net) so the
+     * donation breakdown reconciles with the shown gross.
+     */
+    currencyPrecise: (amount: number) => formatCurrency(amount, language, enabled, 2),
     time: (date: Date) => formatTime(date, language, enabled),
     date: (date: Date) => formatDate(date, language, enabled),
+    /**
+     * Format a UTC-anchored, date-only value (e.g. a journal `entry_date`
+     * parsed to UTC midnight) in UTC so devices west of UTC don't shift it to
+     * the previous calendar day.
+     */
+    dateUtc: (date: Date) => formatDate(date, language, enabled, "UTC"),
     weekday: (date: Date) => formatWeekday(date, language),
     /**
      * Relative "time ago" for feed/announcement timestamps (e.g. "3 hr ago",

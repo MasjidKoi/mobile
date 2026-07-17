@@ -55,8 +55,8 @@ export function PermissionExplainer({
           {title}
         </Text>
         <View className="gap-3.5">
-          {benefits.map((b) => (
-            <View key={b.icon} className="flex-row items-center gap-3">
+          {benefits.map((b, i) => (
+            <View key={`${i}-${b.icon}`} className="flex-row items-center gap-3">
               <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-primary-soft">
                 <Feather name={b.icon} size={18} color={c.primary} />
               </View>

@@ -24,10 +24,10 @@ export function tryRefreshToken(): Promise<boolean> {
   if (refreshPromise) return refreshPromise;
 
   refreshPromise = (async () => {
-    const refreshToken = await getRefreshToken();
-    if (!refreshToken) return false;
-
     try {
+      const refreshToken = await getRefreshToken();
+      if (!refreshToken) return false;
+
       const response = await fetch(`${env.apiBaseUrl}${ENDPOINTS.auth.refresh}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -41,6 +41,9 @@ export function tryRefreshToken(): Promise<boolean> {
     } catch {
       return false;
     } finally {
+      // MUST run on every exit path (incl. the no-token early return) or the
+      // singleton stays a permanently-resolved `false` and disables refresh for
+      // the rest of the JS session.
       refreshPromise = null;
     }
   })();

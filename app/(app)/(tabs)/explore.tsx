@@ -226,6 +226,14 @@ export default function ExploreTab() {
                 <ActivityIndicator color={c.primary} />
               </View>
             </View>
+          ) : nearby.isError && results.length === 0 ? (
+            <View pointerEvents="box-none" className="absolute inset-x-0 top-3 px-4">
+              <Banner
+                variant="warning"
+                icon={<Feather name="wifi-off" size={15} color="#8A6A1F" />}
+                message={t("discovery.error.title")}
+              />
+            </View>
           ) : null}
           {bottomOverlay}
         </View>
@@ -267,11 +275,26 @@ export default function ExploreTab() {
               <View className="gap-2">
                 <SectionHeader title={t("discovery.nearby")} />
                 {results.length === 0 ? (
-                  <EmptyState
-                    icon={<Feather name="search" size={26} color={c.primary} />}
-                    title={t("discovery.empty.title")}
-                    caption={t("discovery.empty.caption")}
-                  />
+                  nearby.isError ? (
+                    <EmptyState
+                      icon={<Feather name="wifi-off" size={26} color={c.primary} />}
+                      title={t("discovery.error.title")}
+                      caption={t("discovery.error.caption")}
+                      action={
+                        <Button
+                          variant="text"
+                          label={t("common.retry")}
+                          onPress={() => void nearby.refetch()}
+                        />
+                      }
+                    />
+                  ) : (
+                    <EmptyState
+                      icon={<Feather name="search" size={26} color={c.primary} />}
+                      title={t("discovery.empty.title")}
+                      caption={t("discovery.empty.caption")}
+                    />
+                  )
                 ) : (
                   results.map((m) => (
                     <NearbyMasjidRow

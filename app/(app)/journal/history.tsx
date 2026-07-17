@@ -113,7 +113,7 @@ function DayRow({ entry }: { entry: JournalEntry }) {
       </View>
       <View className="flex-1 gap-0.5">
         <Text variant="body" className="font-semibold">
-          {f.date(parseIso(entry.entry_date))}
+          {f.dateUtc(parseIso(entry.entry_date))}
         </Text>
         <Text variant="caption" className="text-content-muted">
           {t("badges.progress", { current: f.number(count), target: f.number(5) })}

@@ -27,6 +27,8 @@ export default function GoalTemplatesScreen() {
     router.replace({ pathname: "/goals/[id]", params: { id: goal.goal_id } });
 
   const choose = (key: GoalTemplateKey, requiresDateRange: boolean) => {
+    // Guard against a rapid double-tap firing two creates before we navigate away.
+    if (create.isPending) return;
     if (requiresDateRange) {
       setDays(KHATM_DEFAULT_DAYS);
       setDateSheet(key);
@@ -46,6 +48,7 @@ export default function GoalTemplatesScreen() {
           <Pressable
             key={tpl.key}
             accessibilityRole="button"
+            disabled={create.isPending}
             onPress={() => choose(tpl.key, tpl.requiresDateRange)}
             className="flex-row items-center gap-3 rounded-lg border border-border bg-surface p-4 active:bg-primary-soft"
           >

@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
 import { router, useLocalSearchParams } from "expo-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, Share, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -66,6 +66,29 @@ export default function EventDetailScreen() {
   const rsvpCount = count ?? event?.rsvp_count ?? 0;
   const rsvpEnabled = enabled ?? event?.rsvp_enabled ?? false;
   const full = event?.capacity != null && rsvpCount >= event.capacity && !isRsvped;
+
+  // Rehydrate the reminder toggle from the OS: the scheduled notification
+  // outlives this screen, so after a navigate-away-and-return we must recover
+  // its id — otherwise the toggle shows OFF, re-enabling duplicates it, and the
+  // orphaned notification can't be cancelled from here.
+  useEffect(() => {
+    let active = true;
+    Notifications.getAllScheduledNotificationsAsync()
+      .then((all) => {
+        if (!active) return;
+        const found = all.find((n) => n.content?.data?.eventId === params.id);
+        if (found) {
+          reminderId.current = found.identifier;
+          setReminderOn(true);
+        }
+      })
+      .catch(() => {
+        // Non-fatal — leave the toggle in its default state.
+      });
+    return () => {
+      active = false;
+    };
+  }, [params.id]);
 
   const back = <BackButton onPress={() => router.back()} />;
 
@@ -147,6 +170,9 @@ export default function EventDetailScreen() {
     setReminderOn(nextOn);
     try {
       if (nextOn) {
+        // Already scheduled (incl. rehydrated from a prior visit) — don't
+        // schedule a duplicate notification for the same event.
+        if (reminderId.current) return;
         const perm = await Notifications.getPermissionsAsync();
         const granted = perm.granted || (await Notifications.requestPermissionsAsync()).granted;
         const fireAt = new Date(at.getTime() - 60 * 60 * 1000);
@@ -155,7 +181,12 @@ export default function EventDetailScreen() {
           return;
         }
         reminderId.current = await Notifications.scheduleNotificationAsync({
-          content: { title: event.title, body: t("community.events.reminderSet") },
+          content: {
+            title: event.title,
+            body: t("community.events.reminderSet"),
+            // Tag with the event id so a later mount can find + cancel it.
+            data: { eventId: params.id },
+          },
           trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: fireAt },
         });
       } else if (reminderId.current) {

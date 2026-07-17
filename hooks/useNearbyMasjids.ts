@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { roundCoords } from "@/lib/location/coords";
 import type { Coords } from "@/lib/location/types";
@@ -35,5 +35,9 @@ export function useNearbyMasjids(
     }),
     queryFn: () => fetchNearby(q as Coords, filters, radiusM),
     enabled: enabled && !!q,
+    // Keep the prior results on screen while a new radius/filter combo loads,
+    // so the list dims instead of blanking to a full-screen spinner (and scroll
+    // position survives) — matching the map view's behaviour.
+    placeholderData: keepPreviousData,
   });
 }

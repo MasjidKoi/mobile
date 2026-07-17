@@ -47,7 +47,7 @@ export default function DayDetailScreen() {
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-background">
-      <AppBar title={f.date(parseIso(day))} left={<BackButton />} />
+      <AppBar title={f.dateUtc(parseIso(day))} left={<BackButton />} />
       {entryQuery.isLoading && !entry ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator color={c.primary} />

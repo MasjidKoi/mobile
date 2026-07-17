@@ -147,7 +147,8 @@
       ],
       "enable": "تفعيل الإشعارات",
       "notNow": "ليس الآن"
-    }
+    },
+    "openSettings": "فتح الإعدادات"
   },
   "profileTab": {
     "title": "الملف",
@@ -197,7 +198,16 @@
     "needsLocationCaption": "فعّل الموقع أو اختر منطقتك لعرض مواقيت الصلاة.",
     "enableLocation": "تفعيل الموقع",
     "pickCity": "اختر منطقة",
-    "calculatedDisclaimer": "مواقيت محسوبة — حدّد مسجدًا رئيسيًا لعرض أوقات الجماعة."
+    "calculatedDisclaimer": "مواقيت محسوبة — حدّد مسجدًا رئيسيًا لعرض أوقات الجماعة.",
+    "travelTitle": "الأوقات المحسوبة محليًا",
+    "calculatedKicker": "محسوب · طريقة {{method}}",
+    "travelKicker": "مسافر · {{area}}",
+    "homeMasjidWith": "المسجد الرئيسي · {{name}}",
+    "heroSubtitleMasjid": "أذان {{prayer}} {{azan}} · الجماعة {{jamaat}}",
+    "heroSubtitleMasjidNoJamaat": "أذان {{prayer}} {{azan}}",
+    "heroSubtitleCalculated": "أذان {{prayer}}",
+    "heroSubtitleTravel": "أذان {{prayer}} · طريقة {{method}}",
+    "nextPrayerPill": "التالي: {{label}}"
   },
   "prayers": {
     "fajr": "الفجر",
@@ -215,7 +225,8 @@
     "countdownHM": "{{hours}} س {{minutes}} د",
     "countdownM": "{{minutes}} د",
     "jamaahIn": "الجماعة بعد {{minutes}} د",
-    "jamaahLikely": "الجماعة قائمة الآن"
+    "jamaahLikely": "الجماعة قائمة الآن",
+    "now": "الآن"
   },
   "units": {
     "m": "م",
@@ -314,6 +325,10 @@
         "title": "لا توجد طلبات بعد",
         "caption": "تظهر المساجد التي تضيفها هنا مع حالة مراجعتها."
       }
+    },
+    "error": {
+      "title": "تعذّر تحميل المساجد",
+      "caption": "تحقّق من اتصالك وحاول مرة أخرى."
     }
   },
   "ramadan": {
@@ -350,7 +365,11 @@
       "azanBody": "الأذان {{time}}",
       "reminderBody": "الأذان بعد {{minutes}} د — {{time}}",
       "iqamahBody": "الجماعة {{time}} — توجّه الآن"
-    }
+    },
+    "offsetValue": "قبل {{minutes}} دقيقة",
+    "sourceAzan": "حسب الأذان",
+    "sourceJamaat": "حسب الجماعة",
+    "perPrayerSub": "{{source}} · {{time}}"
   },
   "azanSound": {
     "title": "صوت الأذان",
@@ -364,6 +383,13 @@
     "options": {
       "mecca": "أذان مكة",
       "classic": "أذان كلاسيكي",
+      "default": "النغمة الافتراضية",
+      "silent": "صامت"
+    },
+    "fajrSoftName": "أذان الفجر · نغمة هادئة",
+    "optionsShort": {
+      "mecca": "أذان الفجر",
+      "classic": "أذان المدينة",
       "default": "النغمة الافتراضية",
       "silent": "صامت"
     }
@@ -389,12 +415,25 @@
       "sw": "جغ",
       "w": "غ",
       "nw": "شغ"
+    },
+    "kaabaSharif": "الكعبة المشرفة",
+    "directions": {
+      "n": "الشمال",
+      "ne": "الشمال الشرقي",
+      "e": "الشرق",
+      "se": "الجنوب الشرقي",
+      "s": "الجنوب",
+      "sw": "الجنوب الغربي",
+      "w": "الغرب",
+      "nw": "الشمال الغربي"
     }
   },
   "hijri": {
     "title": "التقويم الهجري",
     "suffix": "هـ",
-    "myDates": "مناسباتي الإسلامية"
+    "myDates": "مناسباتي الإسلامية",
+    "upcoming": "الأيام الإسلامية القادمة",
+    "approx": "(تقريبًا)"
   },
   "ramadanReminders": {
     "title": "تذكيرات رمضان",
@@ -420,7 +459,10 @@
     "azan1": "الأذان الأول",
     "azan2": "الأذان الثاني",
     "khutbahStart": "بدء الخطبة",
-    "start2": "البدء الثاني"
+    "start2": "البدء الثاني",
+    "scheduleTitle": "جدول الجمعة",
+    "jamaat1": "الجماعة الأولى",
+    "jamaat2": "الجماعة الثانية"
   },
   "validation": {
     "email_required": "أدخل بريدك الإلكتروني",
@@ -470,7 +512,10 @@
         "male": "رجال",
         "female": "نساء",
         "parking": "مواقف"
-      }
+      },
+      "scheduleTitle": "جدول الصلاة",
+      "madhhabCalc": "حساب {{madhab}}",
+      "publishedTimesNote": "أوقات هذا المسجد المنشورة تُعرض كما هي — دون إعادة حسابها حسب مذهبك."
     },
     "facility": {
       "sisters": "قسم النساء",
@@ -1212,6 +1257,10 @@
       "body": "{{name}} · المستوى {{tier}}",
       "cta": "عرض الوسام",
       "dismiss": "تم"
+    },
+    "unknown": {
+      "title": "لم يُعثر على الشارة",
+      "caption": "هذه الشارة غير متوفرة. يرجى تحديث التطبيق."
     }
   },
   "goals": {
@@ -1332,5 +1381,17 @@
       "yesterday": "أمس",
       "daysAgo": "قبل {{count}} يوم"
     }
+  },
+  "methods": {
+    "KARACHI": "كراتشي",
+    "MWL": "رابطة العالم الإسلامي",
+    "ISNA": "الجمعية الإسلامية لأمريكا الشمالية",
+    "EGYPT": "مصر",
+    "MAKKAH": "أم القرى",
+    "DUBAI": "دبي",
+    "KUWAIT": "الكويت",
+    "QATAR": "قطر",
+    "SINGAPORE": "سنغافورة",
+    "TEHRAN": "طهران"
   }
 }

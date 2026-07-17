@@ -22,7 +22,7 @@ import type {
   LocationSource,
   ResolvedLocation,
 } from "@/lib/location/types";
-import { recordPermissionDenied } from "@/lib/permissions";
+import { clearPermissionDenied, recordPermissionDenied } from "@/lib/permissions";
 
 interface LocationContextValue extends ResolvedLocation {
   /** Prompt for OS permission (if needed) and acquire a GPS fix; falls back to last-known/city. */
@@ -121,6 +121,9 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     const perm = toPermission(res.status);
     setPermission(perm);
     if (perm === "granted") {
+      // Clear any prior denial flag so recovery UIs don't treat a now-granted
+      // permission as still denied (symmetric with the notifications flow).
+      void clearPermissionDenied("location");
       await acquireGps();
     } else if (perm === "denied") {
       void recordPermissionDenied("location");

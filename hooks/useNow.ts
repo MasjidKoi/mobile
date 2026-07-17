@@ -15,6 +15,10 @@ const listeners = new Set<() => void>();
 function subscribe(listener: () => void): () => void {
   listeners.add(listener);
   if (!timer) {
+    // Refresh immediately on (re)start: after every subscriber unmounts the
+    // interval is cleared and `currentTs` freezes, so a later mount would
+    // otherwise read a stale timestamp until the first tick ~30s later.
+    currentTs = Date.now();
     timer = setInterval(() => {
       currentTs = Date.now();
       listeners.forEach((l) => l());

@@ -13,6 +13,24 @@ export class CheckInPermissionError extends Error {
   }
 }
 
+/** Bound the GPS acquisition so a poor/indoor fix can't hang the mutation
+ * forever — on timeout the caller surfaces the retryable check-in error screen. */
+const GPS_TIMEOUT_MS = 12_000;
+
+async function acquireCurrentPosition(): Promise<Location.LocationObject> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High }),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error("location_timeout")), GPS_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
 /**
  * Check-in mutation. The 100m geofence needs an accurate *current* fix — not the
  * shared LocationProvider fallback (which may be a manually-picked city) — so we
@@ -32,7 +50,7 @@ export function useCheckIn(masjidId: string) {
       if (status !== Location.PermissionStatus.GRANTED) {
         throw new CheckInPermissionError();
       }
-      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+      const pos = await acquireCurrentPosition();
       return postCheckIn(masjidId, {
         latitude: pos.coords.latitude,
         longitude: pos.coords.longitude,

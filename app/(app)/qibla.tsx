@@ -10,6 +10,7 @@ import { AppBar, Button, Text } from "@/components";
 import { QiblaCompass } from "@/components/qibla/QiblaCompass";
 import { useQibla } from "@/hooks/useQibla";
 import { useFormat } from "@/lib/i18n/format";
+import { openAppSettings } from "@/lib/permissions";
 import { normalizeDegrees } from "@/lib/qibla";
 import { useColors } from "@/lib/theme/useColors";
 import { useLocation } from "@/providers/LocationProvider";
@@ -47,7 +48,22 @@ export default function QiblaScreen() {
           <Text variant="caption" className="text-center text-content-secondary">
             {t("qibla.needLocationCaption")}
           </Text>
-          <Button label={t("home.enableLocation")} onPress={() => void requestLocation()} />
+          <View className="w-full gap-2">
+            {/* After a permanent denial, requestForegroundPermissionsAsync
+                resolves straight to "denied" with no dialog, so offer the OS
+                Settings path; the bearing is also fully computable from a
+                manually-picked city, so always offer that fallback too. */}
+            {permission === "denied" ? (
+              <Button label={t("permissions.openSettings")} onPress={() => openAppSettings()} />
+            ) : (
+              <Button label={t("home.enableLocation")} onPress={() => void requestLocation()} />
+            )}
+            <Button
+              variant="text"
+              label={t("permissions.location.pickCity")}
+              onPress={() => router.push("/city-picker")}
+            />
+          </View>
         </View>
       </SafeAreaView>
     );

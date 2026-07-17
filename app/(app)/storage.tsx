@@ -40,7 +40,6 @@ export default function StorageScreen() {
     prayer: c.primary,
     masjids: c["accent-gold"],
     feed: c["text-secondary"],
-    tiles: c["text-muted"],
   };
 
   const refresh = useCallback(() => {

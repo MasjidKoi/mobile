@@ -20,7 +20,7 @@ const storage = (): {
   removeItem(k: string): Promise<void>;
 } => require("@react-native-async-storage/async-storage").default;
 
-export type CacheCategoryKey = "prayer" | "masjids" | "feed" | "tiles";
+export type CacheCategoryKey = "prayer" | "masjids" | "feed";
 
 export interface CacheCategory {
   key: CacheCategoryKey;
@@ -71,7 +71,6 @@ const CATEGORY_META: {
     icon: "map-pin",
   },
   { key: "feed", labelKey: "settings.storage.cacheFeed", icon: "rss" },
-  { key: "tiles", labelKey: "settings.storage.cacheTiles", icon: "map" },
 ];
 
 /** Rough byte size of a cached value (UTF-16 length of its JSON). */
@@ -92,7 +91,6 @@ export function getCacheSummary(queryClient: QueryClient): CacheSummary {
     prayer: { bytes: 0, lastSync: null },
     masjids: { bytes: 0, lastSync: null },
     feed: { bytes: 0, lastSync: null },
-    tiles: { bytes: 0, lastSync: null },
   };
 
   for (const query of queryClient.getQueryCache().getAll()) {

@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "extra": {
-      "apiBaseUrl": "http://localhost:8001",
+      "apiBaseUrl": "https://api.masjidkoi.me",
       "appEnv": "development"
     },
     "ios": {

@@ -41,6 +41,10 @@ export function BottomSheet({ visible, onClose, children, className }: BottomShe
   heightRef.current = height;
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
+  // Latest `visible`, so the async slide-out callback can tell whether a reopen
+  // raced in during the ~220ms close animation.
+  const visibleRef = useRef(visible);
+  visibleRef.current = visible;
 
   const slideOut = (done: () => void) => {
     Animated.parallel([
@@ -60,14 +64,20 @@ export function BottomSheet({ visible, onClose, children, className }: BottomShe
     if (visible) {
       setMounted(true);
     } else if (mounted) {
-      slideOut(() => setMounted(false));
+      // If `visible` flips back to true within the 220ms close animation, the
+      // reopen (below) re-animates in; this callback must NOT unmount underneath
+      // it, or the sheet gets stuck closed while `visible === true`.
+      slideOut(() => {
+        if (!visibleRef.current) setMounted(false);
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  // Animate in once the Modal has mounted.
+  // Animate in whenever the sheet is both mounted and visible — keyed on
+  // `visible` too so a reopen mid-close (mounted already true) still re-animates.
   useEffect(() => {
-    if (mounted) {
+    if (mounted && visible) {
       translateY.setValue(heightRef.current);
       backdrop.setValue(0);
       Animated.parallel([
@@ -76,7 +86,7 @@ export function BottomSheet({ visible, onClose, children, className }: BottomShe
       ]).start();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted]);
+  }, [mounted, visible]);
 
   const pan = useRef(
     PanResponder.create({

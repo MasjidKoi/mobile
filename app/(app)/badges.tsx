@@ -65,6 +65,8 @@ function BadgeFamilyTile({ family }: { family: BadgeFamily }) {
   const c = useColors();
   const f = useFormat();
   const meta = BADGE_META[family.badge_type];
+  // Unknown family (client/server skew) — skip rather than crash on meta.key/icon.
+  if (!meta) return null;
   const earned = family.current_tier > 0;
   const state = earned ? "earned" : "progress";
   const tierLabel = earned

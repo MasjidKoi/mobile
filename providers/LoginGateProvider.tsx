@@ -36,7 +36,7 @@ export function useLoginGate(): LoginGateContextValue {
 }
 
 export function LoginGateProvider({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { status } = useAuth();
   const [visible, setVisible] = useState(false);
   const [reason, setReason] = useState<GateReason>("generic");
   // Held across the multi-screen modal flow; run once the flow completes.
@@ -44,15 +44,19 @@ export function LoginGateProvider({ children }: { children: ReactNode }) {
 
   const requireAuth = useCallback<RequireAuth>(
     (action, nextReason = "generic") => {
-      if (isAuthenticated) {
+      if (status === "authenticated") {
         action();
         return;
       }
+      // During the brief launch "loading" window auth hasn't resolved yet — an
+      // already-signed-in user would otherwise get a spurious login sheet. Treat
+      // the tap as a no-op until status settles to guest/authenticated.
+      if (status === "loading") return;
       pendingAction.current = action;
       setReason(nextReason);
       setVisible(true);
     },
-    [isAuthenticated],
+    [status],
   );
 
   const cancel = useCallback(() => {

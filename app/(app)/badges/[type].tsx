@@ -20,12 +20,31 @@ export default function BadgeDetailScreen() {
   const meta = BADGE_META[badgeType];
   const { data: family, isLoading } = useBadgeFamily(badgeType);
 
-  if (isLoading || !meta) {
+  if (isLoading) {
     return (
       <SafeAreaView edges={["top"]} className="flex-1 bg-background">
         <AppBar title={t("badges.title")} left={<BackButton />} />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator color={c.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Unknown badge family (malformed deep link, or client/server skew) — show a
+  // not-found state instead of an infinite spinner that never resolves.
+  if (!meta) {
+    return (
+      <SafeAreaView edges={["top"]} className="flex-1 bg-background">
+        <AppBar title={t("badges.title")} left={<BackButton />} />
+        <View className="flex-1 items-center justify-center gap-3 px-8">
+          <Feather name="award" size={40} color={c["text-muted"]} />
+          <Text variant="heading" className="text-center">
+            {t("badges.unknown.title")}
+          </Text>
+          <Text variant="caption" className="text-center text-content-secondary">
+            {t("badges.unknown.caption")}
+          </Text>
         </View>
       </SafeAreaView>
     );
