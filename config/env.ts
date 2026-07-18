@@ -14,7 +14,7 @@ type Extra = { apiBaseUrl?: string; appEnv?: string };
 
 const extra = (Constants.expoConfig?.extra ?? {}) as Extra;
 
-const DEFAULT_API_BASE_URL = "http://localhost:8001";
+const DEFAULT_API_BASE_URL = "http://localhost:8000";
 
 const stripTrailingSlash = (url: string): string => url.replace(/\/+$/, "");
 

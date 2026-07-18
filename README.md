@@ -111,7 +111,7 @@ vars → `app.json` → `expo.extra` → hardcoded defaults.
 
 | Variable | Description |
 |---|---|
-| `EXPO_PUBLIC_API_BASE_URL` | Backend base URL (**no** version prefix). Simulator/emulator: `http://localhost:8001`. Physical device: your LAN IP or an Expo tunnel URL. |
+| `EXPO_PUBLIC_API_BASE_URL` | Backend base URL (**no** version prefix). Simulator/emulator: `http://localhost:8000`. Physical device: your LAN IP or an Expo tunnel URL. |
 | `EXPO_PUBLIC_APP_ENV` | `development` \| `staging` \| `production` |
 | `EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_KEY` | Google Maps key for Android map screens (optional) |
 
