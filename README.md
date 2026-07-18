@@ -48,17 +48,51 @@ built with Expo and React Native for iOS and Android.
 
 The app talks to the **MasjidKoi backend** (FastAPI) over a REST API.
 
+## Architecture
+
+```mermaid
+flowchart TB
+    subgraph device["Device (iOS / Android)"]
+        router["expo-router<br/>file-based screens"]
+        hooks["React Query hooks<br/>(useMasjid, useDonations, …)"]
+        providers["Providers<br/>auth · locale · location · notifications"]
+        client["lib/api/client<br/>fetch wrapper · Bearer + 401 refresh"]
+        store["persisted cache<br/>(AsyncStorage)"]
+        native["on-device: adhan prayer calc ·<br/>Qibla · maps · secure-store"]
+    end
+
+    backend["MasjidKoi backend<br/>FastAPI REST (EXPO_PUBLIC_API_BASE_URL)"]
+
+    router --> hooks
+    providers --> hooks
+    hooks --> client
+    hooks <--> store
+    client -->|JWT Bearer, refresh on 401| backend
+    router --> native
+```
+
+- **Data layer** — feature hooks in `hooks/` wrap **TanStack React Query**;
+  results persist to **AsyncStorage** so the app opens with warm data offline.
+- **API client** — `lib/api/client.ts` is a typed `fetch` wrapper that attaches
+  the JWT `Bearer` token, refreshes it on a `401`, and drops to the login gate if
+  refresh fails. The backend mounts routers at **root** — there is **no `/api/v1`
+  prefix**.
+- **Auth** — passwordless email-OTP; access/refresh tokens are stored via
+  `expo-secure-store` (`lib/auth/`).
+- **On-device compute** — prayer times (`adhan`), Qibla, and Hijri dates are
+  calculated locally; the deep-link scheme is `masjidkoi://`.
+
 ## Getting started
 
-Prerequisites: Node.js 18+, npm, and the [Expo](https://docs.expo.dev) toolchain. For
-native builds you'll also need Xcode (iOS) and/or Android Studio.
+Prerequisites: **Node.js 20+**, npm, and the [Expo](https://docs.expo.dev)
+toolchain. For native builds you'll also need Xcode (iOS) and/or Android Studio.
 
 ```bash
 # 1. Install dependencies
 npm install
 
 # 2. Point the app at your backend API
-#    (configure the API base URL in the Expo app config / environment)
+cp .env.example .env.local     # then edit EXPO_PUBLIC_API_BASE_URL
 
 # 3. Start the dev server
 npx expo start
@@ -70,16 +104,37 @@ From the Expo dev server you can launch the app in:
 - an Android emulator — `npm run android`
 - a physical device via [Expo Go](https://expo.dev/go)
 
+### Configuration
+
+Runtime config resolves in `config/env.ts` in this order: `EXPO_PUBLIC_*` env
+vars → `app.json` → `expo.extra` → hardcoded defaults.
+
+| Variable | Description |
+|---|---|
+| `EXPO_PUBLIC_API_BASE_URL` | Backend base URL (**no** version prefix). Simulator/emulator: `http://localhost:8001`. Physical device: your LAN IP or an Expo tunnel URL. |
+| `EXPO_PUBLIC_APP_ENV` | `development` \| `staging` \| `production` |
+| `EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_KEY` | Google Maps key for Android map screens (optional) |
+
+> `localhost` only works in a simulator/emulator — a physical device must reach
+> the backend over a LAN IP or tunnel. The committed `app.json` default
+> (`expo.extra.apiBaseUrl`) points at `https://api.masjidkoi.me`; override it with
+> `.env.local` for local development.
+
 ## Project structure
 
 ```
-app/                 # screens & routes (expo-router, file-based)
+app/                 # screens & routes (expo-router, file-based, typed routes)
   (app)/(tabs)/      # main tabs: home, explore, feed, profile
-  (app)/             # feature screens: donations, campaigns, events,
-                     # badges, journal, goals, check-in, masjid, …
+  (app)/             # feature screens: donate, donation, campaign, event,
+                     # badges, journal, goals, checkin, masjid, review, receipt…
 components/          # shared UI components
-hooks/               # data + behavior hooks (React Query)
-lib/                 # api client, i18n, forms, theme, config
+hooks/               # ~55 React Query data hooks (useMasjid, useDonations, …)
+providers/           # app providers: auth, locale, location, notifications, nudges
+config/              # env.ts — typed runtime config resolution
+lib/                 # api client + feature modules:
+                     #   api/ auth/ donations/ masjids/ prayer/ qibla/ hijri/
+                     #   i18n/ query/ location/ notifications/ forms/ theme/ …
+constants/           # static app constants
 assets/              # fonts, images, azan audio
 ```
 
@@ -98,6 +153,36 @@ assets/              # fonts, images, azan audio
 
 UI strings live in `lib/i18n/locales/{en,bn,ar}.json`. Arabic enables right-to-left
 layout automatically. Bengali numerals and Hijri dates are supported throughout.
+
+## Building & releasing
+
+The app uses the Expo **new architecture** (`newArchEnabled: true`) and the React
+Compiler. Native identifiers: iOS bundle `com.anonymous.mobile`, Android package
+`com.anonymous.mobile`, URL scheme `masjidkoi://`.
+
+Local native builds (compile on your machine — needs Xcode / Android Studio):
+
+```bash
+npm run ios          # build & run on iOS simulator
+npm run android      # build & run on Android emulator
+```
+
+Cloud / distribution builds via [EAS](https://docs.expo.dev/build/introduction/):
+
+```bash
+npm install -g eas-cli
+eas login
+eas build --platform ios          # or android / all
+eas submit --platform ios         # upload to App Store / Play Console
+```
+
+Set `EXPO_PUBLIC_API_BASE_URL` / `EXPO_PUBLIC_APP_ENV` (and the maps key) as EAS
+build-time environment variables — they are inlined into the JS bundle at build
+time, so a release build must point at the production backend
+(`https://api.masjidkoi.me`). OTA JS updates ship through **expo-updates**.
+
+The permission strings and notification sounds (`azan_mecca`, `azan_madina`) are
+declared in `app.json` — update them there, not in native project files.
 
 ---
 
